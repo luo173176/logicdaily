@@ -61,6 +61,11 @@ jobs:
       - name: 安装 Playwright 浏览器
         run: npx playwright install --with-deps chromium
 
+      # playwright.config.ts 的 webServer 用 `next start` 起生产服务器，
+      # 而这是独立于 check 的 job，工作目录里没有 .next 构建产物，必须先构建。
+      - name: 生产构建（供 next start 使用）
+        run: npm run build
+
       - name: 端到端测试（Pixel 7 视口）
         env:
           CI: true
