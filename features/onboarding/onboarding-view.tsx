@@ -45,7 +45,9 @@ export function OnboardingView() {
   return (
     <div className="stack gap-4">
       <header className="stack gap-1">
-        <p className="label">第 {step + 1} / {steps.length} 步</p>
+        <p className="label">
+          第 {step + 1} / {steps.length} 步
+        </p>
         <h1 className="text-2xl">{steps[step].title}</h1>
         <p className="muted text-sm">{steps[step].hint}</p>
       </header>
@@ -131,10 +133,7 @@ export function OnboardingView() {
             <p>题目、作答、复习队列和思考日志都保存在这台设备的浏览器里。导出备份可以得到一个 JSON 文件。</p>
           </Note>
           <Note tone="neutral" title="AI 教练是可选的">
-            <p>
-              不配置任何模型时，逻辑题、判分、解析、错因归类、间隔复习与思考日志都能完整使用。需要时可以在“我的 → AI
-              教练”里配置服务端凭据。
-            </p>
+            <p>不配置任何模型时，逻辑题、判分、解析、错因归类、间隔复习与思考日志都能完整使用。需要时可以在“我的 → AI 教练”里配置服务端凭据。</p>
           </Note>
           <p className="faint">当前设置：{settingsSummary(draft)}</p>
         </div>
@@ -174,9 +173,7 @@ export function OnboardingView() {
 
 export function quietHoursHint(settings: AppSettings): string {
   const target = minutesOfDay(settings.reminders.time);
-  return isInQuietHours(target, { ...settings.reminders, enabled: true, paused: false })
-    ? '设定时间落在免打扰时段内，提醒不会发出。'
-    : '';
+  return isInQuietHours(target, { ...settings.reminders, enabled: true, paused: false }) ? '设定时间落在免打扰时段内，提醒不会发出。' : '';
 }
 
 export function restoreDefaults(): AppSettings {

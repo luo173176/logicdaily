@@ -68,10 +68,7 @@ export function knowledgeEvidence(state: KnowledgeState): 'insufficient' | 'deve
   return 'established';
 }
 
-export function updateKnowledgeState(
-  prev: KnowledgeState | null,
-  input: MasteryUpdate,
-): KnowledgeState {
+export function updateKnowledgeState(prev: KnowledgeState | null, input: MasteryUpdate): KnowledgeState {
   const base = prev ?? createKnowledgeState(input.knowledgePointId, input.nowTs);
 
   const value = outcomeValue(input.outcome, input.selfAssessmentScore);

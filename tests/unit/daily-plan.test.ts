@@ -132,9 +132,7 @@ describe('generateDailyPlan', () => {
   });
 
   it('已答过的题在 21 天内不重复出现', () => {
-    const draft = generateDailyPlan(
-      context({ attempts: [attempt('ex-a', { dateKey: addDays(TODAY, -5) })] }),
-    );
+    const draft = generateDailyPlan(context({ attempts: [attempt('ex-a', { dateKey: addDays(TODAY, -5) })] }));
     expect(draft.items.some((i) => i.exerciseId === 'ex-a')).toBe(false);
   });
 
@@ -175,16 +173,14 @@ describe('generateDailyPlan', () => {
   });
 
   it('事实与推测标签映射到对应活动类型', () => {
-    const draft = generateDailyPlan(
-      context({ settings: { ...defaultSettings('local'), dailyBudgetMinutes: 60, newToReviewRatio: 1 } }),
-    );
+    const draft = generateDailyPlan(context({ settings: { ...defaultSettings('local'), dailyBudgetMinutes: 60, newToReviewRatio: 1 } }));
     expect(draft.items.some((i) => i.activity === 'fact-vs-inference')).toBe(true);
   });
 
   it('planCompletion 只在必做项缺失时报缺', () => {
-    const draft = generateDailyPlan(context({ reviewStates: [
-      { ...createReviewState('ex-a', NOW), sameDayRelearn: true, sameDayRelearnAfterTs: NOW - 1, dueDateKey: TODAY },
-    ] }));
+    const draft = generateDailyPlan(
+      context({ reviewStates: [{ ...createReviewState('ex-a', NOW), sameDayRelearn: true, sameDayRelearnAfterTs: NOW - 1, dueDateKey: TODAY }] }),
+    );
     const record = planToRecord(draft);
     const required = record.items.filter((i) => i.required).map((i) => i.id);
     const result = planCompletion(record, required);

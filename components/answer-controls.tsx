@@ -57,7 +57,10 @@ export function AnswerControls({ exercise, answer, onChange, disabled, revealed,
   const shuffledKeys = useMemo(
     () =>
       exercise.format === 'single-choice' || exercise.format === 'multi-choice'
-        ? presentationKeyOrder(exercise.options.map((o) => o.key), `${exercise.id}:${seedSuffix}`)
+        ? presentationKeyOrder(
+            exercise.options.map((o) => o.key),
+            `${exercise.id}:${seedSuffix}`,
+          )
         : [],
     [exercise, seedSuffix],
   );
@@ -66,11 +69,7 @@ export function AnswerControls({ exercise, answer, onChange, disabled, revealed,
     const selected = answer.format === 'single-choice' || answer.format === 'multi-choice' ? answer.keys : [];
     const multi = exercise.format === 'multi-choice';
     return (
-      <div
-        role={multi ? 'group' : 'radiogroup'}
-        aria-label={multi ? '选择所有适用项' : '选择一个选项'}
-        className="stack gap-2"
-      >
+      <div role={multi ? 'group' : 'radiogroup'} aria-label={multi ? '选择所有适用项' : '选择一个选项'} className="stack gap-2">
         {shuffledKeys.map((key) => {
           const option = exercise.options.find((o) => o.key === key);
           if (!option) return null;
@@ -109,9 +108,7 @@ export function AnswerControls({ exercise, answer, onChange, disabled, revealed,
               <span className="flex-1">
                 <span>{option.text}</span>
                 {revealed && isCorrectAnswer ? <span className="mt-1 block text-xs font-semibold text-ok">参考答案</span> : null}
-                {revealed && isChecked && !isCorrectAnswer ? (
-                  <span className="mt-1 block text-xs font-semibold text-bad">你选的</span>
-                ) : null}
+                {revealed && isChecked && !isCorrectAnswer ? <span className="mt-1 block text-xs font-semibold text-bad">你选的</span> : null}
               </span>
             </button>
           );
@@ -219,9 +216,7 @@ export function AnswerControls({ exercise, answer, onChange, disabled, revealed,
           placeholder="用你自己的话写出推理过程：你认为的前提、中间步骤、以及结论。"
           onChange={(event) => onChange({ format: 'short-answer', text: event.target.value })}
         />
-        <p className="faint">
-          提交后系统会按题目要点检查你写到了哪些环节。这是自动提示，不是评分，也不代表答案唯一。
-        </p>
+        <p className="faint">提交后系统会按题目要点检查你写到了哪些环节。这是自动提示，不是评分，也不代表答案唯一。</p>
       </div>
     );
   }

@@ -1,13 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  createEmptyJournal,
-  journalCompleteness,
-  journalEvidenceSchema,
-  journalSchema,
-  searchJournals,
-  type Journal,
-} from '@/lib/domain/journal';
+import { createEmptyJournal, journalCompleteness, journalEvidenceSchema, journalSchema, searchJournals, type Journal } from '@/lib/domain/journal';
 
 function filled(overrides: Partial<Journal> = {}): Journal {
   return {
@@ -41,7 +34,9 @@ describe('新建日志', () => {
   it('证据的立场、可靠性都有约束', () => {
     expect(journalEvidenceSchema.safeParse({ id: 'e', journalId: 'j', stance: 'oppose', text: '反例', createdAt: 1 }).success).toBe(true);
     expect(journalEvidenceSchema.safeParse({ id: 'e', journalId: 'j', stance: '因为所以', text: 'x', createdAt: 1 }).success).toBe(false);
-    expect(journalEvidenceSchema.safeParse({ id: 'e', journalId: 'j', stance: 'support', text: 'x', reliability: 9, createdAt: 1 }).success).toBe(false);
+    expect(journalEvidenceSchema.safeParse({ id: 'e', journalId: 'j', stance: 'support', text: 'x', reliability: 9, createdAt: 1 }).success).toBe(
+      false,
+    );
     expect(journalEvidenceSchema.safeParse({ id: 'e', journalId: 'j', stance: 'support', text: '', createdAt: 1 }).success).toBe(false);
   });
 });

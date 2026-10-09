@@ -46,17 +46,17 @@ npm run test:e2e     # 会自己起停生产服务器，注意别占用 3000/312
 
 ## 目录职责
 
-| 位置 | 放什么 |
-| --- | --- |
-| `lib/domain/` | 纯函数领域逻辑与 schema。新增业务规则先想能不能放这里 |
-| `lib/db/` | Dexie 表结构与 `DataStore` 实现。改表要动 `database.ts` 的 version |
-| `lib/services/` | 用例编排（提交作答、生成计划、提醒决策）。这里是唯一同时碰领域层和数据层的地方 |
-| `lib/ai/` | 模型适配层。新增任务看 [docs/AI_INTEGRATION.md](docs/AI_INTEGRATION.md) 第 7 节 |
-| `features/<域>/` | 视图与交互逻辑，按业务域切分，不放数据访问 |
-| `components/` | 跨域复用的通用控件 |
-| `app/` | 路由外壳，尽量薄；页面组件基本只是 `import` 对应 feature |
-| `content/exercises/` | 题库 JSON，一题型一个文件 |
-| `scripts/` | 构建期/开发期脚本，不参与运行时 |
+| 位置                 | 放什么                                                                          |
+| -------------------- | ------------------------------------------------------------------------------- |
+| `lib/domain/`        | 纯函数领域逻辑与 schema。新增业务规则先想能不能放这里                           |
+| `lib/db/`            | Dexie 表结构与 `DataStore` 实现。改表要动 `database.ts` 的 version              |
+| `lib/services/`      | 用例编排（提交作答、生成计划、提醒决策）。这里是唯一同时碰领域层和数据层的地方  |
+| `lib/ai/`            | 模型适配层。新增任务看 [docs/AI_INTEGRATION.md](docs/AI_INTEGRATION.md) 第 7 节 |
+| `features/<域>/`     | 视图与交互逻辑，按业务域切分，不放数据访问                                      |
+| `components/`        | 跨域复用的通用控件                                                              |
+| `app/`               | 路由外壳，尽量薄；页面组件基本只是 `import` 对应 feature                        |
+| `content/exercises/` | 题库 JSON，一题型一个文件                                                       |
+| `scripts/`           | 构建期/开发期脚本，不参与运行时                                                 |
 
 ## 怎么加一道题
 

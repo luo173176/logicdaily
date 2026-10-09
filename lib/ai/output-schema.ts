@@ -81,14 +81,7 @@ export type MaterialAnalysis = z.infer<typeof materialAnalysisSchema>;
 export type PracticeRecommendation = z.infer<typeof practiceRecommendationSchema>;
 export type WeeklySummary = z.infer<typeof weeklySummarySchema>;
 
-export const AI_TASKS = [
-  'analyze-reasoning',
-  'review-journal',
-  'analyze-material',
-  'recommend-practice',
-  'weekly-summary',
-  'ping',
-] as const;
+export const AI_TASKS = ['analyze-reasoning', 'review-journal', 'analyze-material', 'recommend-practice', 'weekly-summary', 'ping'] as const;
 
 export type AiTask = (typeof AI_TASKS)[number];
 

@@ -6,10 +6,7 @@
       "id": "ex-dec-001",
       "version": 1,
       "category": "problem-decomposition",
-      "knowledgePoints": [
-        "subgoal-split",
-        "dependency-order"
-      ],
+      "knowledgePoints": ["subgoal-split", "dependency-order"],
       "difficulty": 2,
       "estimatedSeconds": 90,
       "format": "single-choice",
@@ -39,9 +36,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -72,11 +67,7 @@
         ],
         "takeaway": "拆问题的第一步是确认“这个问题是不是真的存在”，其次才是“它由什么造成”。"
       },
-      "reviewTags": [
-        "问题拆解",
-        "步骤依赖顺序",
-        "指标排查"
-      ],
+      "reviewTags": ["问题拆解", "步骤依赖顺序", "指标排查"],
       "provenance": "原创题，场景取自互联网运营排查指标的常见流程，用于训练先核对口径再拆分支。",
       "status": "validated",
       "grading": {
@@ -88,10 +79,7 @@
       "id": "ex-dec-002",
       "version": 1,
       "category": "problem-decomposition",
-      "knowledgePoints": [
-        "dependency-order",
-        "subgoal-split"
-      ],
+      "knowledgePoints": ["dependency-order", "subgoal-split"],
       "difficulty": 3,
       "estimatedSeconds": 130,
       "format": "ordering",
@@ -119,13 +107,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "s1",
-          "s2",
-          "s3",
-          "s4",
-          "s5"
-        ]
+        "keys": ["s1", "s2", "s3", "s4", "s5"]
       },
       "alternatives": [],
       "explanation": {
@@ -149,11 +131,7 @@
         ],
         "takeaway": "排子目标顺序时，先问“这一步的结论会不会被下一步推翻”，被推翻的那一步就要往前放。"
       },
-      "reviewTags": [
-        "问题拆解",
-        "依赖顺序",
-        "指标下滑排查"
-      ],
+      "reviewTags": ["问题拆解", "依赖顺序", "指标下滑排查"],
       "provenance": "原创题，围绕电商转化率下降的排查流程设计，五个步骤互不重叠。",
       "status": "validated",
       "grading": {
@@ -165,10 +143,7 @@
       "id": "ex-dec-003",
       "version": 1,
       "category": "problem-decomposition",
-      "knowledgePoints": [
-        "subgoal-split",
-        "dependency-order"
-      ],
+      "knowledgePoints": ["subgoal-split", "dependency-order"],
       "difficulty": 3,
       "estimatedSeconds": 120,
       "format": "short-answer",
@@ -178,40 +153,28 @@
           {
             "id": "c1",
             "label": "先核对两边的口径与来源",
-            "keywords": [
-              "口径",
-              "数据来源"
-            ],
+            "keywords": ["口径", "数据来源"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "把“忙”拆成可测量的子指标",
-            "keywords": [
-              "子指标",
-              "拆成"
-            ],
+            "keywords": ["子指标", "拆成"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c3",
             "label": "列出至少两个能同时解释两边的假设",
-            "keywords": [
-              "两个",
-              "假设"
-            ],
+            "keywords": ["两个", "假设"],
             "weight": 2,
             "required": false
           },
           {
             "id": "c4",
             "label": "安排一个能区分假设的最小观察",
-            "keywords": [
-              "区分",
-              "观察"
-            ],
+            "keywords": ["区分", "观察"],
             "weight": 2,
             "required": false
           }
@@ -242,11 +205,7 @@
         ],
         "takeaway": "两组证据打架时，先查它们是不是在同一把尺子上量的。"
       },
-      "reviewTags": [
-        "问题拆解",
-        "事实与感受",
-        "口径核对"
-      ],
+      "reviewTags": ["问题拆解", "事实与感受", "口径核对"],
       "provenance": "原创题，场景取自客服团队周报与团队感受冲突的复盘，要点与范文逐一对应。",
       "status": "validated",
       "grading": {
@@ -258,10 +217,7 @@
       "id": "ex-dec-004",
       "version": 1,
       "category": "problem-decomposition",
-      "knowledgePoints": [
-        "subgoal-split",
-        "variable-control"
-      ],
+      "knowledgePoints": ["subgoal-split", "variable-control"],
       "difficulty": 4,
       "estimatedSeconds": 160,
       "format": "ordering",
@@ -293,14 +249,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "t1",
-          "t2",
-          "t3",
-          "t4",
-          "t5",
-          "t6"
-        ]
+        "keys": ["t1", "t2", "t3", "t4", "t5", "t6"]
       },
       "alternatives": [],
       "explanation": {
@@ -325,11 +274,7 @@
         ],
         "takeaway": "先写成功门槛和终止条件，再开始收集数据；顺序反了，数据会替你说出你想要的话。"
       },
-      "reviewTags": [
-        "问题拆解",
-        "最小验证",
-        "变量控制"
-      ],
+      "reviewTags": ["问题拆解", "最小验证", "变量控制"],
       "provenance": "原创题，面向新功能上线前的低成本验证设计，六个步骤各占一个依赖环节。",
       "status": "validated",
       "grading": {
@@ -341,10 +286,7 @@
       "id": "ex-dec-005",
       "version": 1,
       "category": "problem-decomposition",
-      "knowledgePoints": [
-        "subgoal-split",
-        "dependency-order"
-      ],
+      "knowledgePoints": ["subgoal-split", "dependency-order"],
       "difficulty": 4,
       "estimatedSeconds": 110,
       "format": "single-choice",
@@ -374,9 +316,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -407,11 +347,7 @@
         ],
         "takeaway": "遇到形容词式的问题（太差、太慢、太高），第一步是把它翻译成带比较对象的数字。"
       },
-      "reviewTags": [
-        "问题拆解",
-        "子目标拆解",
-        "留存"
-      ],
+      "reviewTags": ["问题拆解", "子目标拆解", "留存"],
       "provenance": "原创题，针对工作中常见的“形容词式需求”如何拆成可验证子问题。",
       "status": "validated",
       "grading": {
@@ -423,10 +359,7 @@
       "id": "ex-dec-006",
       "version": 1,
       "category": "problem-decomposition",
-      "knowledgePoints": [
-        "subgoal-split",
-        "variable-control"
-      ],
+      "knowledgePoints": ["subgoal-split", "variable-control"],
       "difficulty": 3,
       "estimatedSeconds": 110,
       "format": "multi-choice",
@@ -458,11 +391,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "C",
-          "D"
-        ]
+        "keys": ["A", "C", "D"]
       },
       "alternatives": [],
       "explanation": {
@@ -488,11 +417,7 @@
         ],
         "takeaway": "拆完每一层都问两句：这一步怎么判定？判定不了是不是说明我拆得还不够细？"
       },
-      "reviewTags": [
-        "问题拆解",
-        "子问题判定",
-        "穷尽互斥"
-      ],
+      "reviewTags": ["问题拆解", "子问题判定", "穷尽互斥"],
       "provenance": "原创题，用零售门店客流场景考查拆解合格性的两条判据。",
       "status": "validated",
       "grading": {
@@ -504,11 +429,7 @@
       "id": "ex-dec-007",
       "version": 1,
       "category": "problem-decomposition",
-      "knowledgePoints": [
-        "dependency-order",
-        "variable-control",
-        "subgoal-split"
-      ],
+      "knowledgePoints": ["dependency-order", "variable-control", "subgoal-split"],
       "difficulty": 5,
       "estimatedSeconds": 170,
       "format": "short-answer",
@@ -518,40 +439,28 @@
           {
             "id": "c1",
             "label": "先分别定义三个信号的口径",
-            "keywords": [
-              "口径",
-              "定义"
-            ],
+            "keywords": ["口径", "定义"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "检查三者是否由同一个原因同时驱动",
-            "keywords": [
-              "同一个",
-              "共同原因"
-            ],
+            "keywords": ["同一个", "共同原因"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c3",
             "label": "按能排除多少可能来排序步骤",
-            "keywords": [
-              "排序",
-              "排除"
-            ],
+            "keywords": ["排序", "排除"],
             "weight": 2,
             "required": false
           },
           {
             "id": "c4",
             "label": "点出最易跳过的一步是控制变量",
-            "keywords": [
-              "控制变量",
-              "跳过"
-            ],
+            "keywords": ["控制变量", "跳过"],
             "weight": 2,
             "required": false
           }
@@ -582,11 +491,7 @@
         ],
         "takeaway": "同时有几个异常时，先问它们是不是同一件事的三个侧面，再决定分别排查什么。"
       },
-      "reviewTags": [
-        "问题拆解",
-        "共同原因",
-        "控制变量"
-      ],
+      "reviewTags": ["问题拆解", "共同原因", "控制变量"],
       "provenance": "原创题，用多信号同时恶化的经营场景训练拆解顺序与变量控制意识。",
       "status": "validated",
       "grading": {
@@ -598,11 +503,7 @@
       "id": "ex-dec-008",
       "version": 1,
       "category": "problem-decomposition",
-      "knowledgePoints": [
-        "subgoal-split",
-        "dependency-order",
-        "variable-control"
-      ],
+      "knowledgePoints": ["subgoal-split", "dependency-order", "variable-control"],
       "difficulty": 5,
       "estimatedSeconds": 180,
       "format": "open-response",
@@ -660,12 +561,7 @@
         ],
         "takeaway": "拆解是否合格，取决于每个子问题是否有一句“看到什么就算它成立或不成立”。"
       },
-      "reviewTags": [
-        "问题拆解",
-        "开放题",
-        "变量控制",
-        "依赖顺序"
-      ],
+      "reviewTags": ["问题拆解", "开放题", "变量控制", "依赖顺序"],
       "provenance": "原创题，量表按常见的四种回答层级递进设计，供自评与可选的模型反馈使用。",
       "status": "validated",
       "grading": {

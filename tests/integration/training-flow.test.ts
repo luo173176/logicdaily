@@ -5,11 +5,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { LogicDailyDatabase } from '@/lib/db/database';
 import { LocalStore } from '@/lib/db/store';
 import { defaultSettings } from '@/lib/domain/settings';
-import {
-  ensureTodayPlan,
-  listDueReviews,
-  submitAttempt,
-} from '@/lib/services/training';
+import { ensureTodayPlan, listDueReviews, submitAttempt } from '@/lib/services/training';
 import { allFixtures, singleChoiceFixture } from '../fixtures/exercises';
 
 let counter = 1000;

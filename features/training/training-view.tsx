@@ -5,18 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useApp } from '@/app/providers';
 import { CoachPanel } from '@/features/coach/coach-panel';
 import { AnswerControls, emptyAnswer, isAnswered, type AnswerValue } from '@/components/answer-controls';
-import {
-  Button,
-  Chip,
-  ConfidencePicker,
-  DifficultyPips,
-  EmptyState,
-  Note,
-  ProgressBar,
-  SectionTitle,
-  Skeleton,
-  StatusBadge,
-} from '@/components/ui';
+import { Button, Chip, ConfidencePicker, DifficultyPips, EmptyState, Note, ProgressBar, SectionTitle, Skeleton, StatusBadge } from '@/components/ui';
 import type { Exercise } from '@/lib/domain/exercise-schema';
 import { describeAnswer, type GradeResult } from '@/lib/domain/grading';
 import { CATEGORY_LABELS, LOGIC_ERROR_EXPLANATIONS, LOGIC_ERROR_LABELS, CAUSE_LABELS, type CauseType } from '@/lib/domain/taxonomy';
@@ -140,10 +129,7 @@ export function TrainingView() {
 
   const completed = useMemo(() => new Set(progress?.completedItemIds ?? []), [progress]);
   const skipped = useMemo(() => new Set(progress?.skippedItemIds ?? []), [progress]);
-  const activeItem = useMemo(
-    () => queue?.find((item) => !completed.has(item.id) && !skipped.has(item.id)) ?? null,
-    [queue, completed, skipped],
-  );
+  const activeItem = useMemo(() => queue?.find((item) => !completed.has(item.id) && !skipped.has(item.id)) ?? null, [queue, completed, skipped]);
 
   const loadExercise = useCallback(
     async (id: string) => {
@@ -186,7 +172,11 @@ export function TrainingView() {
   }
 
   if (error) {
-    return <Note tone="bad" title="无法开始训练">{error}</Note>;
+    return (
+      <Note tone="bad" title="无法开始训练">
+        {error}
+      </Note>
+    );
   }
 
   if (!plan) return <Skeleton lines={5} />;
@@ -224,9 +214,7 @@ export function TrainingView() {
             </div>
           }
         >
-          <p>
-            计划里剩下的内容会留在复习队列中。{relativeDayLabel(addDays(dateKey, 1), dateKey)}会根据今天的表现重新安排。
-          </p>
+          <p>计划里剩下的内容会留在复习队列中。{relativeDayLabel(addDays(dateKey, 1), dateKey)}会根据今天的表现重新安排。</p>
         </EmptyState>
         <PlanRationale plan={plan} />
       </div>
@@ -278,22 +266,15 @@ export function TrainingView() {
               <DifficultyPips level={exercise.difficulty} />
             </div>
             <p className="label">
-              第 {queueItems.filter((i) => i.kind !== 'journal').indexOf(activeItem) + 1} 题 · 预计 {Math.round(exercise.estimatedSeconds / 15) * 15} 秒 ·{' '}
-              {activeItem.kind === 'review' || activeItem.kind === 'same-day-relearn' ? '复习' : '新题'}
+              第 {queueItems.filter((i) => i.kind !== 'journal').indexOf(activeItem) + 1} 题 · 预计 {Math.round(exercise.estimatedSeconds / 15) * 15}{' '}
+              秒 · {activeItem.kind === 'review' || activeItem.kind === 'same-day-relearn' ? '复习' : '新题'}
             </p>
             {exercise.context ? <p className="inset text-sm">{exercise.context}</p> : null}
             <h1 className="text-lg">{exercise.stem}</h1>
             {activeItem.reason ? <p className="faint">{activeItem.reason}</p> : null}
           </header>
 
-          <AnswerControls
-            exercise={exercise}
-            answer={answer}
-            onChange={setAnswer}
-            disabled={!!result}
-            revealed={!!result}
-            seedSuffix={dateKey}
-          />
+          <AnswerControls exercise={exercise} answer={answer} onChange={setAnswer} disabled={!!result} revealed={!!result} seedSuffix={dateKey} />
 
           {!result ? (
             <div className="stack gap-3">
@@ -381,11 +362,7 @@ export function TrainingView() {
                 });
                 if (revised) {
                   setResult({ ...result, cause: revised.attempt.cause, errorTypes: revised.attempt.errorTypes });
-                  notify(
-                    next === 'ambiguous'
-                      ? '已标记题目歧义，并加入题库复核清单。'
-                      : `归因已更新为“${CAUSE_LABELS[revised.attempt.cause]}”。`,
-                  );
+                  notify(next === 'ambiguous' ? '已标记题目歧义，并加入题库复核清单。' : `归因已更新为“${CAUSE_LABELS[revised.attempt.cause]}”。`);
                 }
               }}
             />
@@ -434,22 +411,12 @@ function PlanHeader({
         <span className="chip">{plan.budgetMinutes} 分钟</span>
       </div>
       <ProgressBar value={completed} total={total} label={reviewOnly ? '复习进度' : '完成项目'} />
-      <p className="faint">
-        已用时 {Math.round((progress?.totalSeconds ?? 0) / 60)} 分钟。进度只记录你真正做过的事，不代表能力变化。
-      </p>
+      <p className="faint">已用时 {Math.round((progress?.totalSeconds ?? 0) / 60)} 分钟。进度只记录你真正做过的事，不代表能力变化。</p>
     </header>
   );
 }
 
-function RemainingItems({
-  items,
-  completed,
-  skipped,
-}: {
-  items: QueueItem[];
-  completed: Set<string>;
-  skipped: Set<string>;
-}) {
+function RemainingItems({ items, completed, skipped }: { items: QueueItem[]; completed: Set<string>; skipped: Set<string> }) {
   const remaining = items.filter((i) => !completed.has(i.id) && !skipped.has(i.id));
   if (remaining.length <= 1) return null;
   return (
@@ -529,7 +496,9 @@ function ResultPanel({
           </div>
           <p className="faint">
             当前归因：{CAUSE_LABELS[result.cause]}
-            {result.errorTypes.length > 0 ? ` · 涉及 ${result.errorTypes.map((t) => LOGIC_ERROR_LABELS[t as keyof typeof LOGIC_ERROR_LABELS]).join('、')}` : ''}
+            {result.errorTypes.length > 0
+              ? ` · 涉及 ${result.errorTypes.map((t) => LOGIC_ERROR_LABELS[t as keyof typeof LOGIC_ERROR_LABELS]).join('、')}`
+              : ''}
           </p>
           {result.repeated ? (
             <Note tone="warn" title="同类错误反复出现">

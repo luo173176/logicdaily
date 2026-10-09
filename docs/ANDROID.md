@@ -15,15 +15,15 @@
 
 Chrome 判定「可安装」需要的东西，逐条对照本仓库：
 
-| 条件 | 本仓库状态 | 依据（实测文件） |
-| --- | --- | --- |
-| HTTPS（或 localhost） | 由你的部署提供 | `components/service-worker-registration.tsx:13` 只在 `https:` 或 `localhost`/`127.0.0.1` 下注册 SW |
-| `start_url` 可访问、在 `scope` 内 | `id`/`start_url` = `/`，`scope` = `/` | `app/manifest.ts` |
-| Web App Manifest 被链接 | `metadata.manifest = '/manifest.webmanifest'`，由 `app/manifest.ts`（`MetadataRoute.Manifest`）动态生成；实测该 URL 返回 `content-type: application/manifest+json` | `app/layout.tsx:19` |
-| 图标 ≥192px 与 ≥512px，且 maskable | `/icons/icon-192.png`、`/icons/icon-512.png`、`/icons/icon-maskable-512.png`（purpose 分别为 `any`/`any`/`maskable`）；4 个 PNG 文件实测存在于 `public/icons/` | `app/manifest.ts`、`public/icons/` |
-| 已注册且能工作的 Service Worker | `public/sw.js`，`scope: '/'`，`updateViaCache: 'none'` | `components/service-worker-registration.tsx:54` |
-| 名称/显示模式 | `name`、`short_name` = `LogicDaily`，`display: standalone`，`display_override: ['standalone','minimal-ui']`，`orientation: portrait-primary`，`background_color` `#f6f6f4`，`theme_color` `#2f5d88`，`lang: zh-CN` | `app/manifest.ts` |
-| 桌面长按菜单快捷方式 | 3 条：`/train`「开始今天的训练」、`/journal/new`「写思考日志」、`/review`「复习错题」 | `app/manifest.ts:25-29` |
+| 条件                               | 本仓库状态                                                                                                                                                                                                         | 依据（实测文件）                                                                                   |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| HTTPS（或 localhost）              | 由你的部署提供                                                                                                                                                                                                     | `components/service-worker-registration.tsx:13` 只在 `https:` 或 `localhost`/`127.0.0.1` 下注册 SW |
+| `start_url` 可访问、在 `scope` 内  | `id`/`start_url` = `/`，`scope` = `/`                                                                                                                                                                              | `app/manifest.ts`                                                                                  |
+| Web App Manifest 被链接            | `metadata.manifest = '/manifest.webmanifest'`，由 `app/manifest.ts`（`MetadataRoute.Manifest`）动态生成；实测该 URL 返回 `content-type: application/manifest+json`                                                 | `app/layout.tsx:19`                                                                                |
+| 图标 ≥192px 与 ≥512px，且 maskable | `/icons/icon-192.png`、`/icons/icon-512.png`、`/icons/icon-maskable-512.png`（purpose 分别为 `any`/`any`/`maskable`）；4 个 PNG 文件实测存在于 `public/icons/`                                                     | `app/manifest.ts`、`public/icons/`                                                                 |
+| 已注册且能工作的 Service Worker    | `public/sw.js`，`scope: '/'`，`updateViaCache: 'none'`                                                                                                                                                             | `components/service-worker-registration.tsx:54`                                                    |
+| 名称/显示模式                      | `name`、`short_name` = `LogicDaily`，`display: standalone`，`display_override: ['standalone','minimal-ui']`，`orientation: portrait-primary`，`background_color` `#f6f6f4`，`theme_color` `#2f5d88`，`lang: zh-CN` | `app/manifest.ts`                                                                                  |
+| 桌面长按菜单快捷方式               | 3 条：`/train`「开始今天的训练」、`/journal/new`「写思考日志」、`/review`「复习错题」                                                                                                                              | `app/manifest.ts:25-29`                                                                            |
 
 `/manifest.webmanifest` 与 `/sw.js` 是否 200，可以用 `docs/DEPLOYMENT.md` 第 9.3 节的 curl 先确认。
 
@@ -45,17 +45,17 @@ Chrome 判定「可安装」需要的东西，逐条对照本仓库：
 
 数据在 IndexedDB，所以「离线可用」靠的是**外壳 + 分块缓存**，而不是缓存接口。`public/sw.js`（实测全文 96 行）的真实策略，按请求类别逐条：
 
-| 请求类别 | 策略（代码依据） | 实际效果 |
-| --- | --- | --- |
-| 安装期预缓存 | `SHELL_URLS = ['/', '/offline', '/icons/icon-192.png', '/icons/icon-512.png']`，`install` 里 `cache.addAll`（`sw.js:10,13-20`） | 首页外壳与离线页保证第一次断网就有兜底 |
-| `/_next/static/`、`/icons/`、`/fonts/` | 缓存优先，命中就直接返回；未命中才走网络并把副本写进缓存（`sw.js:11,45-58`） | 已发布过的哈希 JS/CSS chunk 长期离线可用 |
+| 请求类别                                                     | 策略（代码依据）                                                                                                                               | 实际效果                                                                                                  |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| 安装期预缓存                                                 | `SHELL_URLS = ['/', '/offline', '/icons/icon-192.png', '/icons/icon-512.png']`，`install` 里 `cache.addAll`（`sw.js:10,13-20`）                | 首页外壳与离线页保证第一次断网就有兜底                                                                    |
+| `/_next/static/`、`/icons/`、`/fonts/`                       | 缓存优先，命中就直接返回；未命中才走网络并把副本写进缓存（`sw.js:11,45-58`）                                                                   | 已发布过的哈希 JS/CSS chunk 长期离线可用                                                                  |
 | 导航请求（`mode === 'navigate'` 或 `Accept` 含 `text/html`） | **网络优先**；成功且 `response.ok` 就更新缓存；失败则依次回落：本次 URL 的缓存 → `/` 的缓存 → `/offline` → `Response.error()`（`sw.js:60-78`） | 断网时从桌面图标进入任意页面，通常仍拿到已缓存的那一页；没缓存过就落到首页；连首页都没有就落到 `/offline` |
-| 其他同源 GET（含按路由拆分的 JS/CSS 分块） | 网络优先，失败回落缓存（`sw.js:80-91`） | 第一次联网访问过的路由，之后离线可打开 |
-| **`/api/*`** | `if (url.pathname.startsWith('/api/')) return;`（`sw.js:42-43`）**直接放行网络，永不缓存** | AI 调用不会被重复计费，配置状态实时 |
-| 非 GET | 直接不拦截（`sw.js:37`） | 提交类请求不被 SW 干预 |
-| 跨源请求 | `url.origin !== self.location.origin` 时不拦截（`sw.js:40`） | 若你自己放了外部字体/CDN，离线时它们会失败 |
-| 缓存版本 | 固定名 `logicdaily-v1`；`activate` 删除所有不同名的缓存（`sw.js:9,22-29`） | 改代码里的缓存名即可强制清干净旧缓存 |
-| 非安全上下文 | 不注册 SW（见 1.1） | 用 `http://` 内网 IP 访问时，**离线能力为零** |
+| 其他同源 GET（含按路由拆分的 JS/CSS 分块）                   | 网络优先，失败回落缓存（`sw.js:80-91`）                                                                                                        | 第一次联网访问过的路由，之后离线可打开                                                                    |
+| **`/api/*`**                                                 | `if (url.pathname.startsWith('/api/')) return;`（`sw.js:42-43`）**直接放行网络，永不缓存**                                                     | AI 调用不会被重复计费，配置状态实时                                                                       |
+| 非 GET                                                       | 直接不拦截（`sw.js:37`）                                                                                                                       | 提交类请求不被 SW 干预                                                                                    |
+| 跨源请求                                                     | `url.origin !== self.location.origin` 时不拦截（`sw.js:40`）                                                                                   | 若你自己放了外部字体/CDN，离线时它们会失败                                                                |
+| 缓存版本                                                     | 固定名 `logicdaily-v1`；`activate` 删除所有不同名的缓存（`sw.js:9,22-29`）                                                                     | 改代码里的缓存名即可强制清干净旧缓存                                                                      |
+| 非安全上下文                                                 | 不注册 SW（见 1.1）                                                                                                                            | 用 `http://` 内网 IP 访问时，**离线能力为零**                                                             |
 
 离线**可用**的功能（因为逻辑全在客户端）：今日计划、答题与判分、错因归类、解析、思考日志的创建/编辑/软删除、复习队列与 LD-SRS 排期、训练报告、主题切换、数据导出/导入。首页的 `/offline` 页面本身也这样告诉用户（实测文案：「打开已缓存的页面、查看今日计划与解析 / 作答、写思考日志（数据保存在本机 IndexedDB）/ 复习队列与统计（全部计算在本地）」）。
 
@@ -80,7 +80,7 @@ $ curl -s http://127.0.0.1:3123/ | grep -o '<meta name="viewport"[^>]*>'
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"/>
 ```
 
-  `viewport-fit=cover` 已在 `app/layout.tsx` 的 `viewport` 导出里设置（Next 16 的 `Viewport` 类型支持它：`node_modules/next/dist/lib/metadata/types/extra-types.d.ts:52`）。
+`viewport-fit=cover` 已在 `app/layout.tsx` 的 `viewport` 导出里设置（Next 16 的 `Viewport` 类型支持它：`node_modules/next/dist/lib/metadata/types/extra-types.d.ts:52`）。
 
 - 历史背景（值得知道，因为它曾经是个真 bug）：这一项**曾经缺失**，导致 `app/globals.css` 里给 `html` 加的 `padding: env(safe-area-inset-top) … env(safe-area-inset-left)` 与 `components/nav.tsx` 的 `paddingBottom: 'env(safe-area-inset-bottom)'` 在实践中全部解析为 0——安全区代码写了但没生效。加上 `viewportFit: 'cover'` 之后它们才真正起作用。
 - 除安全区变量之外，仍有**固定尺寸补偿**在兜底（即使某个浏览器不支持 `env()` 也不会挡住内容）：

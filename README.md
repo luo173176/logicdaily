@@ -10,21 +10,21 @@ LogicDaily 是一个**离线优先、移动端优先**的逻辑思维训练 PWA�
 
 **仓库状态**：功能可用、测试通过、文档齐全，但**尚未部署过**，也**没有 APK**。详见 [已知限制](#已知限制)。
 
-| | |
-| --- | --- |
+|        |                                                                                                               |
+| ------ | ------------------------------------------------------------------------------------------------------------- |
 | 技术栈 | Next.js 16 (App Router / Turbopack) · React 19 · TypeScript strict · Tailwind CSS 4 · Dexie (IndexedDB) · Zod |
-| 题库 | 14 个题型 × 8 题 = 112 道原创中文题，全部带解析、推理步骤、典型错误与知识点标签 |
-| 测试 | 211 个单元/集成测试 + 17 个移动端视口端到端测试（Pixel 7 模拟），CI 见 `.github/workflows/ci.yml` |
-| 许可 | AGPL-3.0-or-later（题库内容同为 AGPL） |
+| 题库   | 14 个题型 × 8 题 = 112 道原创中文题，全部带解析、推理步骤、典型错误与知识点标签                               |
+| 测试   | 211 个单元/集成测试 + 17 个移动端视口端到端测试（Pixel 7 模拟），CI 见 `.github/workflows/ci.yml`             |
+| 许可   | AGPL-3.0-or-later（题库内容同为 AGPL）                                                                        |
 
 ## 界面
 
-| 首页：今天从一道题开始 | 答题与错因归类 | 复习队列 |
-| --- | --- | --- |
+| 首页：今天从一道题开始           | 答题与错因归类                               | 复习队列                           |
+| -------------------------------- | -------------------------------------------- | ---------------------------------- |
 | ![首页](docs/images/01-home.png) | ![答题结果](docs/images/04-train-result.png) | ![复习](docs/images/05-review.png) |
 
-| 思考日志（八步向导） | 训练报告 | 深色模式 |
-| --- | --- | --- |
+| 思考日志（八步向导）                           | 训练报告                              | 深色模式                              |
+| ---------------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![思考日志](docs/images/06-journal-wizard.png) | ![训练报告](docs/images/08-stats.png) | ![深色](docs/images/10-home-dark.png) |
 
 截图由 `npx tsx scripts/capture-screenshots.mts` 对本仓库的生产构建实际截取（412×915 视口）。
@@ -141,16 +141,16 @@ tests/
 
 ## 命令
 
-| 命令 | 作用 |
-| --- | --- |
-| `npm run dev` | 开发服务器（Turbopack） |
-| `npm run build` / `npm start` | 生产构建与启动 |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run lint` | ESLint（flat config，`core-web-vitals` + `typescript` 预设） |
-| `npm run test` | Vitest 单元 + 集成（211 个用例，用 fake-indexeddb） |
-| `npm run test:e2e` | Playwright 端到端（17 个用例，自动起停生产服务器） |
-| `npm run content:validate` | 题库内容校验（id 规范、枚举、答案与解析自洽、重复题干检测） |
-| `npm run format` | Prettier 写入格式化 |
+| 命令                          | 作用                                                         |
+| ----------------------------- | ------------------------------------------------------------ |
+| `npm run dev`                 | 开发服务器（Turbopack）                                      |
+| `npm run build` / `npm start` | 生产构建与启动                                               |
+| `npm run typecheck`           | `tsc --noEmit`                                               |
+| `npm run lint`                | ESLint（flat config，`core-web-vitals` + `typescript` 预设） |
+| `npm run test`                | Vitest 单元 + 集成（211 个用例，用 fake-indexeddb）          |
+| `npm run test:e2e`            | Playwright 端到端（17 个用例，自动起停生产服务器）           |
+| `npm run content:validate`    | 题库内容校验（id 规范、枚举、答案与解析自洽、重复题干检测）  |
+| `npm run format`              | Prettier 写入格式化                                          |
 
 CI（`.github/workflows/ci.yml`）依次跑：`typecheck` → `eslint` → `content:validate` → `test` → `build`，通过后再跑 `test:e2e`。
 

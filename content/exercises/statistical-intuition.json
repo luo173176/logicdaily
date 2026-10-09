@@ -6,10 +6,7 @@
       "id": "ex-sta-001",
       "version": 1,
       "category": "statistical-intuition",
-      "knowledgePoints": [
-        "base-rate",
-        "conditional-probability"
-      ],
+      "knowledgePoints": ["base-rate", "conditional-probability"],
       "difficulty": 4,
       "estimatedSeconds": 120,
       "format": "single-choice",
@@ -39,9 +36,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -73,11 +68,7 @@
         ],
         "takeaway": "看到阳性别急，先算“真阳性有几人、假阳性有几人”，基础概率决定分母。"
       },
-      "reviewTags": [
-        "基础概率",
-        "条件概率",
-        "筛查检测"
-      ],
+      "reviewTags": ["基础概率", "条件概率", "筛查检测"],
       "provenance": "原创题，参数为编写者设定（患病率 1%、检出率 99%、误报率 5%），结论 16.7% 由 99÷594 直接算得。",
       "status": "validated",
       "grading": {
@@ -89,9 +80,7 @@
       "id": "ex-sta-002",
       "version": 1,
       "category": "statistical-intuition",
-      "knowledgePoints": [
-        "sample-size"
-      ],
+      "knowledgePoints": ["sample-size"],
       "difficulty": 2,
       "estimatedSeconds": 55,
       "format": "single-choice",
@@ -121,9 +110,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -154,11 +141,7 @@
         ],
         "takeaway": "小样本的漂亮数字先打折：条数越少，越可能只是运气。"
       },
-      "reviewTags": [
-        "样本量",
-        "极端比例",
-        "消费评价"
-      ],
+      "reviewTags": ["样本量", "极端比例", "消费评价"],
       "provenance": "原创题，两个比例数值由编写者按二项分布独立算得（0.8 的 8 次方约 16.8%，8 条中不超 4 条的概率约 5.6%）。",
       "status": "validated",
       "grading": {
@@ -170,9 +153,7 @@
       "id": "ex-sta-003",
       "version": 1,
       "category": "statistical-intuition",
-      "knowledgePoints": [
-        "average-vs-distribution"
-      ],
+      "knowledgePoints": ["average-vs-distribution"],
       "difficulty": 3,
       "estimatedSeconds": 75,
       "format": "single-choice",
@@ -202,9 +183,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -234,11 +213,7 @@
         ],
         "takeaway": "只给平均数时，追问中位数和有没有极端值，往往比平均值更有代表性。"
       },
-      "reviewTags": [
-        "平均数",
-        "中位数",
-        "分布形态"
-      ],
+      "reviewTags": ["平均数", "中位数", "分布形态"],
       "provenance": "原创题，10 个数据由编写者构造为满足均值 28、中位数 18 的一组右偏数据，各项计算已在解析中列出。",
       "status": "validated",
       "grading": {
@@ -250,10 +225,7 @@
       "id": "ex-sta-004",
       "version": 1,
       "category": "statistical-intuition",
-      "knowledgePoints": [
-        "survivorship-bias",
-        "average-vs-distribution"
-      ],
+      "knowledgePoints": ["survivorship-bias", "average-vs-distribution"],
       "difficulty": 4,
       "estimatedSeconds": 110,
       "format": "multi-choice",
@@ -285,11 +257,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "B",
-          "E"
-        ]
+        "keys": ["A", "B", "E"]
       },
       "alternatives": [],
       "explanation": {
@@ -315,11 +283,7 @@
         ],
         "takeaway": "看到“存续产品的平均成绩”，先问被删掉的那部分去哪了。"
       },
-      "reviewTags": [
-        "幸存者偏差",
-        "平均数",
-        "公司报表"
-      ],
+      "reviewTags": ["幸存者偏差", "平均数", "公司报表"],
       "provenance": "原创题，基金只数由编写者设定为 20、8、12 的自洽关系，用于训练识别按结果筛选样本的宣传话术。",
       "status": "validated",
       "grading": {
@@ -331,10 +295,7 @@
       "id": "ex-sta-005",
       "version": 1,
       "category": "statistical-intuition",
-      "knowledgePoints": [
-        "sample-size",
-        "confounder"
-      ],
+      "knowledgePoints": ["sample-size", "confounder"],
       "difficulty": 3,
       "estimatedSeconds": 60,
       "format": "true-false",
@@ -367,11 +328,7 @@
         ],
         "takeaway": "比较两个百分比之前，先把它们背后的例数和分母差异摆出来。"
       },
-      "reviewTags": [
-        "样本量",
-        "比率与例数",
-        "混淆变量"
-      ],
+      "reviewTags": ["样本量", "比率与例数", "混淆变量"],
       "provenance": "原创题，例数与概率由编写者核算（1,200×2%=24 例、40×5%=2 例，真实率 2% 时 40 台不少于 2 例的概率约 19%）。",
       "status": "validated",
       "grading": {
@@ -383,11 +340,7 @@
       "id": "ex-sta-006",
       "version": 1,
       "category": "statistical-intuition",
-      "knowledgePoints": [
-        "survivorship-bias",
-        "average-vs-distribution",
-        "sample-size"
-      ],
+      "knowledgePoints": ["survivorship-bias", "average-vs-distribution", "sample-size"],
       "difficulty": 5,
       "estimatedSeconds": 160,
       "format": "short-answer",
@@ -397,30 +350,21 @@
           {
             "id": "c1",
             "label": "指出两个平均数的人群口径不同",
-            "keywords": [
-              "口径",
-              "人群"
-            ],
+            "keywords": ["口径", "人群"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "指出平均数掩盖了分布",
-            "keywords": [
-              "分布",
-              "平均数"
-            ],
+            "keywords": ["分布", "平均数"],
             "weight": 2,
             "required": false
           },
           {
             "id": "c3",
             "label": "提出同口径分组对照",
-            "keywords": [
-              "对照",
-              "自我选择"
-            ],
+            "keywords": ["对照", "自我选择"],
             "weight": 2,
             "required": false
           }
@@ -455,11 +399,7 @@
         ],
         "takeaway": "规则改动前后对比任何平均值，都要先确认统计的是同一群人。"
       },
-      "reviewTags": [
-        "幸存者偏差",
-        "口径变化",
-        "消费评价"
-      ],
+      "reviewTags": ["幸存者偏差", "口径变化", "消费评价"],
       "provenance": "原创题，场景取自应用商店评价规则改版，120÷2,000=6% 与星数总量估算均由编写者核算。",
       "status": "validated",
       "grading": {
@@ -471,11 +411,7 @@
       "id": "ex-sta-007",
       "version": 1,
       "category": "statistical-intuition",
-      "knowledgePoints": [
-        "average-vs-distribution",
-        "survivorship-bias",
-        "sample-size"
-      ],
+      "knowledgePoints": ["average-vs-distribution", "survivorship-bias", "sample-size"],
       "difficulty": 3,
       "estimatedSeconds": 100,
       "format": "ordering",
@@ -503,13 +439,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "w1",
-          "w2",
-          "w3",
-          "w4",
-          "w5"
-        ]
+        "keys": ["w1", "w2", "w3", "w4", "w5"]
       },
       "alternatives": [],
       "explanation": {
@@ -533,11 +463,7 @@
         ],
         "takeaway": "核查一个宣传用的平均数：先问口径，再问谁被统计进去，最后问分布长什么样。"
       },
-      "reviewTags": [
-        "平均数与分布",
-        "幸存者偏差",
-        "招聘数据"
-      ],
+      "reviewTags": ["平均数与分布", "幸存者偏差", "招聘数据"],
       "provenance": "原创题，场景取自招聘页面的薪资宣传，用于训练把统计口径核查排成有依赖顺序的步骤。",
       "status": "validated",
       "grading": {
@@ -549,11 +475,7 @@
       "id": "ex-sta-008",
       "version": 1,
       "category": "statistical-intuition",
-      "knowledgePoints": [
-        "base-rate",
-        "survivorship-bias",
-        "conditional-probability"
-      ],
+      "knowledgePoints": ["base-rate", "survivorship-bias", "conditional-probability"],
       "difficulty": 5,
       "estimatedSeconds": 180,
       "format": "open-response",
@@ -615,12 +537,7 @@
         ],
         "takeaway": "两个百分比比较前，先把各自的分子、分母和时间窗口写在纸上。"
       },
-      "reviewTags": [
-        "基础概率",
-        "条件概率",
-        "教育产品宣传",
-        "开放题"
-      ],
+      "reviewTags": ["基础概率", "条件概率", "教育产品宣传", "开放题"],
       "provenance": "原创题，场景取自求职训练营的宣传话术，45÷50=90% 与 50−45=5 由编写者核对，量表按回答层级设计供自评使用。",
       "status": "validated",
       "grading": {

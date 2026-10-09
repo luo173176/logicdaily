@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-import {
-  EXERCISE_CATEGORIES,
-  KNOWLEDGE_POINT_IDS,
-  LOGIC_ERROR_TYPES,
-} from '@/lib/domain/taxonomy';
+import { EXERCISE_CATEGORIES, KNOWLEDGE_POINT_IDS, LOGIC_ERROR_TYPES } from '@/lib/domain/taxonomy';
 
 const idSchema = z
   .string()
@@ -57,7 +53,10 @@ const baseFields = {
   id: idSchema,
   version: z.number().int().min(1),
   category: z.enum(EXERCISE_CATEGORIES),
-  knowledgePoints: z.array(z.enum(KNOWLEDGE_POINT_IDS as [string, ...string[]])).min(1).max(4),
+  knowledgePoints: z
+    .array(z.enum(KNOWLEDGE_POINT_IDS as [string, ...string[]]))
+    .min(1)
+    .max(4),
   difficulty: z.number().int().min(1).max(5),
   estimatedSeconds: z.number().int().min(20).max(600),
   context: z.string().min(4).optional(),
@@ -73,16 +72,18 @@ const baseFields = {
 const singleChoice = z.object({
   ...baseFields,
   format: z.literal('single-choice'),
-  options: z.array(optionSchema).min(2).max(6).superRefine((opts, ctx) => {
-    const keys = opts.map((o) => o.key);
-    if (new Set(keys).size !== keys.length) {
-      ctx.addIssue({ code: 'custom', message: '选项 key 重复' });
-    }
-  }),
+  options: z
+    .array(optionSchema)
+    .min(2)
+    .max(6)
+    .superRefine((opts, ctx) => {
+      const keys = opts.map((o) => o.key);
+      if (new Set(keys).size !== keys.length) {
+        ctx.addIssue({ code: 'custom', message: '选项 key 重复' });
+      }
+    }),
   answer: z.object({ keys: z.array(z.string()).length(1) }),
-  alternatives: z
-    .array(z.object({ keys: z.array(z.string()).min(1), note: z.string().min(4) }))
-    .default([]),
+  alternatives: z.array(z.object({ keys: z.array(z.string()).min(1), note: z.string().min(4) })).default([]),
 });
 
 const multiChoice = z.object({
@@ -139,19 +140,15 @@ const ordering = z.object({
   ...baseFields,
   format: z.literal('ordering'),
   /** items 按正确顺序给出，界面负责打乱。 */
-  items: z.array(z.object({ key: z.string().min(1), text: nonEmpty })).min(3).max(6),
+  items: z
+    .array(z.object({ key: z.string().min(1), text: nonEmpty }))
+    .min(3)
+    .max(6),
   answer: z.object({ keys: z.array(z.string()).min(3) }),
   alternatives: z.array(z.object({ keys: z.array(z.string()), note: z.string() })).default([]),
 });
 
-export const exerciseSchema = z.discriminatedUnion('format', [
-  singleChoice,
-  multiChoice,
-  trueFalse,
-  shortAnswer,
-  openResponse,
-  ordering,
-]);
+export const exerciseSchema = z.discriminatedUnion('format', [singleChoice, multiChoice, trueFalse, shortAnswer, openResponse, ordering]);
 
 export type ExerciseOption = z.infer<typeof optionSchema>;
 export type Checkpoint = z.infer<typeof checkpointSchema>;

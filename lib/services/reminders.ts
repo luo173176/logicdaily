@@ -34,17 +34,15 @@ export function isInQuietHours(atMinutes: number, settings: ReminderState): bool
  * PWA 无法保证后台准时唤醒（浏览器与系统都会限制），因此这里只做“应用处于打开状态时的当日提醒”。
  * 真正的可靠后台提醒需要原生包装层，见 docs/ANDROID.md 的说明。
  */
-export function decideReminder(
-  options: {
-    settings: AppSettings;
-    nowMinutes: number;
-    weekday: number;
-    dateKey: DateKey;
-    lastNotifiedDateKey: DateKey | null;
-    pendingRequiredItems: number;
-    overdueDays: number;
-  },
-): ReminderDecision {
+export function decideReminder(options: {
+  settings: AppSettings;
+  nowMinutes: number;
+  weekday: number;
+  dateKey: DateKey;
+  lastNotifiedDateKey: DateKey | null;
+  pendingRequiredItems: number;
+  overdueDays: number;
+}): ReminderDecision {
   const { settings, nowMinutes, weekday, dateKey, lastNotifiedDateKey, pendingRequiredItems, overdueDays } = options;
   const state: ReminderState = { ...settings.reminders, enabled: settings.reminders.enabled && !settings.reminders.paused };
 

@@ -90,10 +90,8 @@ export const LOGIC_ERROR_LABELS: Record<LogicErrorType, string> = {
 };
 
 export const LOGIC_ERROR_EXPLANATIONS: Record<LogicErrorType, string> = {
-  'affirming-consequent':
-    '由“若 P 则 Q”和 Q 成立，推出 P 成立。例：如果下雨地会湿；地湿了，所以下过雨。（可能是洒水车）',
-  'denying-antecedent':
-    '由“若 P 则 Q”和 P 不成立，推出 Q 不成立。例：如果努力就会进步；他没努力，所以他不会进步。',
+  'affirming-consequent': '由“若 P 则 Q”和 Q 成立，推出 P 成立。例：如果下雨地会湿；地湿了，所以下过雨。（可能是洒水车）',
+  'denying-antecedent': '由“若 P 则 Q”和 P 不成立，推出 Q 不成立。例：如果努力就会进步；他没努力，所以他不会进步。',
   'hasty-generalization': '由少量或不具代表性的样本得出普遍结论。',
   'correlation-as-causation': '因为两者同时变化或同时出现，就断定存在因果关系。',
   'ignoring-counterexample': '全称结论已经存在可用反例，仍把它当作成立。',
@@ -109,15 +107,7 @@ export const LOGIC_ERROR_EXPLANATIONS: Record<LogicErrorType, string> = {
   'missing-reasoning-step': '结论与前提之间存在未说明的中间环节。',
 };
 
-export const CAUSE_TYPES = [
-  'none',
-  'logic-skill',
-  'knowledge-gap',
-  'carelessness',
-  'misread-question',
-  'ambiguous-question',
-  'unknown',
-] as const;
+export const CAUSE_TYPES = ['none', 'logic-skill', 'knowledge-gap', 'carelessness', 'misread-question', 'ambiguous-question', 'unknown'] as const;
 
 export type CauseType = (typeof CAUSE_TYPES)[number];
 
@@ -196,9 +186,7 @@ export const KNOWLEDGE_POINTS: ReadonlyArray<{
 
 export const KNOWLEDGE_POINT_IDS = KNOWLEDGE_POINTS.map((k) => k.id);
 
-export const KNOWLEDGE_POINT_LABELS: Record<string, string> = Object.fromEntries(
-  KNOWLEDGE_POINTS.map((k) => [k.id, k.label]),
-);
+export const KNOWLEDGE_POINT_LABELS: Record<string, string> = Object.fromEntries(KNOWLEDGE_POINTS.map((k) => [k.id, k.label]));
 
 export const JOURNAL_STEPS = [
   {

@@ -40,25 +40,14 @@ const NOT_APPLICABLE: MistakeClassification = {
  * 这样做的目的是避免把“答错”一律归为逻辑能力问题：粗心、术语不熟、读题偏差都会给出不同结论。
  */
 export function classifyMistake(input: MistakeInput): MistakeClassification {
-  const {
-    exercise,
-    grade,
-    outcome,
-    timeSpentSeconds,
-    confidence,
-    selfReport = null,
-    priorErrorCounts = {},
-  } = input;
+  const { exercise, grade, outcome, timeSpentSeconds, confidence, selfReport = null, priorErrorCounts = {} } = input;
 
   if (outcome === 'correct' || outcome === 'self-assessed') {
     return NOT_APPLICABLE;
   }
 
   const errorTypes = dedupe(grade.errorTypes);
-  const repeatedPattern =
-    errorTypes.length > 0 &&
-    errorTypes.some((t) => (priorErrorCounts[t] ?? 0) >= 2) &&
-    outcome !== 'partial';
+  const repeatedPattern = errorTypes.length > 0 && errorTypes.some((t) => (priorErrorCounts[t] ?? 0) >= 2) && outcome !== 'partial';
 
   if (selfReport === 'ambiguous') {
     return {
@@ -92,8 +81,7 @@ export function classifyMistake(input: MistakeInput): MistakeClassification {
       cause: 'knowledge-gap',
       errorTypes,
       repeatedPattern: false,
-      rationale:
-        '你标记了不熟悉的术语或概念。这属于知识缺口，建议先补充相关说明再练习同类题目。',
+      rationale: '你标记了不熟悉的术语或概念。这属于知识缺口，建议先补充相关说明再练习同类题目。',
       flagForReview: false,
     };
   }
@@ -108,10 +96,7 @@ export function classifyMistake(input: MistakeInput): MistakeClassification {
     };
   }
 
-  const rushed =
-    timeSpentSeconds > 0 &&
-    timeSpentSeconds < Math.max(8, exercise.estimatedSeconds * 0.3) &&
-    errorTypes.length === 0;
+  const rushed = timeSpentSeconds > 0 && timeSpentSeconds < Math.max(8, exercise.estimatedSeconds * 0.3) && errorTypes.length === 0;
 
   if (rushed) {
     return {

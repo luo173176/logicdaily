@@ -105,7 +105,7 @@ test.describe('AI 降级与错误处理', () => {
     // Service Worker 会拦截请求，导致路由桩不稳定；测试里先注销。
     await page.goto('/');
     await page.evaluate(async () => {
-      const registrations = await navigator.serviceWorker?.getRegistrations?.() ?? [];
+      const registrations = (await navigator.serviceWorker?.getRegistrations?.()) ?? [];
       await Promise.all(registrations.map((registration) => registration.unregister()));
       const keys = (await caches?.keys?.()) ?? [];
       await Promise.all(keys.map((key) => caches.delete(key)));
@@ -127,7 +127,14 @@ test.describe('AI 降级与错误处理', () => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ ok: true, configured: true, defaultModel: 'test-model', allowedBaseUrlCount: 1, allowClientBaseUrl: false, limits: {} }),
+        body: JSON.stringify({
+          ok: true,
+          configured: true,
+          defaultModel: 'test-model',
+          allowedBaseUrlCount: 1,
+          allowClientBaseUrl: false,
+          limits: {},
+        }),
       }),
     );
     await page.route('**/api/ai/analyze', (route) =>

@@ -57,7 +57,10 @@ export const journalPayloadSchema = z.object({
     )
     .max(20)
     .default([]),
-  stepNotes: z.array(z.object({ stepId: z.string().max(40), text: z.string().max(4000) })).max(12).default([]),
+  stepNotes: z
+    .array(z.object({ stepId: z.string().max(40), text: z.string().max(4000) }))
+    .max(12)
+    .default([]),
   /** 客户端必须显式声明用户已同意把这篇日志发给模型。 */
   consented: z.literal(true),
 });
@@ -88,12 +91,54 @@ export const weeklyPayloadSchema = z.object({
 export const pingPayloadSchema = z.object({ note: z.string().max(40).default('logicdaily') });
 
 export const aiRequestSchema = z.discriminatedUnion('task', [
-  z.object({ task: z.literal('analyze-reasoning'), payload: reasoningPayloadSchema, model: z.string().max(80).optional(), temperature: z.number().min(0).max(2).optional(), maxOutputTokens: z.number().int().min(128).max(4000).optional(), baseUrl: z.string().max(300).optional() }),
-  z.object({ task: z.literal('review-journal'), payload: journalPayloadSchema, model: z.string().max(80).optional(), temperature: z.number().min(0).max(2).optional(), maxOutputTokens: z.number().int().min(128).max(4000).optional(), baseUrl: z.string().max(300).optional() }),
-  z.object({ task: z.literal('analyze-material'), payload: materialPayloadSchema, model: z.string().max(80).optional(), temperature: z.number().min(0).max(2).optional(), maxOutputTokens: z.number().int().min(128).max(4000).optional(), baseUrl: z.string().max(300).optional() }),
-  z.object({ task: z.literal('recommend-practice'), payload: practicePayloadSchema, model: z.string().max(80).optional(), temperature: z.number().min(0).max(2).optional(), maxOutputTokens: z.number().int().min(128).max(4000).optional(), baseUrl: z.string().max(300).optional() }),
-  z.object({ task: z.literal('weekly-summary'), payload: weeklyPayloadSchema, model: z.string().max(80).optional(), temperature: z.number().min(0).max(2).optional(), maxOutputTokens: z.number().int().min(128).max(4000).optional(), baseUrl: z.string().max(300).optional() }),
-  z.object({ task: z.literal('ping'), payload: pingPayloadSchema, model: z.string().max(80).optional(), temperature: z.number().min(0).max(2).optional(), maxOutputTokens: z.number().int().min(128).max(4000).optional(), baseUrl: z.string().max(300).optional() }),
+  z.object({
+    task: z.literal('analyze-reasoning'),
+    payload: reasoningPayloadSchema,
+    model: z.string().max(80).optional(),
+    temperature: z.number().min(0).max(2).optional(),
+    maxOutputTokens: z.number().int().min(128).max(4000).optional(),
+    baseUrl: z.string().max(300).optional(),
+  }),
+  z.object({
+    task: z.literal('review-journal'),
+    payload: journalPayloadSchema,
+    model: z.string().max(80).optional(),
+    temperature: z.number().min(0).max(2).optional(),
+    maxOutputTokens: z.number().int().min(128).max(4000).optional(),
+    baseUrl: z.string().max(300).optional(),
+  }),
+  z.object({
+    task: z.literal('analyze-material'),
+    payload: materialPayloadSchema,
+    model: z.string().max(80).optional(),
+    temperature: z.number().min(0).max(2).optional(),
+    maxOutputTokens: z.number().int().min(128).max(4000).optional(),
+    baseUrl: z.string().max(300).optional(),
+  }),
+  z.object({
+    task: z.literal('recommend-practice'),
+    payload: practicePayloadSchema,
+    model: z.string().max(80).optional(),
+    temperature: z.number().min(0).max(2).optional(),
+    maxOutputTokens: z.number().int().min(128).max(4000).optional(),
+    baseUrl: z.string().max(300).optional(),
+  }),
+  z.object({
+    task: z.literal('weekly-summary'),
+    payload: weeklyPayloadSchema,
+    model: z.string().max(80).optional(),
+    temperature: z.number().min(0).max(2).optional(),
+    maxOutputTokens: z.number().int().min(128).max(4000).optional(),
+    baseUrl: z.string().max(300).optional(),
+  }),
+  z.object({
+    task: z.literal('ping'),
+    payload: pingPayloadSchema,
+    model: z.string().max(80).optional(),
+    temperature: z.number().min(0).max(2).optional(),
+    maxOutputTokens: z.number().int().min(128).max(4000).optional(),
+    baseUrl: z.string().max(300).optional(),
+  }),
 ]);
 
 export type AiRequest = z.infer<typeof aiRequestSchema>;

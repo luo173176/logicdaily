@@ -6,10 +6,7 @@
       "id": "ex-cond-001",
       "version": 1,
       "category": "conditional-reasoning",
-      "knowledgePoints": [
-        "modus-tollens",
-        "affirming-consequent"
-      ],
+      "knowledgePoints": ["modus-tollens", "affirming-consequent"],
       "difficulty": 2,
       "estimatedSeconds": 60,
       "format": "single-choice",
@@ -35,15 +32,11 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [
         {
-          "keys": [
-            "C"
-          ],
+          "keys": ["C"],
           "note": "如果允许怀疑规定本身可能被违反（例如标签漏贴），那么只能得出“按规则应判定未通过”，此解释同样合理。"
         }
       ],
@@ -69,10 +62,7 @@
         ],
         "takeaway": "否定后件可以否定前件；要得出可靠结论，先确认规则本身是否被假定严格执行。"
       },
-      "reviewTags": [
-        "否定后件式",
-        "条件推理"
-      ],
+      "reviewTags": ["否定后件式", "条件推理"],
       "provenance": "原创题，场景取自制造质检流程，用于训练否定后件式。",
       "status": "validated",
       "grading": {
@@ -84,10 +74,7 @@
       "id": "ex-cond-002",
       "version": 1,
       "category": "conditional-reasoning",
-      "knowledgePoints": [
-        "affirming-consequent",
-        "modus-ponens"
-      ],
+      "knowledgePoints": ["affirming-consequent", "modus-ponens"],
       "difficulty": 2,
       "estimatedSeconds": 50,
       "format": "single-choice",
@@ -115,9 +102,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "C"
-        ]
+        "keys": ["C"]
       },
       "alternatives": [],
       "explanation": {
@@ -142,11 +127,7 @@
         ],
         "takeaway": "看到“如果……就……”，先问：这个条件是充分的还是必要的？"
       },
-      "reviewTags": [
-        "肯定后件",
-        "条件推理",
-        "事实与推测"
-      ],
+      "reviewTags": ["肯定后件", "条件推理", "事实与推测"],
       "provenance": "原创题，用于区分肯定前件与肯定后件两种推理。",
       "status": "validated",
       "grading": {
@@ -158,12 +139,7 @@
       "id": "ex-cond-003",
       "version": 1,
       "category": "conditional-reasoning",
-      "knowledgePoints": [
-        "modus-ponens",
-        "modus-tollens",
-        "affirming-consequent",
-        "denying-antecedent"
-      ],
+      "knowledgePoints": ["modus-ponens", "modus-tollens", "affirming-consequent", "denying-antecedent"],
       "difficulty": 3,
       "estimatedSeconds": 90,
       "format": "multi-choice",
@@ -195,11 +171,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "B",
-          "E"
-        ]
+        "keys": ["A", "B", "E"]
       },
       "alternatives": [],
       "explanation": {
@@ -225,11 +197,7 @@
         ],
         "takeaway": "四种形式里只有“肯定前件”和“否定后件”可靠，另外两种要看条件类型。"
       },
-      "reviewTags": [
-        "条件推理",
-        "有效式",
-        "易错"
-      ],
+      "reviewTags": ["条件推理", "有效式", "易错"],
       "provenance": "原创题，覆盖条件推理四种常见形式。",
       "status": "validated",
       "grading": {
@@ -241,10 +209,7 @@
       "id": "ex-cond-004",
       "version": 1,
       "category": "conditional-reasoning",
-      "knowledgePoints": [
-        "necessary-condition",
-        "only-if"
-      ],
+      "knowledgePoints": ["necessary-condition", "only-if"],
       "difficulty": 3,
       "estimatedSeconds": 45,
       "format": "true-false",
@@ -269,11 +234,7 @@
         ],
         "takeaway": "“只要”带充分条件，“只有”带必要条件。"
       },
-      "reviewTags": [
-        "必要条件",
-        "句式翻译",
-        "条件推理"
-      ],
+      "reviewTags": ["必要条件", "句式翻译", "条件推理"],
       "provenance": "原创题，针对“只有……才……”的翻译常见混淆点。",
       "status": "validated",
       "grading": {
@@ -285,10 +246,7 @@
       "id": "ex-cond-005",
       "version": 1,
       "category": "conditional-reasoning",
-      "knowledgePoints": [
-        "implicit-premise",
-        "affirming-consequent"
-      ],
+      "knowledgePoints": ["implicit-premise", "affirming-consequent"],
       "difficulty": 4,
       "estimatedSeconds": 120,
       "format": "short-answer",
@@ -298,32 +256,21 @@
           {
             "id": "c1",
             "label": "指出隐含前提",
-            "keywords": [
-              "隐含前提",
-              "前提"
-            ],
+            "keywords": ["隐含前提", "前提"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "给出另一种解释",
-            "keywords": [
-              "另一种",
-              "也可能是",
-              "其他解释"
-            ],
+            "keywords": ["另一种", "也可能是", "其他解释"],
             "weight": 2,
             "required": true
           },
           {
             "id": "c3",
             "label": "提出可核对的数据",
-            "keywords": [
-              "对照",
-              "同期",
-              "数据"
-            ],
+            "keywords": ["对照", "同期", "数据"],
             "weight": 2,
             "required": false
           }
@@ -353,11 +300,7 @@
         ],
         "takeaway": "遇到“之后所以因为”，先找它没说出口的前提。"
       },
-      "reviewTags": [
-        "隐含前提",
-        "条件推理",
-        "因果"
-      ],
+      "reviewTags": ["隐含前提", "条件推理", "因果"],
       "provenance": "原创题，场景来自互联网团队复盘会议。",
       "status": "validated",
       "grading": {
@@ -369,10 +312,7 @@
       "id": "ex-cond-006",
       "version": 1,
       "category": "conditional-reasoning",
-      "knowledgePoints": [
-        "falsification",
-        "dependency-order"
-      ],
+      "knowledgePoints": ["falsification", "dependency-order"],
       "difficulty": 3,
       "estimatedSeconds": 80,
       "format": "ordering",
@@ -396,12 +336,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "s1",
-          "s2",
-          "s3",
-          "s4"
-        ]
+        "keys": ["s1", "s2", "s3", "s4"]
       },
       "alternatives": [],
       "explanation": {
@@ -424,11 +359,7 @@
         ],
         "takeaway": "检验一个“如果……就……”，关键在于能否构造出反例。"
       },
-      "reviewTags": [
-        "可检验性",
-        "步骤顺序",
-        "条件推理"
-      ],
+      "reviewTags": ["可检验性", "步骤顺序", "条件推理"],
       "provenance": "原创题，用于训练把条件命题转成可检验设计。",
       "status": "validated",
       "grading": {
@@ -440,10 +371,7 @@
       "id": "ex-cond-007",
       "version": 1,
       "category": "conditional-reasoning",
-      "knowledgePoints": [
-        "sufficient-condition",
-        "necessary-condition"
-      ],
+      "knowledgePoints": ["sufficient-condition", "necessary-condition"],
       "difficulty": 4,
       "estimatedSeconds": 150,
       "format": "open-response",
@@ -500,11 +428,7 @@
         ],
         "takeaway": "评估一句话时，先把它拆成“若 P 则 Q”，再问证据够不够。"
       },
-      "reviewTags": [
-        "条件推理",
-        "开放题",
-        "论证分析"
-      ],
+      "reviewTags": ["条件推理", "开放题", "论证分析"],
       "provenance": "原创题，量表依据常见回答层级设计，供自评与可选的模型反馈使用。",
       "status": "validated",
       "grading": {
@@ -516,10 +440,7 @@
       "id": "ex-cond-008",
       "version": 1,
       "category": "conditional-reasoning",
-      "knowledgePoints": [
-        "denying-antecedent",
-        "exhaustive-cases"
-      ],
+      "knowledgePoints": ["denying-antecedent", "exhaustive-cases"],
       "difficulty": 3,
       "estimatedSeconds": 70,
       "format": "single-choice",
@@ -547,9 +468,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -579,11 +498,7 @@
         ],
         "takeaway": "检验一个条件承诺，要去找“前件成立但后件不成立”的例子。"
       },
-      "reviewTags": [
-        "否定前件",
-        "证伪",
-        "条件推理"
-      ],
+      "reviewTags": ["否定前件", "证伪", "条件推理"],
       "provenance": "原创题，结合培训效果场景训练证伪意识。",
       "status": "validated",
       "grading": {

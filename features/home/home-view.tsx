@@ -44,7 +44,12 @@ export function HomeView() {
       ]);
 
       const activeKeys = new Set(attempts30.map((a) => a.dateKey));
-      const nextNew = await pickNextNewExercise(store, profileId, attempts30.map((a) => a.exerciseId), plan);
+      const nextNew = await pickNextNewExercise(
+        store,
+        profileId,
+        attempts30.map((a) => a.exerciseId),
+        plan,
+      );
 
       const allKeys = await allActiveKeys(store, profileId, dateKey);
       const streak = trainingStreak(allKeys, settings, dateKey);
@@ -86,7 +91,12 @@ export function HomeView() {
       </Note>
     );
   }
-  if (error) return <Note tone="bad" title="读取数据时出错">{error}</Note>;
+  if (error)
+    return (
+      <Note tone="bad" title="读取数据时出错">
+        {error}
+      </Note>
+    );
   if (!overview) return <Skeleton lines={6} />;
 
   const completion = overview.plan ? planCompletion(overview.plan, overview.progress?.completedItemIds ?? []) : null;
@@ -97,9 +107,7 @@ export function HomeView() {
       <header className="stack gap-1">
         <p className="label">{formatChineseDateWithWeekday(dateKey)}</p>
         <h1 className="text-2xl">{doneToday ? '继续今天的训练' : '今天从一道题开始'}</h1>
-        <p className="muted text-sm">
-          {settings.dailyBudgetMinutes} 分钟就能完成一次有效练习。连续天数只用于帮你恢复节奏，不是成绩。
-        </p>
+        <p className="muted text-sm">{settings.dailyBudgetMinutes} 分钟就能完成一次有效练习。连续天数只用于帮你恢复节奏，不是成绩。</p>
       </header>
 
       {!settings.onboarded ? (
@@ -114,11 +122,7 @@ export function HomeView() {
       ) : null}
 
       <section className="card stack gap-3">
-        <ProgressBar
-          value={completion?.done ?? 0}
-          total={completion?.total ?? 0}
-          label={overview.plan?.restDay ? '休息日任务' : '今日进度'}
-        />
+        <ProgressBar value={completion?.done ?? 0} total={completion?.total ?? 0} label={overview.plan?.restDay ? '休息日任务' : '今日进度'} />
         {overview.plan ? (
           <ul className="stack gap-1 text-sm">
             {overview.plan.items.map((item) => {
@@ -151,9 +155,7 @@ export function HomeView() {
         </div>
         <div className="card flex-1">
           <p className="label">本周活跃</p>
-          <p className="text-xl font-semibold tabular-nums">
-            {overview.week.count}/7 天
-          </p>
+          <p className="text-xl font-semibold tabular-nums">{overview.week.count}/7 天</p>
           <p className="faint">按周一起算</p>
         </div>
       </section>

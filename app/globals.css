@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* 主题变量：浅色为默认，data-theme="dark" 覆盖。避免依赖构建期的 dark 变体。 */
 :root {
@@ -74,8 +74,7 @@
 @layer base {
   html {
     /* 手机浏览器工具栏与状态栏适配 */
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
-      env(safe-area-inset-left);
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     background: var(--canvas);
   }
 
@@ -84,8 +83,15 @@
     background: var(--canvas);
     color: var(--ink);
     font-family:
-      'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Source Han Sans SC',
-      system-ui, -apple-system, 'Segoe UI', sans-serif;
+      'PingFang SC',
+      'Hiragino Sans GB',
+      'Microsoft YaHei',
+      'Noto Sans CJK SC',
+      'Source Han Sans SC',
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      sans-serif;
     /* 中文阅读：略宽行距、合适字号，避免长句挤压 */
     font-size: 16px;
     line-height: 1.7;

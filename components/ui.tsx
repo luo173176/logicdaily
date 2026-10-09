@@ -12,15 +12,7 @@ export function SectionTitle({ children, action }: { children: ReactNode; action
   );
 }
 
-export function StatusBadge({
-  tone,
-  children,
-  symbol,
-}: {
-  tone: 'ok' | 'warn' | 'bad' | 'neutral';
-  children: ReactNode;
-  symbol?: string;
-}) {
+export function StatusBadge({ tone, children, symbol }: { tone: 'ok' | 'warn' | 'bad' | 'neutral'; children: ReactNode; symbol?: string }) {
   return (
     <span className={`status-badge status-${tone}`}>
       {symbol ? <span aria-hidden>{symbol}</span> : null}
@@ -29,15 +21,7 @@ export function StatusBadge({
   );
 }
 
-export function ProgressBar({
-  value,
-  total,
-  label,
-}: {
-  value: number;
-  total: number;
-  label?: string;
-}) {
+export function ProgressBar({ value, total, label }: { value: number; total: number; label?: string }) {
   const percent = total === 0 ? 0 : Math.min(100, Math.round((value / total) * 100));
   return (
     <div>
@@ -61,15 +45,7 @@ export function ProgressBar({
   );
 }
 
-export function Chip({
-  children,
-  pressed,
-  onPress,
-}: {
-  children: ReactNode;
-  pressed?: boolean;
-  onPress?: () => void;
-}) {
+export function Chip({ children, pressed, onPress }: { children: ReactNode; pressed?: boolean; onPress?: () => void }) {
   if (!onPress) return <span className="chip">{children}</span>;
   return (
     <button type="button" className="chip chip-toggle" aria-pressed={pressed ?? false} onClick={onPress}>
@@ -78,17 +54,7 @@ export function Chip({
   );
 }
 
-export function Field({
-  label,
-  hint,
-  htmlFor,
-  children,
-}: {
-  label: string;
-  hint?: ReactNode;
-  htmlFor?: string;
-  children: ReactNode;
-}) {
+export function Field({ label, hint, htmlFor, children }: { label: string; hint?: ReactNode; htmlFor?: string; children: ReactNode }) {
   return (
     <div className="stack gap-1.5">
       <label className="label" htmlFor={htmlFor}>
@@ -100,15 +66,7 @@ export function Field({
   );
 }
 
-export function Note({
-  tone = 'neutral',
-  title,
-  children,
-}: {
-  tone?: 'ok' | 'warn' | 'bad' | 'neutral';
-  title?: string;
-  children: ReactNode;
-}) {
+export function Note({ tone = 'neutral', title, children }: { tone?: 'ok' | 'warn' | 'bad' | 'neutral'; title?: string; children: ReactNode }) {
   return (
     <div className={`rounded-xl border border-line px-4 py-3 text-sm status-${tone}`}>
       {title ? <p className="mb-1 font-semibold text-ink">{title}</p> : null}
@@ -165,15 +123,7 @@ export function Button({
 }
 
 /** 信心程度选择：1～5，用于判因与复习调度。 */
-export function ConfidencePicker({
-  value,
-  onChange,
-  disabled,
-}: {
-  value: number;
-  onChange: (next: number) => void;
-  disabled?: boolean;
-}) {
+export function ConfidencePicker({ value, onChange, disabled }: { value: number; onChange: (next: number) => void; disabled?: boolean }) {
   const labels = ['完全没把握', '不太确定', '一般', '比较确定', '非常确定'];
   return (
     <div role="radiogroup" aria-label="你对这个答案的信心程度" className="row wrap gap-2">

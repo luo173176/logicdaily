@@ -1,12 +1,7 @@
 import type { AttemptRecord, DailyPlanRecord, DailyProgressRecord } from '@/lib/domain/records';
 import type { Journal } from '@/lib/domain/journal';
 import type { ExerciseCard } from '@/lib/domain/catalog';
-import {
-  CATEGORY_LABELS,
-  LOGIC_ERROR_LABELS,
-  type ExerciseCategory,
-  type LogicErrorType,
-} from '@/lib/domain/taxonomy';
+import { CATEGORY_LABELS, LOGIC_ERROR_LABELS, type ExerciseCategory, type LogicErrorType } from '@/lib/domain/taxonomy';
 import { addDays, diffDays, rangeKeys, type DateKey } from '@/lib/domain/time';
 
 export const MIN_SAMPLE_FOR_TREND = 12;
@@ -41,10 +36,7 @@ export function accuracyMetric(attempts: AttemptRecord[]): Metric {
     value: weighted,
     display: total === 0 ? '暂无数据' : pct(weighted),
     formula: '(答对数 + 部分正确数 × 0.5) ÷ 总作答数。开放题的自评分不计入分母外的加权。',
-    note:
-      total < MIN_SAMPLE_FOR_TREND
-        ? `样本 ${total} 次，少于 ${MIN_SAMPLE_FOR_TREND} 次时不宜比较趋势。`
-        : undefined,
+    note: total < MIN_SAMPLE_FOR_TREND ? `样本 ${total} 次，少于 ${MIN_SAMPLE_FOR_TREND} 次时不宜比较趋势。` : undefined,
     insufficientData: total < MIN_SAMPLE_FOR_TREND,
   };
 }
@@ -196,12 +188,7 @@ export function reviewEffectiveness(attempts: AttemptRecord[]): Metric {
   };
 }
 
-export function completionMetric(
-  plans: DailyPlanRecord[],
-  progresses: DailyProgressRecord[],
-  fromKey: DateKey,
-  toKey: DateKey,
-): Metric {
+export function completionMetric(plans: DailyPlanRecord[], progresses: DailyProgressRecord[], fromKey: DateKey, toKey: DateKey): Metric {
   const within = plans.filter((p) => p.dateKey >= fromKey && p.dateKey <= toKey);
   const progressByDate = new Map(progresses.map((x) => [x.dateKey, x]));
   let done = 0;
@@ -341,9 +328,7 @@ export function buildSuggestions(input: {
     });
   }
 
-  const weakCategory = [...categories]
-    .filter((c) => !c.insufficientData)
-    .sort((a, b) => a.correctRate - b.correctRate)[0];
+  const weakCategory = [...categories].filter((c) => !c.insufficientData).sort((a, b) => a.correctRate - b.correctRate)[0];
   if (weakCategory) {
     out.push({
       text: `${weakCategory.label}的正确率是 ${pct(weakCategory.correctRate)}（${weakCategory.attempts} 次作答），可以把它作为本周的主要练习面。`,

@@ -76,8 +76,7 @@ export function shortAnswerFixture(): Exercise {
       ],
       correctRatio: 0.8,
       partialRatio: 0.5,
-      modelAnswer:
-        '这里隐含了“同事的评价反映了我的整体变化”这一前提；也可能只是他们注意到了外在行为。可以用一周的稳定记录来验证。',
+      modelAnswer: '这里隐含了“同事的评价反映了我的整体变化”这一前提；也可能只是他们注意到了外在行为。可以用一周的稳定记录来验证。',
     },
     alternatives: [],
     explanation: {
@@ -167,12 +166,5 @@ export function trueFalseFixture(value: boolean): Exercise {
 }
 
 export function allFixtures(): Exercise[] {
-  return [
-    singleChoiceFixture(),
-    multiChoiceFixture(),
-    shortAnswerFixture(),
-    orderingFixture(),
-    openResponseFixture(),
-    trueFalseFixture(true),
-  ];
+  return [singleChoiceFixture(), multiChoiceFixture(), shortAnswerFixture(), orderingFixture(), openResponseFixture(), trueFalseFixture(true)];
 }

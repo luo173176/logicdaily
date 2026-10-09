@@ -6,10 +6,7 @@
       "id": "ex-ind-001",
       "version": 1,
       "category": "inductive-reasoning",
-      "knowledgePoints": [
-        "inductive-strength",
-        "sample-size"
-      ],
+      "knowledgePoints": ["inductive-strength", "sample-size"],
       "difficulty": 2,
       "estimatedSeconds": 50,
       "format": "single-choice",
@@ -39,9 +36,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -72,11 +67,7 @@
         ],
         "takeaway": "评估归纳结论时，先看它说了多大范围，再看样本是否覆盖了这个范围。"
       },
-      "reviewTags": [
-        "归纳强度",
-        "样本代表性",
-        "消费决策"
-      ],
+      "reviewTags": ["归纳强度", "样本代表性", "消费决策"],
       "provenance": "原创题，场景取自网购数码配件后的差评经历，用于训练评估个案归纳的证据宽度。",
       "status": "validated",
       "grading": {
@@ -88,10 +79,7 @@
       "id": "ex-ind-002",
       "version": 1,
       "category": "inductive-reasoning",
-      "knowledgePoints": [
-        "inductive-strength",
-        "sample-size"
-      ],
+      "knowledgePoints": ["inductive-strength", "sample-size"],
       "difficulty": 3,
       "estimatedSeconds": 75,
       "format": "single-choice",
@@ -120,9 +108,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -147,11 +133,7 @@
         ],
         "takeaway": "看到“调查结果显示大家……”，先比对结论范围与抽样范围是不是同一个。"
       },
-      "reviewTags": [
-        "抽样代表性",
-        "归纳强度",
-        "校园场景"
-      ],
+      "reviewTags": ["抽样代表性", "归纳强度", "校园场景"],
       "provenance": "原创题，场景取自高校学生会的问卷公告，用于训练识别抽样框与结论范围不一致。",
       "status": "validated",
       "grading": {
@@ -163,10 +145,7 @@
       "id": "ex-ind-003",
       "version": 1,
       "category": "inductive-reasoning",
-      "knowledgePoints": [
-        "analogical-reasoning",
-        "inductive-strength"
-      ],
+      "knowledgePoints": ["analogical-reasoning", "inductive-strength"],
       "difficulty": 3,
       "estimatedSeconds": 45,
       "format": "true-false",
@@ -195,11 +174,7 @@
         ],
         "takeaway": "类比只能回答“有多可能”，回答不了“是不是必然”。"
       },
-      "reviewTags": [
-        "类比推理",
-        "必然与或然",
-        "消费场景"
-      ],
+      "reviewTags": ["类比推理", "必然与或然", "消费场景"],
       "provenance": "原创题，场景取自连锁咖啡门店的消费体验，针对类比结论被说成必然的常见错误。",
       "status": "validated",
       "grading": {
@@ -211,11 +186,7 @@
       "id": "ex-ind-004",
       "version": 1,
       "category": "inductive-reasoning",
-      "knowledgePoints": [
-        "inductive-strength",
-        "variable-control",
-        "confounder"
-      ],
+      "knowledgePoints": ["inductive-strength", "variable-control", "confounder"],
       "difficulty": 4,
       "estimatedSeconds": 115,
       "format": "multi-choice",
@@ -248,11 +219,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "B",
-          "C"
-        ]
+        "keys": ["A", "B", "C"]
       },
       "alternatives": [],
       "explanation": {
@@ -278,11 +245,7 @@
         ],
         "takeaway": "想让一个归纳更可信，就增加能区分不同解释的观察，而不是修饰结论的语气。"
       },
-      "reviewTags": [
-        "归纳强度",
-        "对照实验",
-        "工作协作"
-      ],
+      "reviewTags": ["归纳强度", "对照实验", "工作协作"],
       "provenance": "原创题，场景取自互联网运营例会的效果讨论，用于训练加强或削弱归纳结论的具体做法。",
       "status": "validated",
       "grading": {
@@ -294,11 +257,7 @@
       "id": "ex-ind-005",
       "version": 1,
       "category": "inductive-reasoning",
-      "knowledgePoints": [
-        "inductive-strength",
-        "base-rate",
-        "spurious-correlation"
-      ],
+      "knowledgePoints": ["inductive-strength", "base-rate", "spurious-correlation"],
       "difficulty": 4,
       "estimatedSeconds": 140,
       "format": "short-answer",
@@ -308,40 +267,28 @@
           {
             "id": "c1",
             "label": "指出统计口径可能变化",
-            "keywords": [
-              "口径",
-              "统计标准"
-            ],
+            "keywords": ["口径", "统计标准"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "指出基数与总量的作用",
-            "keywords": [
-              "基数",
-              "总量"
-            ],
+            "keywords": ["基数", "总量"],
             "weight": 2,
             "required": true
           },
           {
             "id": "c3",
             "label": "给出另一种解释",
-            "keywords": [
-              "也可能是",
-              "另一种解释"
-            ],
+            "keywords": ["也可能是", "另一种解释"],
             "weight": 2,
             "required": true
           },
           {
             "id": "c4",
             "label": "提出可核对的数据",
-            "keywords": [
-              "报案量",
-              "破案率"
-            ],
+            "keywords": ["报案量", "破案率"],
             "weight": 1,
             "required": false
           }
@@ -376,11 +323,7 @@
         ],
         "takeaway": "读到“数字涨了所以变坏了”，先查口径、基数，再问有没有反向解释。"
       },
-      "reviewTags": [
-        "统计口径",
-        "新闻阅读",
-        "归纳评估"
-      ],
+      "reviewTags": ["统计口径", "新闻阅读", "归纳评估"],
       "provenance": "原创题，场景取自本地新闻对社会治安数据的报道，用于训练对统计类归纳结论补充所需信息。",
       "status": "validated",
       "grading": {
@@ -392,11 +335,7 @@
       "id": "ex-ind-006",
       "version": 1,
       "category": "inductive-reasoning",
-      "knowledgePoints": [
-        "inductive-strength",
-        "dependency-order",
-        "common-cause"
-      ],
+      "knowledgePoints": ["inductive-strength", "dependency-order", "common-cause"],
       "difficulty": 3,
       "estimatedSeconds": 100,
       "format": "ordering",
@@ -428,25 +367,11 @@
         }
       ],
       "answer": {
-        "keys": [
-          "s1",
-          "s2",
-          "s3",
-          "s4",
-          "s5",
-          "s6"
-        ]
+        "keys": ["s1", "s2", "s3", "s4", "s5", "s6"]
       },
       "alternatives": [
         {
-          "keys": [
-            "s1",
-            "s3",
-            "s2",
-            "s4",
-            "s5",
-            "s6"
-          ],
+          "keys": ["s1", "s3", "s2", "s4", "s5", "s6"],
           "note": "先列举混杂因素再扩大样本也说得通：知道要控制什么，扩展样本时就能顺带收集这些信息，只是可能多跑一趟。"
         }
       ],
@@ -472,11 +397,7 @@
         ],
         "takeaway": "检验生活经验式的结论，先定口径再扩样本，最后专门去找反例。"
       },
-      "reviewTags": [
-        "步骤顺序",
-        "归纳检验",
-        "家庭沟通"
-      ],
+      "reviewTags": ["步骤顺序", "归纳检验", "家庭沟通"],
       "provenance": "原创题，场景取自家人之间关于锻炼与长寿的日常争论，用于训练设计可执行的检验顺序。",
       "status": "validated",
       "grading": {
@@ -488,11 +409,7 @@
       "id": "ex-ind-007",
       "version": 1,
       "category": "inductive-reasoning",
-      "knowledgePoints": [
-        "survivorship-bias",
-        "inductive-strength",
-        "correlation-scenarios"
-      ],
+      "knowledgePoints": ["survivorship-bias", "inductive-strength", "correlation-scenarios"],
       "difficulty": 4,
       "estimatedSeconds": 110,
       "format": "single-choice",
@@ -522,9 +439,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -559,11 +474,7 @@
         ],
         "takeaway": "下归纳结论前，先问一句：看不见的那部分样本到哪里去了？"
       },
-      "reviewTags": [
-        "幸存者偏差",
-        "样本缺失",
-        "阅读新闻"
-      ],
+      "reviewTags": ["幸存者偏差", "样本缺失", "阅读新闻"],
       "provenance": "原创题，场景取自社交平台上的创业经验访谈帖，用于训练识别系统性样本缺失。",
       "status": "validated",
       "grading": {
@@ -575,11 +486,7 @@
       "id": "ex-ind-008",
       "version": 1,
       "category": "inductive-reasoning",
-      "knowledgePoints": [
-        "inductive-strength",
-        "conclusion-identification",
-        "falsification"
-      ],
+      "knowledgePoints": ["inductive-strength", "conclusion-identification", "falsification"],
       "difficulty": 5,
       "estimatedSeconds": 175,
       "format": "open-response",
@@ -641,11 +548,7 @@
         ],
         "takeaway": "把自己的错题统计当证据前，先把它换算成“每章的失分率”，再决定复习投向哪里。"
       },
-      "reviewTags": [
-        "归纳评估",
-        "学习备考",
-        "开放题"
-      ],
+      "reviewTags": ["归纳评估", "学习备考", "开放题"],
       "provenance": "原创题，场景取自考生刷真题后的自我总结，量表按从接受说法到设计验证的常见回答层级设计。",
       "status": "validated",
       "grading": {

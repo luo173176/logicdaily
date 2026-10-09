@@ -6,9 +6,7 @@
       "id": "ex-arg-001",
       "version": 1,
       "category": "argument-analysis",
-      "knowledgePoints": [
-        "conclusion-identification"
-      ],
+      "knowledgePoints": ["conclusion-identification"],
       "difficulty": 2,
       "estimatedSeconds": 55,
       "format": "single-choice",
@@ -34,9 +32,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -61,11 +57,7 @@
         ],
         "takeaway": "找结论的办法：把每句话拿去问“它为什么成立”，能被其他句子回答的那句才是结论。"
       },
-      "reviewTags": [
-        "结论识别",
-        "提示词",
-        "支持方向"
-      ],
+      "reviewTags": ["结论识别", "提示词", "支持方向"],
       "provenance": "原创题，场景取自公共交通调整讨论，用于训练区分结论句与前提句。",
       "status": "validated",
       "grading": {
@@ -77,10 +69,7 @@
       "id": "ex-arg-002",
       "version": 1,
       "category": "argument-analysis",
-      "knowledgePoints": [
-        "implicit-premise",
-        "conclusion-identification"
-      ],
+      "knowledgePoints": ["implicit-premise", "conclusion-identification"],
       "difficulty": 3,
       "estimatedSeconds": 75,
       "format": "single-choice",
@@ -106,9 +95,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -134,11 +121,7 @@
         ],
         "takeaway": "找隐含前提的诀窍是取反代入：把候选假设反过来说一遍，若论证随之塌掉，它就是那条未说出的前提。"
       },
-      "reviewTags": [
-        "隐含前提",
-        "取反检验",
-        "论证缺口"
-      ],
+      "reviewTags": ["隐含前提", "取反检验", "论证缺口"],
       "provenance": "原创题，场景取自职场评价讨论，专门训练用取反法定位隐含前提。",
       "status": "validated",
       "grading": {
@@ -150,10 +133,7 @@
       "id": "ex-arg-003",
       "version": 1,
       "category": "argument-analysis",
-      "knowledgePoints": [
-        "conclusion-identification",
-        "evidence-relevance"
-      ],
+      "knowledgePoints": ["conclusion-identification", "evidence-relevance"],
       "difficulty": 4,
       "estimatedSeconds": 115,
       "format": "multi-choice",
@@ -187,10 +167,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "B"
-        ]
+        "keys": ["A", "B"]
       },
       "alternatives": [],
       "explanation": {
@@ -221,12 +198,7 @@
         ],
         "takeaway": "区分前提与背景的可靠问法：这句话为真时，结论是否变得更可能？没变化就是背景。"
       },
-      "reviewTags": [
-        "前提识别",
-        "背景信息",
-        "证据相关性",
-        "多选题"
-      ],
+      "reviewTags": ["前提识别", "背景信息", "证据相关性", "多选题"],
       "provenance": "原创题，场景取自公共图书馆开放时间讨论，用于练习前提与背景的角色划分。",
       "status": "validated",
       "grading": {
@@ -238,10 +210,7 @@
       "id": "ex-arg-004",
       "version": 1,
       "category": "argument-analysis",
-      "knowledgePoints": [
-        "evidence-relevance",
-        "implicit-premise"
-      ],
+      "knowledgePoints": ["evidence-relevance", "implicit-premise"],
       "difficulty": 2,
       "estimatedSeconds": 45,
       "format": "true-false",
@@ -270,11 +239,7 @@
         ],
         "takeaway": "评估证据先问两句：它能改变结论的可能性吗？如果能，它有多强？"
       },
-      "reviewTags": [
-        "证据相关性",
-        "判断标准",
-        "证据强度"
-      ],
+      "reviewTags": ["证据相关性", "判断标准", "证据强度"],
       "provenance": "原创题，针对“数字与权威自动等于证据”这一常见误解设计。",
       "status": "validated",
       "grading": {
@@ -286,11 +251,7 @@
       "id": "ex-arg-005",
       "version": 1,
       "category": "argument-analysis",
-      "knowledgePoints": [
-        "conclusion-identification",
-        "implicit-premise",
-        "evidence-relevance"
-      ],
+      "knowledgePoints": ["conclusion-identification", "implicit-premise", "evidence-relevance"],
       "difficulty": 4,
       "estimatedSeconds": 130,
       "format": "short-answer",
@@ -300,42 +261,28 @@
           {
             "id": "c1",
             "label": "写出被支持的结论",
-            "keywords": [
-              "满意度",
-              "回升"
-            ],
+            "keywords": ["满意度", "回升"],
             "weight": 2,
             "required": true
           },
           {
             "id": "c2",
             "label": "补出未说出的前提",
-            "keywords": [
-              "隐含前提",
-              "前提"
-            ],
+            "keywords": ["隐含前提", "前提"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c3",
             "label": "指出需要排除的同时变化",
-            "keywords": [
-              "同时发生",
-              "其他因素",
-              "价格"
-            ],
+            "keywords": ["同时发生", "其他因素", "价格"],
             "weight": 2,
             "required": false
           },
           {
             "id": "c4",
             "label": "说明数据不算支持的情形",
-            "keywords": [
-              "口径",
-              "同期",
-              "样本"
-            ],
+            "keywords": ["口径", "同期", "样本"],
             "weight": 3,
             "required": true
           }
@@ -370,12 +317,7 @@
         ],
         "takeaway": "看到“A 指标变好了，所以 B 一定会变好”，先把中间那条“A 是 B 的可靠代理”写出来再检查。"
       },
-      "reviewTags": [
-        "结论识别",
-        "隐含前提",
-        "指标代理",
-        "简答题"
-      ],
+      "reviewTags": ["结论识别", "隐含前提", "指标代理", "简答题"],
       "provenance": "原创题，场景取自互联网运营周报，范文与要点关键词一一对应以便自动判分。",
       "status": "validated",
       "grading": {
@@ -387,12 +329,7 @@
       "id": "ex-arg-006",
       "version": 1,
       "category": "argument-analysis",
-      "knowledgePoints": [
-        "conclusion-identification",
-        "implicit-premise",
-        "evidence-relevance",
-        "subgoal-split"
-      ],
+      "knowledgePoints": ["conclusion-identification", "implicit-premise", "evidence-relevance", "subgoal-split"],
       "difficulty": 3,
       "estimatedSeconds": 85,
       "format": "ordering",
@@ -420,13 +357,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "s1",
-          "s2",
-          "s3",
-          "s4",
-          "s5"
-        ]
+        "keys": ["s1", "s2", "s3", "s4", "s5"]
       },
       "alternatives": [],
       "explanation": {
@@ -454,11 +385,7 @@
         ],
         "takeaway": "拆论证的顺序是：结论 → 剔除背景 → 列前提 → 补隐含前提 → 评强度。"
       },
-      "reviewTags": [
-        "论证结构",
-        "步骤顺序",
-        "拆解"
-      ],
+      "reviewTags": ["论证结构", "步骤顺序", "拆解"],
       "provenance": "原创题，用于把论证分析的一般流程排成可复用的步骤。",
       "status": "validated",
       "grading": {
@@ -470,12 +397,7 @@
       "id": "ex-arg-007",
       "version": 1,
       "category": "argument-analysis",
-      "knowledgePoints": [
-        "conclusion-identification",
-        "implicit-premise",
-        "evidence-relevance",
-        "sample-size"
-      ],
+      "knowledgePoints": ["conclusion-identification", "implicit-premise", "evidence-relevance", "sample-size"],
       "difficulty": 5,
       "estimatedSeconds": 175,
       "format": "open-response",
@@ -541,12 +463,7 @@
         ],
         "takeaway": "分析多句论证时，先按“证据—描述性结论—对策性结论”分层，再逐层检查各自的前提。"
       },
-      "reviewTags": [
-        "论证分层",
-        "隐含前提",
-        "样本代表性",
-        "开放题"
-      ],
+      "reviewTags": ["论证分层", "隐含前提", "样本代表性", "开放题"],
       "provenance": "原创题，场景取自网络调查类文章，量表按常见回答层级设计，供自评与可选的模型反馈使用。",
       "status": "validated",
       "grading": {
@@ -558,11 +475,7 @@
       "id": "ex-arg-008",
       "version": 1,
       "category": "argument-analysis",
-      "knowledgePoints": [
-        "evidence-relevance",
-        "confounder",
-        "correlation-scenarios"
-      ],
+      "knowledgePoints": ["evidence-relevance", "confounder", "correlation-scenarios"],
       "difficulty": 3,
       "estimatedSeconds": 70,
       "format": "single-choice",
@@ -590,9 +503,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -622,11 +533,7 @@
         ],
         "takeaway": "判断一条证据是否相关，就问它能否改变“还有没有别的解释”；能改变原因的才相关。"
       },
-      "reviewTags": [
-        "证据相关性",
-        "混淆因素",
-        "因果检验"
-      ],
+      "reviewTags": ["证据相关性", "混淆因素", "因果检验"],
       "provenance": "原创题，场景取自校园体育安排调整，学校与数据均为虚构，不指向任何真实机构。",
       "status": "validated",
       "grading": {

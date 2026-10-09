@@ -16,13 +16,7 @@ export interface RateDecision {
   usedToday: number;
 }
 
-export function checkRate(options: {
-  key: string;
-  perMinute: number;
-  dailyLimit: number;
-  dateKey: string;
-  nowMs?: number,
-}): RateDecision {
+export function checkRate(options: { key: string; perMinute: number; dailyLimit: number; dateKey: string; nowMs?: number }): RateDecision {
   const now = options.nowMs ?? Date.now();
   const bucket = buckets.get(options.key) ?? { hits: [] as number[], daily: new Map<string, number>() };
   bucket.hits = bucket.hits.filter((ts) => now - ts < 60_000);

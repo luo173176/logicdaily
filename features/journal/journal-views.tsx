@@ -58,15 +58,18 @@ export function JournalListView() {
   const filtered = useMemo(() => (journals ?? []).filter((j) => searchJournals([j], query, tag).length > 0), [journals, query, tag]);
 
   if (!ready || journals === null) return <Skeleton lines={5} />;
-  if (error) return <Note tone="bad" title="读取失败">{error}</Note>;
+  if (error)
+    return (
+      <Note tone="bad" title="读取失败">
+        {error}
+      </Note>
+    );
 
   return (
     <div className="stack gap-4">
       <header className="stack gap-1">
         <h1 className="text-2xl">思考日志</h1>
-        <p className="muted text-sm">
-          记录真实生活里没想清楚的问题。这里的内容默认只保存在你的设备上，不会自动发送给任何模型。
-        </p>
+        <p className="muted text-sm">记录真实生活里没想清楚的问题。这里的内容默认只保存在你的设备上，不会自动发送给任何模型。</p>
       </header>
 
       <div className="row gap-2">
@@ -121,7 +124,9 @@ export function JournalListView() {
                   </div>
                   {journal.problem ? <p className="text-sm muted">{truncate(journal.problem)}</p> : null}
                   <div className="row wrap gap-2">
-                    <span className="chip">要点 {completeness.filled}/{completeness.total}</span>
+                    <span className="chip">
+                      要点 {completeness.filled}/{completeness.total}
+                    </span>
                     <span className="chip">证据 {journal.evidence.length}</span>
                     {journal.reviewDueDateKey ? <span className="chip">复盘 {journal.reviewDueDateKey}</span> : null}
                     {journal.tags.map((t) => (
@@ -197,7 +202,12 @@ export function JournalEditorView({ journalId }: { journalId?: string }) {
   }, [journal, journalId, notify, router, store]);
 
   if (!ready) return <Skeleton lines={5} />;
-  if (error && !journal) return <Note tone="bad" title="无法打开日志">{error}</Note>;
+  if (error && !journal)
+    return (
+      <Note tone="bad" title="无法打开日志">
+        {error}
+      </Note>
+    );
   if (!journal) return <Skeleton lines={6} />;
 
   const completeness = journalCompleteness(journal);
@@ -217,7 +227,9 @@ export function JournalEditorView({ journalId }: { journalId?: string }) {
         />
         <div className="row wrap gap-2">
           <StatusBadge tone={STATUS_TONE[journal.status]}>{JOURNAL_STATUS_LABELS[journal.status]}</StatusBadge>
-          <span className="chip">要点 {completeness.filled}/{completeness.total}</span>
+          <span className="chip">
+            要点 {completeness.filled}/{completeness.total}
+          </span>
           <span className="faint">更新 {formatDateTime(journal.updatedAt, timezone)}</span>
         </div>
       </header>
@@ -352,11 +364,7 @@ export function JournalEditorView({ journalId }: { journalId?: string }) {
           ))}
         </div>
         <Field label="复盘提醒日期" hint="留空表示不提醒。到期那天它会出现在今日任务里。">
-          <input
-            type="date"
-            value={journal.reviewDueDateKey ?? ''}
-            onChange={(e) => patch({ reviewDueDateKey: e.target.value || null })}
-          />
+          <input type="date" value={journal.reviewDueDateKey ?? ''} onChange={(e) => patch({ reviewDueDateKey: e.target.value || null })} />
         </Field>
         <div className="row wrap gap-2">
           {[addDays(dateKey, 3), addDays(dateKey, 14), addDays(dateKey, 60)].map((suggest) => (
@@ -403,14 +411,15 @@ export function JournalEditorView({ journalId }: { journalId?: string }) {
 
       <CoachPanel context={{ kind: 'journal', journal }} />
 
-      {error ? <Note tone="bad" title="保存时出现问题">{error}</Note> : null}
+      {error ? (
+        <Note tone="bad" title="保存时出现问题">
+          {error}
+        </Note>
+      ) : null}
 
       <div className="card stack gap-2">
         <div className="row wrap gap-2">
-          <Button
-            disabled={busy || !dirty}
-            onClick={save}
-          >
+          <Button disabled={busy || !dirty} onClick={save}>
             {busy ? '保存中…' : dirty ? '保存' : '已保存'}
           </Button>
           <Button
@@ -428,18 +437,11 @@ export function JournalEditorView({ journalId }: { journalId?: string }) {
             导出这一篇
           </Button>
           <label className="btn btn-secondary">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={journal.aiConsent}
-              onChange={(e) => patch({ aiConsent: e.target.checked })}
-            />
+            <input type="checkbox" className="mr-2" checked={journal.aiConsent} onChange={(e) => patch({ aiConsent: e.target.checked })} />
             允许我把这篇发给 AI 教练分析
           </label>
         </div>
-        <p className="faint">
-          勾选后仍只有你主动点击“请 AI 分析”时才会发送正文；不勾选时任何模型调用都不会包含这篇日志。
-        </p>
+        <p className="faint">勾选后仍只有你主动点击“请 AI 分析”时才会发送正文；不勾选时任何模型调用都不会包含这篇日志。</p>
         <Button
           variant="ghost"
           onClick={async () => {
@@ -456,15 +458,7 @@ export function JournalEditorView({ journalId }: { journalId?: string }) {
   );
 }
 
-function EvidenceRow({
-  item,
-  onChange,
-  onRemove,
-}: {
-  item: JournalEvidence;
-  onChange: (next: JournalEvidence) => void;
-  onRemove: () => void;
-}) {
+function EvidenceRow({ item, onChange, onRemove }: { item: JournalEvidence; onChange: (next: JournalEvidence) => void; onRemove: () => void }) {
   return (
     <div className="inset stack gap-2">
       <div className="row wrap gap-2">

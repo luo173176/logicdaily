@@ -6,10 +6,7 @@
       "id": "ex-dan-001",
       "version": 1,
       "category": "decision-analysis",
-      "knowledgePoints": [
-        "criteria-weighting",
-        "opportunity-cost"
-      ],
+      "knowledgePoints": ["criteria-weighting", "opportunity-cost"],
       "difficulty": 2,
       "estimatedSeconds": 90,
       "format": "single-choice",
@@ -39,9 +36,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -72,11 +67,7 @@
         ],
         "takeaway": "比较方案前，先把对方（或你自己）说过的标准全部列出来，一条都不许漏。"
       },
-      "reviewTags": [
-        "决策分析",
-        "评价标准与权重",
-        "换工作"
-      ],
+      "reviewTags": ["决策分析", "评价标准与权重", "换工作"],
       "provenance": "原创题，用换工作情境训练先列全标准再比较，正确项只使用题干已有信息。",
       "status": "validated",
       "grading": {
@@ -88,11 +79,7 @@
       "id": "ex-dan-002",
       "version": 1,
       "category": "decision-analysis",
-      "knowledgePoints": [
-        "criteria-weighting",
-        "reversibility",
-        "opportunity-cost"
-      ],
+      "knowledgePoints": ["criteria-weighting", "reversibility", "opportunity-cost"],
       "difficulty": 3,
       "estimatedSeconds": 130,
       "format": "ordering",
@@ -120,13 +107,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "p1",
-          "p2",
-          "p3",
-          "p4",
-          "p5"
-        ]
+        "keys": ["p1", "p2", "p3", "p4", "p5"]
       },
       "alternatives": [],
       "explanation": {
@@ -150,12 +131,7 @@
         ],
         "takeaway": "不可逆的程度越高，越要把便宜的、可撤销的验证放在签字之前。"
       },
-      "reviewTags": [
-        "决策分析",
-        "步骤顺序",
-        "租房与买房",
-        "可逆性"
-      ],
+      "reviewTags": ["决策分析", "步骤顺序", "租房与买房", "可逆性"],
       "provenance": "原创题，用租房与买房的比较训练定标准、列机会成本与先做可逆试探的顺序。",
       "status": "validated",
       "grading": {
@@ -167,10 +143,7 @@
       "id": "ex-dan-003",
       "version": 1,
       "category": "decision-analysis",
-      "knowledgePoints": [
-        "sunk-cost",
-        "opportunity-cost"
-      ],
+      "knowledgePoints": ["sunk-cost", "opportunity-cost"],
       "difficulty": 3,
       "estimatedSeconds": 100,
       "format": "single-choice",
@@ -200,9 +173,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -233,11 +204,7 @@
         ],
         "takeaway": "做决定时把已经花掉且收不回的钱写在一栏纸上，另一栏只放未来的投入与产出。"
       },
-      "reviewTags": [
-        "决策分析",
-        "沉没成本",
-        "机会成本"
-      ],
+      "reviewTags": ["决策分析", "沉没成本", "机会成本"],
       "provenance": "原创题，用培训班场景训练识别沉没成本与只比较未来代价。",
       "status": "validated",
       "grading": {
@@ -249,10 +216,7 @@
       "id": "ex-dan-004",
       "version": 1,
       "category": "decision-analysis",
-      "knowledgePoints": [
-        "criteria-weighting",
-        "reversibility"
-      ],
+      "knowledgePoints": ["criteria-weighting", "reversibility"],
       "difficulty": 4,
       "estimatedSeconds": 130,
       "format": "multi-choice",
@@ -284,11 +248,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "B",
-          "D"
-        ]
+        "keys": ["A", "B", "D"]
       },
       "alternatives": [],
       "explanation": {
@@ -314,12 +274,7 @@
         ],
         "takeaway": "决策分析三步走：把话变成权重，把差异变成同一个量纲，再单独问一句这一步能不能反悔。"
       },
-      "reviewTags": [
-        "决策分析",
-        "供应商选择",
-        "加权比较",
-        "可逆性"
-      ],
+      "reviewTags": ["决策分析", "供应商选择", "加权比较", "可逆性"],
       "provenance": "原创题，所有结论均可从题干给出的价差、交期与停线损失数据推出。",
       "status": "validated",
       "grading": {
@@ -331,11 +286,7 @@
       "id": "ex-dan-005",
       "version": 1,
       "category": "decision-analysis",
-      "knowledgePoints": [
-        "sunk-cost",
-        "opportunity-cost",
-        "reversibility"
-      ],
+      "knowledgePoints": ["sunk-cost", "opportunity-cost", "reversibility"],
       "difficulty": 3,
       "estimatedSeconds": 120,
       "format": "short-answer",
@@ -345,40 +296,28 @@
           {
             "id": "c1",
             "label": "指出这 80 万已付出且收不回",
-            "keywords": [
-              "收不回",
-              "沉没成本"
-            ],
+            "keywords": ["收不回", "沉没成本"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "把比较对象转向未来的投入与产出",
-            "keywords": [
-              "未来",
-              "比较"
-            ],
+            "keywords": ["未来", "比较"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c3",
             "label": "写出留在旧系统所放弃的机会成本",
-            "keywords": [
-              "放弃",
-              "机会成本"
-            ],
+            "keywords": ["放弃", "机会成本"],
             "weight": 2,
             "required": false
           },
           {
             "id": "c4",
             "label": "补出迁移这一步的可逆程度与退出方案",
-            "keywords": [
-              "可逆",
-              "退出方案"
-            ],
+            "keywords": ["可逆", "退出方案"],
             "weight": 2,
             "required": false
           }
@@ -409,11 +348,7 @@
         ],
         "takeaway": "问一句“这笔钱在两个选项下会不会不一样”，一样就出局，不一样才进入比较。"
       },
-      "reviewTags": [
-        "决策分析",
-        "沉没成本",
-        "系统替换"
-      ],
+      "reviewTags": ["决策分析", "沉没成本", "系统替换"],
       "provenance": "原创题，取自技术选型会议里的沉没成本论证，要点与范文逐条对应。",
       "status": "validated",
       "grading": {
@@ -425,11 +360,7 @@
       "id": "ex-dan-006",
       "version": 1,
       "category": "decision-analysis",
-      "knowledgePoints": [
-        "criteria-weighting",
-        "opportunity-cost",
-        "reversibility"
-      ],
+      "knowledgePoints": ["criteria-weighting", "opportunity-cost", "reversibility"],
       "difficulty": 5,
       "estimatedSeconds": 170,
       "format": "ordering",
@@ -461,14 +392,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "q1",
-          "q2",
-          "q3",
-          "q4",
-          "q5",
-          "q6"
-        ]
+        "keys": ["q1", "q2", "q3", "q4", "q5", "q6"]
       },
       "alternatives": [],
       "explanation": {
@@ -493,12 +417,7 @@
         ],
         "takeaway": "打分之后一定要多做一步：把最看重的权重挪一挪，看结论会不会跟着翻。"
       },
-      "reviewTags": [
-        "决策分析",
-        "步骤顺序",
-        "搬迁决策",
-        "可逆性"
-      ],
+      "reviewTags": ["决策分析", "步骤顺序", "搬迁决策", "可逆性"],
       "provenance": "原创题，用举家搬迁的工作选择训练权重、机会成本与可逆试探的先后关系。",
       "status": "validated",
       "grading": {
@@ -510,11 +429,7 @@
       "id": "ex-dan-007",
       "version": 1,
       "category": "decision-analysis",
-      "knowledgePoints": [
-        "criteria-weighting",
-        "sunk-cost",
-        "opportunity-cost"
-      ],
+      "knowledgePoints": ["criteria-weighting", "sunk-cost", "opportunity-cost"],
       "difficulty": 4,
       "estimatedSeconds": 150,
       "format": "short-answer",
@@ -524,40 +439,28 @@
           {
             "id": "c1",
             "label": "先列出标准并给权重",
-            "keywords": [
-              "标准",
-              "权重"
-            ],
+            "keywords": ["标准", "权重"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "把已投入的半年时间算作沉没成本",
-            "keywords": [
-              "半年",
-              "沉没成本"
-            ],
+            "keywords": ["半年", "沉没成本"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c3",
             "label": "写出两个选择各自的机会成本",
-            "keywords": [
-              "机会成本",
-              "放弃"
-            ],
+            "keywords": ["机会成本", "放弃"],
             "weight": 2,
             "required": true
           },
           {
             "id": "c4",
             "label": "区分可逆与不可逆部分并去问",
-            "keywords": [
-              "可逆",
-              "不可逆"
-            ],
+            "keywords": ["可逆", "不可逆"],
             "weight": 2,
             "required": false
           }
@@ -588,12 +491,7 @@
         ],
         "takeaway": "二选一之前先检查这个“二”是不是别人替你划好的，能谈的条件就还是可逆项。"
       },
-      "reviewTags": [
-        "决策分析",
-        "机会成本",
-        "沉没成本",
-        "取舍"
-      ],
+      "reviewTags": ["决策分析", "机会成本", "沉没成本", "取舍"],
       "provenance": "原创题，用外包项目与自有产品的冲突训练权重、沉没成本与可逆性检查。",
       "status": "validated",
       "grading": {
@@ -605,12 +503,7 @@
       "id": "ex-dan-008",
       "version": 1,
       "category": "decision-analysis",
-      "knowledgePoints": [
-        "criteria-weighting",
-        "opportunity-cost",
-        "reversibility",
-        "sunk-cost"
-      ],
+      "knowledgePoints": ["criteria-weighting", "opportunity-cost", "reversibility", "sunk-cost"],
       "difficulty": 5,
       "estimatedSeconds": 180,
       "format": "open-response",
@@ -672,12 +565,7 @@
         ],
         "takeaway": "把权重写成数字、把放弃写成清单、把可逆性写成一道门槛，选择的质量就会明显变化。"
       },
-      "reviewTags": [
-        "决策分析",
-        "开放题",
-        "读研与工作",
-        "机会成本"
-      ],
+      "reviewTags": ["决策分析", "开放题", "读研与工作", "机会成本"],
       "provenance": "原创题，量表按回答层级递进设计，供自评与可选的模型反馈使用。",
       "status": "validated",
       "grading": {

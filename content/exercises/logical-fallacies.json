@@ -6,10 +6,7 @@
       "id": "ex-fal-001",
       "version": 1,
       "category": "logical-fallacies",
-      "knowledgePoints": [
-        "evidence-relevance",
-        "inductive-strength"
-      ],
+      "knowledgePoints": ["evidence-relevance", "inductive-strength"],
       "difficulty": 2,
       "estimatedSeconds": 50,
       "format": "single-choice",
@@ -35,9 +32,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -63,11 +58,7 @@
         ],
         "takeaway": "看到“多少人都说……”，先问一句：这些人给出的是人数证据，还是质量证据？"
       },
-      "reviewTags": [
-        "诉诸多数",
-        "证据相关性",
-        "谬误辨析"
-      ],
+      "reviewTags": ["诉诸多数", "证据相关性", "谬误辨析"],
       "provenance": "原创题，场景取自社交平台热搜评论区，用于区分人数证据与质量证据。",
       "status": "validated",
       "grading": {
@@ -79,10 +70,7 @@
       "id": "ex-fal-002",
       "version": 1,
       "category": "logical-fallacies",
-      "knowledgePoints": [
-        "ad-hominem",
-        "straw-man"
-      ],
+      "knowledgePoints": ["ad-hominem", "straw-man"],
       "difficulty": 3,
       "estimatedSeconds": 75,
       "format": "single-choice",
@@ -108,9 +96,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -141,11 +127,7 @@
         ],
         "takeaway": "先问“他反驳的是哪句话”：那句话是对方原话还是被改写过的版本，决定是稻草人还是别的毛病。"
       },
-      "reviewTags": [
-        "人身攻击",
-        "稻草人",
-        "相似谬误区分"
-      ],
+      "reviewTags": ["人身攻击", "稻草人", "相似谬误区分"],
       "provenance": "原创题，场景取自职场福利讨论，专为区分稻草人与人身攻击而写。",
       "status": "validated",
       "grading": {
@@ -157,11 +139,7 @@
       "id": "ex-fal-003",
       "version": 1,
       "category": "logical-fallacies",
-      "knowledgePoints": [
-        "slippery-slope",
-        "false-dilemma",
-        "appeal-to-authority"
-      ],
+      "knowledgePoints": ["slippery-slope", "false-dilemma", "appeal-to-authority"],
       "difficulty": 4,
       "estimatedSeconds": 110,
       "format": "multi-choice",
@@ -193,11 +171,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "B",
-          "C"
-        ]
+        "keys": ["A", "B", "C"]
       },
       "alternatives": [],
       "explanation": {
@@ -223,12 +197,7 @@
         ],
         "takeaway": "一段话里可能同时有几种毛病。逐句问“这句话靠什么支持”，能一次拆出多个谬误。"
       },
-      "reviewTags": [
-        "滑坡",
-        "错误二分",
-        "诉诸权威",
-        "多谬误识别"
-      ],
+      "reviewTags": ["滑坡", "错误二分", "诉诸权威", "多谬误识别"],
       "provenance": "原创题，场景取自家庭劝学对话，用于在一句话里同时识别三种谬误。",
       "status": "validated",
       "grading": {
@@ -240,10 +209,7 @@
       "id": "ex-fal-004",
       "version": 1,
       "category": "logical-fallacies",
-      "knowledgePoints": [
-        "false-dilemma",
-        "conclusion-identification"
-      ],
+      "knowledgePoints": ["false-dilemma", "conclusion-identification"],
       "difficulty": 3,
       "estimatedSeconds": 45,
       "format": "true-false",
@@ -272,11 +238,7 @@
         ],
         "takeaway": "遇到二选一，先自己数一遍可能：能不能构造出让两项同时不成立的情形。"
       },
-      "reviewTags": [
-        "错误二分",
-        "判定标准",
-        "全称结论"
-      ],
+      "reviewTags": ["错误二分", "判定标准", "全称结论"],
       "provenance": "原创题，针对“凡是二分即谬误”这一常见过度概括而写。",
       "status": "validated",
       "grading": {
@@ -288,11 +250,7 @@
       "id": "ex-fal-005",
       "version": 1,
       "category": "logical-fallacies",
-      "knowledgePoints": [
-        "appeal-to-authority",
-        "evidence-relevance",
-        "sample-size"
-      ],
+      "knowledgePoints": ["appeal-to-authority", "evidence-relevance", "sample-size"],
       "difficulty": 4,
       "estimatedSeconds": 130,
       "format": "short-answer",
@@ -302,45 +260,28 @@
           {
             "id": "c1",
             "label": "指出以身份和人数代替依据",
-            "keywords": [
-              "粉丝",
-              "博主",
-              "身份"
-            ],
+            "keywords": ["粉丝", "博主", "身份"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "说明个人经历只是个别样本",
-            "keywords": [
-              "两年",
-              "个人",
-              "样本"
-            ],
+            "keywords": ["两年", "个人", "样本"],
             "weight": 2,
             "required": true
           },
           {
             "id": "c3",
             "label": "列出可核对的证据类型",
-            "keywords": [
-              "历史净值",
-              "持仓",
-              "费率",
-              "招募说明书"
-            ],
+            "keywords": ["历史净值", "持仓", "费率", "招募说明书"],
             "weight": 2,
             "required": false
           },
           {
             "id": "c4",
             "label": "给出引用经验可用的条件",
-            "keywords": [
-              "专业范围",
-              "可核对",
-              "利益"
-            ],
+            "keywords": ["专业范围", "可核对", "利益"],
             "weight": 3,
             "required": true
           }
@@ -375,11 +316,7 @@
         ],
         "takeaway": "听到“我自己也在用”，先问三件事：他是不是这个领域的可靠来源、说法能不能独立核对、他有没有从中得利。"
       },
-      "reviewTags": [
-        "诉诸权威",
-        "投资建议",
-        "样本量"
-      ],
+      "reviewTags": ["诉诸权威", "投资建议", "样本量"],
       "provenance": "原创题，场景取自短视频带货式投资分享，不指向任何真实平台或产品。",
       "status": "validated",
       "grading": {
@@ -391,10 +328,7 @@
       "id": "ex-fal-006",
       "version": 1,
       "category": "logical-fallacies",
-      "knowledgePoints": [
-        "slippery-slope",
-        "falsification"
-      ],
+      "knowledgePoints": ["slippery-slope", "falsification"],
       "difficulty": 3,
       "estimatedSeconds": 90,
       "format": "ordering",
@@ -422,23 +356,11 @@
         }
       ],
       "answer": {
-        "keys": [
-          "s1",
-          "s2",
-          "s3",
-          "s4",
-          "s5"
-        ]
+        "keys": ["s1", "s2", "s3", "s4", "s5"]
       },
       "alternatives": [
         {
-          "keys": [
-            "s1",
-            "s3",
-            "s2",
-            "s4",
-            "s5"
-          ],
+          "keys": ["s1", "s3", "s2", "s4", "s5"],
           "note": "若认为“哪一环最薄弱”本身要靠数据才能判断，那么先逐环索要记录、再回头锁定最弱的一环同样说得通；两种顺序都保留了拆链、取证、找中断措施、最后总判的依赖关系。"
         }
       ],
@@ -467,11 +389,7 @@
         ],
         "takeaway": "检验滑坡的诀窍是把链条拆成环，然后逐环问：这一环的证据在哪里，有没有办法让它传不下去。"
       },
-      "reviewTags": [
-        "滑坡",
-        "可检验性",
-        "步骤顺序"
-      ],
+      "reviewTags": ["滑坡", "可检验性", "步骤顺序"],
       "provenance": "原创题，场景取自班级事务讨论，用于训练把滑坡主张转为可检验步骤。",
       "status": "validated",
       "grading": {
@@ -483,11 +401,7 @@
       "id": "ex-fal-007",
       "version": 1,
       "category": "logical-fallacies",
-      "knowledgePoints": [
-        "straw-man",
-        "conclusion-identification",
-        "implicit-premise"
-      ],
+      "knowledgePoints": ["straw-man", "conclusion-identification", "implicit-premise"],
       "difficulty": 5,
       "estimatedSeconds": 180,
       "format": "open-response",
@@ -549,12 +463,7 @@
         ],
         "takeaway": "反驳之前先对齐词义：两个人说的到底是不是同一个词、同一件事、同一个衡量标准。"
       },
-      "reviewTags": [
-        "偷换概念",
-        "稻草人",
-        "开放题",
-        "词义对齐"
-      ],
+      "reviewTags": ["偷换概念", "稻草人", "开放题", "词义对齐"],
       "provenance": "原创题，量表按常见回答层级由弱到强设计，供自评与可选的模型反馈使用。",
       "status": "validated",
       "grading": {
@@ -566,10 +475,7 @@
       "id": "ex-fal-008",
       "version": 1,
       "category": "logical-fallacies",
-      "knowledgePoints": [
-        "implicit-premise",
-        "validity-vs-truth"
-      ],
+      "knowledgePoints": ["implicit-premise", "validity-vs-truth"],
       "difficulty": 3,
       "estimatedSeconds": 60,
       "format": "single-choice",
@@ -595,9 +501,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -627,11 +531,7 @@
         ],
         "takeaway": "追问一句“这个理由的依据是什么”：如果答案绕回原结论，就等于没给理由。"
       },
-      "reviewTags": [
-        "循环论证",
-        "独立证据",
-        "餐饮文案"
-      ],
+      "reviewTags": ["循环论证", "独立证据", "餐饮文案"],
       "provenance": "原创题，场景取自餐馆宣传语问答，用于训练识别结论被藏进前提的结构。",
       "status": "validated",
       "grading": {

@@ -6,10 +6,7 @@
       "id": "ex-cor-001",
       "version": 1,
       "category": "correlation-vs-causation",
-      "knowledgePoints": [
-        "correlation-scenarios",
-        "common-cause"
-      ],
+      "knowledgePoints": ["correlation-scenarios", "common-cause"],
       "difficulty": 2,
       "estimatedSeconds": 50,
       "format": "single-choice",
@@ -39,9 +36,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -72,11 +67,7 @@
         ],
         "takeaway": "两个指标一起变化时，先找出同时推着它们走的那个变量。"
       },
-      "reviewTags": [
-        "共同原因",
-        "百分点与相对幅度",
-        "消费数据"
-      ],
+      "reviewTags": ["共同原因", "百分点与相对幅度", "消费数据"],
       "provenance": "原创题，场景取自连锁餐饮的运营周报，用于训练识别天气这类共同驱动因素。",
       "status": "validated",
       "grading": {
@@ -88,10 +79,7 @@
       "id": "ex-cor-002",
       "version": 1,
       "category": "correlation-vs-causation",
-      "knowledgePoints": [
-        "spurious-correlation",
-        "correlation-scenarios"
-      ],
+      "knowledgePoints": ["spurious-correlation", "correlation-scenarios"],
       "difficulty": 3,
       "estimatedSeconds": 65,
       "format": "single-choice",
@@ -121,9 +109,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -154,11 +140,7 @@
         ],
         "takeaway": "两条一起上升的曲线，先怀疑它们背后有一条共同的上升趋势。"
       },
-      "reviewTags": [
-        "伪相关",
-        "时间趋势",
-        "城市数据"
-      ],
+      "reviewTags": ["伪相关", "时间趋势", "城市数据"],
       "provenance": "原创题，场景取自城市基建与培训行业数据的对比报道，用于训练识别趋势型伪相关。",
       "status": "validated",
       "grading": {
@@ -170,11 +152,7 @@
       "id": "ex-cor-003",
       "version": 1,
       "category": "correlation-vs-causation",
-      "knowledgePoints": [
-        "correlation-scenarios",
-        "common-cause",
-        "reverse-causation"
-      ],
+      "knowledgePoints": ["correlation-scenarios", "common-cause", "reverse-causation"],
       "difficulty": 4,
       "estimatedSeconds": 110,
       "format": "multi-choice",
@@ -206,11 +184,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "B",
-          "D"
-        ]
+        "keys": ["A", "B", "D"]
       },
       "alternatives": [],
       "explanation": {
@@ -236,11 +210,7 @@
         ],
         "takeaway": "看到一个相关系数，先写出它能容纳的几种方向，再谈它有多大。"
       },
-      "reviewTags": [
-        "相关系数",
-        "教育产品宣传",
-        "多种解释"
-      ],
+      "reviewTags": ["相关系数", "教育产品宣传", "多种解释"],
       "provenance": "原创题，场景取自教育硬件厂商引用的调研数据，用于训练对单个相关系数做多种因果解释。",
       "status": "validated",
       "grading": {
@@ -252,9 +222,7 @@
       "id": "ex-cor-004",
       "version": 1,
       "category": "correlation-vs-causation",
-      "knowledgePoints": [
-        "correlation-scenarios"
-      ],
+      "knowledgePoints": ["correlation-scenarios"],
       "difficulty": 3,
       "estimatedSeconds": 55,
       "format": "true-false",
@@ -283,11 +251,7 @@
         ],
         "takeaway": "先弄清指标测的是什么关系，再决定能否认掉整类关系。"
       },
-      "reviewTags": [
-        "相关系数",
-        "非线性关系",
-        "指标口径"
-      ],
+      "reviewTags": ["相关系数", "非线性关系", "指标口径"],
       "provenance": "原创题，场景取自运动类应用的数据周报，用于训练区分“无线性相关”与“无任何关系”。",
       "status": "validated",
       "grading": {
@@ -299,11 +263,7 @@
       "id": "ex-cor-005",
       "version": 1,
       "category": "correlation-vs-causation",
-      "knowledgePoints": [
-        "correlation-scenarios",
-        "spurious-correlation",
-        "confounder"
-      ],
+      "knowledgePoints": ["correlation-scenarios", "spurious-correlation", "confounder"],
       "difficulty": 4,
       "estimatedSeconds": 140,
       "format": "short-answer",
@@ -313,28 +273,21 @@
           {
             "id": "c1",
             "label": "指出需要反事实证据",
-            "keywords": [
-              "反事实"
-            ],
+            "keywords": ["反事实"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "指出共同驱动因素",
-            "keywords": [
-              "共同驱动"
-            ],
+            "keywords": ["共同驱动"],
             "weight": 2,
             "required": false
           },
           {
             "id": "c3",
             "label": "怀疑两数同源或口径相同",
-            "keywords": [
-              "口径",
-              "同源"
-            ],
+            "keywords": ["口径", "同源"],
             "weight": 2,
             "required": false
           }
@@ -369,11 +322,7 @@
         ],
         "takeaway": "关联完美得没有误差时，先怀疑两个数字是不是出自同一张表。"
       },
-      "reviewTags": [
-        "公司报表",
-        "同源数据",
-        "反事实"
-      ],
+      "reviewTags": ["公司报表", "同源数据", "反事实"],
       "provenance": "原创题，场景取自营销投放复盘，六个数据点由编写者构造为严格正比例，用于训练对完美同步的怀疑。",
       "status": "validated",
       "grading": {
@@ -385,10 +334,7 @@
       "id": "ex-cor-006",
       "version": 1,
       "category": "correlation-vs-causation",
-      "knowledgePoints": [
-        "correlation-scenarios",
-        "confounder"
-      ],
+      "knowledgePoints": ["correlation-scenarios", "confounder"],
       "difficulty": 3,
       "estimatedSeconds": 95,
       "format": "ordering",
@@ -416,13 +362,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "u1",
-          "u2",
-          "u3",
-          "u4",
-          "u5"
-        ]
+        "keys": ["u1", "u2", "u3", "u4", "u5"]
       },
       "alternatives": [],
       "explanation": {
@@ -446,11 +386,7 @@
         ],
         "takeaway": "判断政策效果，关键是比较“有政策的地方”与“没有政策的地方”，而不是比较前后两个月。"
       },
-      "reviewTags": [
-        "城市政策",
-        "步骤顺序",
-        "对照"
-      ],
+      "reviewTags": ["城市政策", "步骤顺序", "对照"],
       "provenance": "原创题，场景取自城市治理措施成效报道，用于训练把共变核查排成有依赖顺序的步骤。",
       "status": "validated",
       "grading": {
@@ -462,11 +398,7 @@
       "id": "ex-cor-007",
       "version": 1,
       "category": "correlation-vs-causation",
-      "knowledgePoints": [
-        "correlation-scenarios",
-        "confounder",
-        "survivorship-bias"
-      ],
+      "knowledgePoints": ["correlation-scenarios", "confounder", "survivorship-bias"],
       "difficulty": 5,
       "estimatedSeconds": 190,
       "format": "open-response",
@@ -529,11 +461,7 @@
         ],
         "takeaway": "拿到一个百分比，先问它的分母是谁；分母不同的两个百分比连不成因果。"
       },
-      "reviewTags": [
-        "消费评价",
-        "分母与口径",
-        "开放题"
-      ],
+      "reviewTags": ["消费评价", "分母与口径", "开放题"],
       "provenance": "原创题，场景取自电商详情页的好评话术，量表按回答层级设计，供自评与可选的模型反馈使用。",
       "status": "validated",
       "grading": {
@@ -545,11 +473,7 @@
       "id": "ex-cor-008",
       "version": 1,
       "category": "correlation-vs-causation",
-      "knowledgePoints": [
-        "correlation-scenarios",
-        "common-cause",
-        "confounder"
-      ],
+      "knowledgePoints": ["correlation-scenarios", "common-cause", "confounder"],
       "difficulty": 3,
       "estimatedSeconds": 60,
       "format": "single-choice",
@@ -579,9 +503,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -611,11 +533,7 @@
         ],
         "takeaway": "两组连生活习惯都不一样时，组间差异就先别算在唯一因素头上。"
       },
-      "reviewTags": [
-        "混淆变量",
-        "健康新闻",
-        "共同原因"
-      ],
+      "reviewTags": ["混淆变量", "健康新闻", "共同原因"],
       "provenance": "原创题，场景取自体检机构发布的会员随访数据，用于训练把生活方式差异识别为混淆变量。",
       "status": "validated",
       "grading": {

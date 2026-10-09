@@ -62,10 +62,7 @@ export async function POST(request: Request) {
   const body: unknown = await request.json().catch(() => null);
   const parsed = aiRequestSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { ok: false, code: 'invalid_request', message: '请求结构不符合要求，已拒绝。' },
-      { status: 400 },
-    );
+    return NextResponse.json({ ok: false, code: 'invalid_request', message: '请求结构不符合要求，已拒绝。' }, { status: 400 });
   }
 
   const dateKey = todayKey(new Date(), 'UTC');
@@ -114,10 +111,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     const kind = error instanceof AiError ? error.kind : 'unavailable';
-    const message =
-      error instanceof AiError
-        ? error.message
-        : '模型调用出现未预期的错误。';
+    const message = error instanceof AiError ? error.message : '模型调用出现未预期的错误。';
     // 只记录类别与状态码：错误对象可能带有请求正文，不进入日志。
     console.log(JSON.stringify({ evt: 'ai_call', status: 'error', code: kind }));
     return NextResponse.json({ ok: false, code: kind, message }, { status: STATUS_BY_KIND[kind] ?? 500 });

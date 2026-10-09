@@ -1,15 +1,7 @@
 import { joinChatCompletions, resolveSafeTarget, UnsafeUrlError } from '@/lib/ai/ssrf';
 
 export type AiErrorKind =
-  | 'not_configured'
-  | 'timeout'
-  | 'rate_limited'
-  | 'unavailable'
-  | 'auth'
-  | 'bad_response'
-  | 'network'
-  | 'unsafe_url'
-  | 'budget_exceeded';
+  'not_configured' | 'timeout' | 'rate_limited' | 'unavailable' | 'auth' | 'bad_response' | 'network' | 'unsafe_url' | 'budget_exceeded';
 
 export class AiError extends Error {
   readonly kind: AiErrorKind;
@@ -137,10 +129,14 @@ export class OpenAiCompatibleProvider {
           const status = response.status;
           // 上游错误正文可能包含请求内容回显，因此只保留状态码。
           const kind = classifyStatus(status);
-          throw new AiError(kind, kind === 'auth' ? '模型服务拒绝了凭据。' : kind === 'rate_limited' ? '模型服务限流，请稍后再试。' : '模型服务暂时不可用。', {
-            retryable: RETRYABLE_STATUS.has(status),
-            status,
-          });
+          throw new AiError(
+            kind,
+            kind === 'auth' ? '模型服务拒绝了凭据。' : kind === 'rate_limited' ? '模型服务限流，请稍后再试。' : '模型服务暂时不可用。',
+            {
+              retryable: RETRYABLE_STATUS.has(status),
+              status,
+            },
+          );
         }
 
         const json = (await response.json()) as {
@@ -170,7 +166,10 @@ export class OpenAiCompatibleProvider {
         } else if (error instanceof UnsafeUrlError) {
           throw new AiError('unsafe_url', error.message, { cause: error });
         } else if (error instanceof Error && error.name === 'AbortError') {
-          lastError = new AiError('timeout', `请求超过 ${Math.round(this.options.timeoutMs / 1000)} 秒已中断。`, { retryable: attempt <= this.options.retryLimit, cause: error });
+          lastError = new AiError('timeout', `请求超过 ${Math.round(this.options.timeoutMs / 1000)} 秒已中断。`, {
+            retryable: attempt <= this.options.retryLimit,
+            cause: error,
+          });
           if (!lastError.retryable) throw lastError;
         } else {
           lastError = new AiError('network', '无法连接模型服务，请检查网络或服务地址。', { retryable: true, cause: error });

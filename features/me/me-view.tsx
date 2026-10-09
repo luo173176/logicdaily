@@ -147,9 +147,7 @@ export function MeView() {
                 <Chip
                   key={day}
                   pressed={pressed}
-                  onPress={() =>
-                    patch({ restWeekdays: pressed ? draft.restWeekdays.filter((d) => d !== day) : [...draft.restWeekdays, day] })
-                  }
+                  onPress={() => patch({ restWeekdays: pressed ? draft.restWeekdays.filter((d) => d !== day) : [...draft.restWeekdays, day] })}
                 >
                   {weekdayLabel(`2026-03-${String(9 + day).padStart(2, '0')}`)}
                 </Chip>
@@ -279,7 +277,10 @@ export function MeView() {
           </Chip>
         </div>
         <Field label="提供商" hint="必须是服务端允许列表中的取值。">
-          <select value={draft.ai.provider} onChange={(event) => patch({ ai: { ...draft.ai, provider: event.target.value as AppSettings['ai']['provider'] } })}>
+          <select
+            value={draft.ai.provider}
+            onChange={(event) => patch({ ai: { ...draft.ai, provider: event.target.value as AppSettings['ai']['provider'] } })}
+          >
             {['openai-compatible', 'openai', 'deepseek', 'moonshot', 'zhipu', 'qwen', 'local', 'custom'].map((item) => (
               <option key={item} value={item}>
                 {item}
@@ -321,7 +322,10 @@ export function MeView() {
             />
           </Field>
         </div>
-        <Field label="每日调用次数上限" hint="0 表示完全不调用模型。这是本机的自我约束；服务端另有权威配额（由部署者的 AI_DAILY_LIMIT 决定），以先到的一方为准。">
+        <Field
+          label="每日调用次数上限"
+          hint="0 表示完全不调用模型。这是本机的自我约束；服务端另有权威配额（由部署者的 AI_DAILY_LIMIT 决定），以先到的一方为准。"
+        >
           <input
             type="number"
             min={0}
@@ -411,7 +415,11 @@ export function MeView() {
           </Button>
         </div>
 
-        {seeding.status === 'failed' ? <Note tone="bad" title="题库载入失败">{seeding.message}</Note> : null}
+        {seeding.status === 'failed' ? (
+          <Note tone="bad" title="题库载入失败">
+            {seeding.message}
+          </Note>
+        ) : null}
 
         <details className="stack gap-1">
           <summary className="cursor-pointer text-sm font-semibold">隐私说明与 AI 数据使用说明</summary>
@@ -464,9 +472,7 @@ export function MeView() {
       <section className="card stack gap-1 text-sm">
         <p>LogicDaily · 每日逻辑思维训练 · 版本 0.1.0</p>
         <p className="muted">开源许可：AGPL-3.0-or-later。题库内容为项目原创撰写，欢迎在注明出处的前提下复用。</p>
-        <p className="faint">
-          已知限制：云端账户与跨设备同步尚未实现；PWA 后台提醒不可靠；APK 需要本地 Android 环境自行构建。详见 README 与 docs/。
-        </p>
+        <p className="faint">已知限制：云端账户与跨设备同步尚未实现；PWA 后台提醒不可靠；APK 需要本地 Android 环境自行构建。详见 README 与 docs/。</p>
       </section>
 
       {dirty ? (
@@ -474,7 +480,14 @@ export function MeView() {
           <div className="card row-between">
             <span className="text-sm">有未保存的设置</span>
             <div className="row gap-2">
-              <Button variant="ghost" size="sm" onClick={() => { setDraft(settings); setDirty(false); }}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setDraft(settings);
+                  setDirty(false);
+                }}
+              >
                 放弃
               </Button>
               <Button size="sm" disabled={busy} onClick={save}>

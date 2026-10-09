@@ -25,20 +25,20 @@ lib/ai/provider.ts              OpenAI 兼容 /chat/completions：AbortControlle
 
 ## 2. 环境变量
 
-| 变量 | 默认 | 说明 |
-| --- | --- | --- |
-| `AI_API_KEY` | 空 | 空 = AI 功能关闭。绝不写入 `next.config.ts` 的 `env`，那会被打进浏览器包 |
-| `AI_BASE_URL` | 空 | OpenAI 兼容基址，例如 `https://api.openai.com/v1` |
-| `AI_MODEL` | `gpt-4o-mini` | 默认模型名 |
-| `AI_ALLOWED_BASE_URLS` | 空 | **SSRF 允许列表**。留空时自动包含 `AI_BASE_URL`；不在列表内的地址一律拒绝 |
-| `AI_ALLOW_CLIENT_BASE_URL` | `false` | 是否允许前端在允许列表内指定 `baseUrl`。保持 false |
-| `AI_ALLOW_LOOPBACK` | `false` | 仅本地开发：放行 `http` 与 `127.0.0.1`（如本机 Ollama）。生产必须 false |
-| `AI_MAX_INPUT_CHARS` | 12000 | 单次请求正文上限（钳制在 500～60000） |
-| `AI_MAX_OUTPUT_TOKENS` | 900 | 钳制在 128～4000 |
-| `AI_TIMEOUT_MS` | 25000 | 钳制在 3000～120000 |
-| `AI_DAILY_LIMIT` | 60 | 每用户每日调用上限，0 表示禁用 |
-| `AI_RATE_LIMIT_PER_MIN` | 12 | 每分钟窗口 |
-| `AI_RETRY_LIMIT` | 2 | 可重试错误的最大重试次数，0 表示不重试 |
+| 变量                       | 默认          | 说明                                                                      |
+| -------------------------- | ------------- | ------------------------------------------------------------------------- |
+| `AI_API_KEY`               | 空            | 空 = AI 功能关闭。绝不写入 `next.config.ts` 的 `env`，那会被打进浏览器包  |
+| `AI_BASE_URL`              | 空            | OpenAI 兼容基址，例如 `https://api.openai.com/v1`                         |
+| `AI_MODEL`                 | `gpt-4o-mini` | 默认模型名                                                                |
+| `AI_ALLOWED_BASE_URLS`     | 空            | **SSRF 允许列表**。留空时自动包含 `AI_BASE_URL`；不在列表内的地址一律拒绝 |
+| `AI_ALLOW_CLIENT_BASE_URL` | `false`       | 是否允许前端在允许列表内指定 `baseUrl`。保持 false                        |
+| `AI_ALLOW_LOOPBACK`        | `false`       | 仅本地开发：放行 `http` 与 `127.0.0.1`（如本机 Ollama）。生产必须 false   |
+| `AI_MAX_INPUT_CHARS`       | 12000         | 单次请求正文上限（钳制在 500～60000）                                     |
+| `AI_MAX_OUTPUT_TOKENS`     | 900           | 钳制在 128～4000                                                          |
+| `AI_TIMEOUT_MS`            | 25000         | 钳制在 3000～120000                                                       |
+| `AI_DAILY_LIMIT`           | 60            | 每用户每日调用上限，0 表示禁用                                            |
+| `AI_RATE_LIMIT_PER_MIN`    | 12            | 每分钟窗口                                                                |
+| `AI_RETRY_LIMIT`           | 2             | 可重试错误的最大重试次数，0 表示不重试                                    |
 
 `GET /api/ai/status` 只暴露 `configured`、默认模型名、允许列表**条数**和各项限额（见 `publicAiStatus()`），不回显 Key、不回显完整 URL。
 
@@ -89,14 +89,14 @@ lib/ai/provider.ts              OpenAI 兼容 /chat/completions：AbortControlle
 
 `AI_TASKS`（`lib/ai/output-schema.ts`）当前有 6 个任务：
 
-| task | 用途 | 提示词版本 |
-| --- | --- | --- |
-| `analyze-reasoning` | 对用户的一次作答/推理给苏格拉底式追问，指出缺口 | `analyze-reasoning-v2`（追问变体加 `-followup`） |
-| `review-journal` | 审阅一篇思考日志：区分事实与推测、给出最强反驳、下一步验证 | `review-journal-v2` |
-| `analyze-material` | 分析一段外部材料：结论、前提、隐含假设、谬误、证据质量 | `analyze-material-v2` |
-| `recommend-practice` | 根据薄弱点推荐题库里的练习题 id | `recommend-practice-v2` |
-| `weekly-summary` | 周度文字小结（基于本地统计，不做能力断言） | `weekly-summary-v2` |
-| `ping` | 连通性自检，用于配置页的「测试连接」 | `ping-v1` |
+| task                 | 用途                                                       | 提示词版本                                       |
+| -------------------- | ---------------------------------------------------------- | ------------------------------------------------ |
+| `analyze-reasoning`  | 对用户的一次作答/推理给苏格拉底式追问，指出缺口            | `analyze-reasoning-v2`（追问变体加 `-followup`） |
+| `review-journal`     | 审阅一篇思考日志：区分事实与推测、给出最强反驳、下一步验证 | `review-journal-v2`                              |
+| `analyze-material`   | 分析一段外部材料：结论、前提、隐含假设、谬误、证据质量     | `analyze-material-v2`                            |
+| `recommend-practice` | 根据薄弱点推荐题库里的练习题 id                            | `recommend-practice-v2`                          |
+| `weekly-summary`     | 周度文字小结（基于本地统计，不做能力断言）                 | `weekly-summary-v2`                              |
+| `ping`               | 连通性自检，用于配置页的「测试连接」                       | `ping-v1`                                        |
 
 除 `ping` 外，输出都继承 `coachBaseSchema`，字段固定为需求里要求的 8 类信息：
 
@@ -137,15 +137,15 @@ lib/ai/prompts/
 
 `AiErrorKind` → 界面表现（`lib/ai/client.ts` 的 `describeAiError`）：
 
-| 情况 | 行为 |
-| --- | --- |
-| 未配置 Key/基址 | 面板显示「AI 教练未启用」+ 一句怎么开启；训练流程完全不受影响（端到端有测试） |
-| `timeout` | 「请求超过 N 秒已中断」，可重试 |
-| `rate_limited` | 「操作太频繁，稍后再试」，HTTP 429 带 `Retry-After`（端到端有测试） |
-| `auth` | 「服务端凭据无效」——提示运维，不提示用户去改自己的设置 |
-| `unavailable` / `network` | 「模型服务暂时不可用」，本地功能不受影响 |
-| `bad_output` | 「模型返回格式不符合预期」，原始文本不渲染 |
-| `unsafe_url` | 「目标地址不在服务端允许列表中」 |
+| 情况                      | 行为                                                                          |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| 未配置 Key/基址           | 面板显示「AI 教练未启用」+ 一句怎么开启；训练流程完全不受影响（端到端有测试） |
+| `timeout`                 | 「请求超过 N 秒已中断」，可重试                                               |
+| `rate_limited`            | 「操作太频繁，稍后再试」，HTTP 429 带 `Retry-After`（端到端有测试）           |
+| `auth`                    | 「服务端凭据无效」——提示运维，不提示用户去改自己的设置                        |
+| `unavailable` / `network` | 「模型服务暂时不可用」，本地功能不受影响                                      |
+| `bad_output`              | 「模型返回格式不符合预期」，原始文本不渲染                                    |
+| `unsafe_url`              | 「目标地址不在服务端允许列表中」                                              |
 
 原则：**AI 失败永远不能阻断训练**。所有 AI 调用都在独立的错误边界内，失败只影响那块面板。
 

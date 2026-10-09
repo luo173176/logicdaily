@@ -6,10 +6,7 @@
       "id": "ex-ded-001",
       "version": 1,
       "category": "deductive-reasoning",
-      "knowledgePoints": [
-        "syllogism",
-        "validity-vs-truth"
-      ],
+      "knowledgePoints": ["syllogism", "validity-vs-truth"],
       "difficulty": 2,
       "estimatedSeconds": 50,
       "format": "single-choice",
@@ -39,9 +36,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "D"
-        ]
+        "keys": ["D"]
       },
       "alternatives": [],
       "explanation": {
@@ -72,11 +67,7 @@
         ],
         "takeaway": "看到“所有／有些”的推理，先画集合图，问清前提是否真的锁定了两个集合的相对位置。"
       },
-      "reviewTags": [
-        "三段论",
-        "必然为真",
-        "集合关系"
-      ],
+      "reviewTags": ["三段论", "必然为真", "集合关系"],
       "provenance": "原创题，场景取自线上读书群的笔记约定，用于训练判断结论是否被前提必然推出。",
       "status": "validated",
       "grading": {
@@ -88,11 +79,7 @@
       "id": "ex-ded-002",
       "version": 1,
       "category": "deductive-reasoning",
-      "knowledgePoints": [
-        "modus-tollens",
-        "contrapositive",
-        "denying-antecedent"
-      ],
+      "knowledgePoints": ["modus-tollens", "contrapositive", "denying-antecedent"],
       "difficulty": 3,
       "estimatedSeconds": 80,
       "format": "single-choice",
@@ -123,9 +110,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -156,11 +141,7 @@
         ],
         "takeaway": "多条条件串起来时，逐条问“这一条给我一个方向还是双向”，不要顺路把方向换掉。"
       },
-      "reviewTags": [
-        "演绎链条",
-        "否定后件式",
-        "条件推理"
-      ],
+      "reviewTags": ["演绎链条", "否定后件式", "条件推理"],
       "provenance": "原创题，场景取自软件项目群里的排班与发布约定，用于训练多前提链条。",
       "status": "validated",
       "grading": {
@@ -172,11 +153,7 @@
       "id": "ex-ded-003",
       "version": 1,
       "category": "deductive-reasoning",
-      "knowledgePoints": [
-        "validity-vs-truth",
-        "syllogism",
-        "affirming-consequent"
-      ],
+      "knowledgePoints": ["validity-vs-truth", "syllogism", "affirming-consequent"],
       "difficulty": 4,
       "estimatedSeconds": 100,
       "format": "single-choice",
@@ -206,9 +183,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -239,11 +214,7 @@
         ],
         "takeaway": "评一段演绎，只问一句：前提全真时结论还能是假的吗？能，它就无效。"
       },
-      "reviewTags": [
-        "有效性",
-        "真理与有效",
-        "论证评估"
-      ],
+      "reviewTags": ["有效性", "真理与有效", "论证评估"],
       "provenance": "原创题，场景取自网购数码产品的测评文章，用于区分推理有效性与前提真实性。",
       "status": "validated",
       "grading": {
@@ -255,10 +226,7 @@
       "id": "ex-ded-004",
       "version": 1,
       "category": "deductive-reasoning",
-      "knowledgePoints": [
-        "syllogism",
-        "validity-vs-truth"
-      ],
+      "knowledgePoints": ["syllogism", "validity-vs-truth"],
       "difficulty": 2,
       "estimatedSeconds": 40,
       "format": "true-false",
@@ -287,11 +255,7 @@
         ],
         "takeaway": "“有些”开头的判断只能对称换位，不能顺手加上“不是”。"
       },
-      "reviewTags": [
-        "三段论",
-        "换位",
-        "有效性判断"
-      ],
+      "reviewTags": ["三段论", "换位", "有效性判断"],
       "provenance": "原创题，场景取自社区团购的售后对话，针对“有些”命题的换位错误。",
       "status": "validated",
       "grading": {
@@ -303,11 +267,7 @@
       "id": "ex-ded-005",
       "version": 1,
       "category": "deductive-reasoning",
-      "knowledgePoints": [
-        "modus-tollens",
-        "necessary-condition",
-        "exhaustive-cases"
-      ],
+      "knowledgePoints": ["modus-tollens", "necessary-condition", "exhaustive-cases"],
       "difficulty": 4,
       "estimatedSeconds": 130,
       "format": "multi-choice",
@@ -340,11 +300,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "B",
-          "C"
-        ]
+        "keys": ["A", "B", "C"]
       },
       "alternatives": [],
       "explanation": {
@@ -370,11 +326,7 @@
         ],
         "takeaway": "链条题先把每句条件统一成“若……则……”，再从已知事实那一端一路推到底。"
       },
-      "reviewTags": [
-        "多前提链条",
-        "必要条件",
-        "排班场景"
-      ],
+      "reviewTags": ["多前提链条", "必要条件", "排班场景"],
       "provenance": "原创题，场景取自制造车间的排班看板，用于训练把自然语言条件转成链条推理。",
       "status": "validated",
       "grading": {
@@ -386,11 +338,7 @@
       "id": "ex-ded-006",
       "version": 1,
       "category": "deductive-reasoning",
-      "knowledgePoints": [
-        "affirming-consequent",
-        "implicit-premise",
-        "necessary-condition"
-      ],
+      "knowledgePoints": ["affirming-consequent", "implicit-premise", "necessary-condition"],
       "difficulty": 4,
       "estimatedSeconds": 140,
       "format": "short-answer",
@@ -400,40 +348,28 @@
           {
             "id": "c1",
             "label": "判定推理形式无效",
-            "keywords": [
-              "无效",
-              "不能必然推出"
-            ],
+            "keywords": ["无效", "不能必然推出"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "点明肯定后件的错误",
-            "keywords": [
-              "肯定后件",
-              "后件"
-            ],
+            "keywords": ["肯定后件", "后件"],
             "weight": 2,
             "required": true
           },
           {
             "id": "c3",
             "label": "给出需要补充的前提",
-            "keywords": [
-              "补充前提",
-              "必要条件"
-            ],
+            "keywords": ["补充前提", "必要条件"],
             "weight": 2,
             "required": true
           },
           {
             "id": "c4",
             "label": "举出同样成立的解释",
-            "keywords": [
-              "代刷",
-              "访客二维码"
-            ],
+            "keywords": ["代刷", "访客二维码"],
             "weight": 1,
             "required": false
           }
@@ -464,11 +400,7 @@
         ],
         "takeaway": "看到“能……所以一定……”，先问一句：这条规则反过来也成立吗？"
       },
-      "reviewTags": [
-        "肯定后件",
-        "隐含前提",
-        "业主群场景"
-      ],
+      "reviewTags": ["肯定后件", "隐含前提", "业主群场景"],
       "provenance": "原创题，场景取自小区业主群关于门禁的日常争论。",
       "status": "validated",
       "grading": {
@@ -480,11 +412,7 @@
       "id": "ex-ded-007",
       "version": 1,
       "category": "deductive-reasoning",
-      "knowledgePoints": [
-        "dependency-order",
-        "validity-vs-truth",
-        "implicit-premise"
-      ],
+      "knowledgePoints": ["dependency-order", "validity-vs-truth", "implicit-premise"],
       "difficulty": 3,
       "estimatedSeconds": 95,
       "format": "ordering",
@@ -512,23 +440,11 @@
         }
       ],
       "answer": {
-        "keys": [
-          "s1",
-          "s2",
-          "s3",
-          "s4",
-          "s5"
-        ]
+        "keys": ["s1", "s2", "s3", "s4", "s5"]
       },
       "alternatives": [
         {
-          "keys": [
-            "s1",
-            "s4",
-            "s2",
-            "s3",
-            "s5"
-          ],
+          "keys": ["s1", "s4", "s2", "s3", "s5"],
           "note": "也可以先核对前提真实性再做形式检验；两种顺序都能得到同一份结论，只是先查形式更能省下核对成本。"
         }
       ],
@@ -553,11 +469,7 @@
         ],
         "takeaway": "先问“形式通不通”，再问“材料真不真”，最后写清哪部分还悬着。"
       },
-      "reviewTags": [
-        "步骤顺序",
-        "论证评估",
-        "职场写作"
-      ],
+      "reviewTags": ["步骤顺序", "论证评估", "职场写作"],
       "provenance": "原创题，场景取自团队周报评审，用于训练评估他人推论的操作顺序。",
       "status": "validated",
       "grading": {
@@ -569,11 +481,7 @@
       "id": "ex-ded-008",
       "version": 1,
       "category": "deductive-reasoning",
-      "knowledgePoints": [
-        "validity-vs-truth",
-        "implicit-premise",
-        "evidence-relevance"
-      ],
+      "knowledgePoints": ["validity-vs-truth", "implicit-premise", "evidence-relevance"],
       "difficulty": 5,
       "estimatedSeconds": 180,
       "format": "open-response",
@@ -634,12 +542,7 @@
         ],
         "takeaway": "有人用身边个例反驳统计结论时，先问：他的样本是怎么被挑出来的，和结论比的是同一件事吗？"
       },
-      "reviewTags": [
-        "隐含前提",
-        "证据强度",
-        "家庭沟通",
-        "开放题"
-      ],
+      "reviewTags": ["隐含前提", "证据强度", "家庭沟通", "开放题"],
       "provenance": "原创题，场景取自家庭聚会的健康话题讨论；量表依据从接受到补前提、再到评估证据强度的常见回答层级设计。",
       "status": "validated",
       "grading": {

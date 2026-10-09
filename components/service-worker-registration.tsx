@@ -40,9 +40,12 @@ export function ServiceWorkerRegistration() {
       });
     });
 
-    const interval = setInterval(() => {
-      void navigator.serviceWorker.getRegistration().then((value) => value?.update());
-    }, 60 * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        void navigator.serviceWorker.getRegistration().then((value) => value?.update());
+      },
+      60 * 60 * 1000,
+    );
 
     return () => {
       cancelled = true;

@@ -2,16 +2,7 @@ import { z } from 'zod';
 
 import { EXERCISE_CATEGORIES } from '@/lib/domain/taxonomy';
 
-export const AI_PROVIDER_PRESETS = [
-  'openai',
-  'openai-compatible',
-  'deepseek',
-  'moonshot',
-  'zhipu',
-  'qwen',
-  'local',
-  'custom',
-] as const;
+export const AI_PROVIDER_PRESETS = ['openai', 'openai-compatible', 'deepseek', 'moonshot', 'zhipu', 'qwen', 'local', 'custom'] as const;
 
 const REMINDER_DEFAULTS = {
   enabled: false,
@@ -118,9 +109,7 @@ export function migrateSettings(raw: unknown): AppSettings {
 const WEEKDAY_NAMES = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
 export function settingsSummary(settings: AppSettings): string {
-  const rest = settings.restWeekdays.length
-    ? `，休息日：${settings.restWeekdays.map((d) => WEEKDAY_NAMES[d]).join('、')}`
-    : '';
+  const rest = settings.restWeekdays.length ? `，休息日：${settings.restWeekdays.map((d) => WEEKDAY_NAMES[d]).join('、')}` : '';
   return `每天 ${settings.dailyBudgetMinutes} 分钟，新题约 ${Math.round(
     settings.newToReviewRatio * 100,
   )}%、复习约 ${Math.round((1 - settings.newToReviewRatio) * 100)}%${rest}。`;

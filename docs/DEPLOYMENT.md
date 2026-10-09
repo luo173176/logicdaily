@@ -17,14 +17,14 @@
 
 ## 1. 你要部署的到底是什么
 
-| 组成 | 位置 | 部署含义 |
-| --- | --- | --- |
-| Next.js 16 App Router 前端（静态外壳 + 客户端组件） | `app/`、`components/`、`features/` | 需要 Node 服务端进程；页面被预渲染成静态外壳，真正的数据都在浏览器里 |
-| 两个 AI route handler | `app/api/ai/status/route.ts`（GET）、`app/api/ai/analyze/route.ts`（POST + GET） | 唯一需要服务端运行逻辑的地方，必须有 Node |
-| 用户数据 | 浏览器 IndexedDB，数据库名 `logicdaily`（`lib/db/database.ts:40`） | 服务端**没有**数据库、没有账号、没有会话，不需要 Postgres/Redis/对象存储 |
-| 题库 | `content/exercises/*.json` 14 个文件，被 `lib/content/packs.ts` 静态导入 | 打进客户端分块，随 JS 下发，首次运行播种进 IndexedDB；不需要任何数据迁移 |
-| 离线与安装 | `public/sw.js`、`app/manifest.ts`（`MetadataRoute.Manifest`，对外 URL 是 `/manifest.webmanifest`） | 只有 HTTPS 下浏览器才注册 Service Worker |
-| AI 上游 | 由 `AI_BASE_URL` 指定的 OpenAI 兼容接口 | 可选。不配是受支持的降级状态（实测见第 9 节） |
+| 组成                                                | 位置                                                                                               | 部署含义                                                                 |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Next.js 16 App Router 前端（静态外壳 + 客户端组件） | `app/`、`components/`、`features/`                                                                 | 需要 Node 服务端进程；页面被预渲染成静态外壳，真正的数据都在浏览器里     |
+| 两个 AI route handler                               | `app/api/ai/status/route.ts`（GET）、`app/api/ai/analyze/route.ts`（POST + GET）                   | 唯一需要服务端运行逻辑的地方，必须有 Node                                |
+| 用户数据                                            | 浏览器 IndexedDB，数据库名 `logicdaily`（`lib/db/database.ts:40`）                                 | 服务端**没有**数据库、没有账号、没有会话，不需要 Postgres/Redis/对象存储 |
+| 题库                                                | `content/exercises/*.json` 14 个文件，被 `lib/content/packs.ts` 静态导入                           | 打进客户端分块，随 JS 下发，首次运行播种进 IndexedDB；不需要任何数据迁移 |
+| 离线与安装                                          | `public/sw.js`、`app/manifest.ts`（`MetadataRoute.Manifest`，对外 URL 是 `/manifest.webmanifest`） | 只有 HTTPS 下浏览器才注册 Service Worker                                 |
+| AI 上游                                             | 由 `AI_BASE_URL` 指定的 OpenAI 兼容接口                                                            | 可选。不配是受支持的降级状态（实测见第 9 节）                            |
 
 一句话结论：**一台能跑 Node 22 的机器 + 一张 TLS 证书 + 一个反向代理**，就是完整部署。AI Key 是可选项。
 
@@ -222,13 +222,13 @@ if (url.pathname.startsWith('/api/')) return;
 
 **但 CDN 那一层没人替你管。** `/api/ai/status` 现在已是动态处理器（见 4.1），但 CDN 默认仍可能给 JSON 上一个它自己决定的 TTL，所以还是要显式对 `/api/*` 关闭缓存。实测的本仓库各路径响应头：
 
-| 路径 | 实测 `Cache-Control` | 你要做什么 |
-| --- | --- | --- |
-| `/api/ai/status` | 无 `cache-control`（已改为动态，见 4.1） | 仍在 CDN 上对 `/api/*` 强制 `no-store`，见 5.1 |
-| `/api/ai/analyze` | HEAD 请求未返回 `cache-control` | 同样按 `/api/` 规则处理，别让它进缓存 |
-| `/`、`/train` | `s-maxage=31536000`、`x-nextjs-prerender: 1` | 静态外壳可以被共享缓存，但发布后要 purge 或缩短 HTML TTL，否则用户拿旧壳去请求新 chunk 会 404 |
-| `/sw.js` | `public, max-age=0` | 保持不缓存（默认就正确）；注册时已用 `updateViaCache: 'none'` |
-| `/manifest.webmanifest` | `public, max-age=0, must-revalidate` | 保持默认即可 |
+| 路径                    | 实测 `Cache-Control`                         | 你要做什么                                                                                    |
+| ----------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `/api/ai/status`        | 无 `cache-control`（已改为动态，见 4.1）     | 仍在 CDN 上对 `/api/*` 强制 `no-store`，见 5.1                                                |
+| `/api/ai/analyze`       | HEAD 请求未返回 `cache-control`              | 同样按 `/api/` 规则处理，别让它进缓存                                                         |
+| `/`、`/train`           | `s-maxage=31536000`、`x-nextjs-prerender: 1` | 静态外壳可以被共享缓存，但发布后要 purge 或缩短 HTML TTL，否则用户拿旧壳去请求新 chunk 会 404 |
+| `/sw.js`                | `public, max-age=0`                          | 保持不缓存（默认就正确）；注册时已用 `updateViaCache: 'none'`                                 |
+| `/manifest.webmanifest` | `public, max-age=0, must-revalidate`         | 保持默认即可                                                                                  |
 
 `.next/static` 之类的哈希资源由 Next 自己发 `immutable` 头，交给 CDN 长缓存是安全的。
 
@@ -299,23 +299,23 @@ CMD ["node", "server.js"]
 
 来源：`.env.example` 全文 + 代码里真实读取的位置。作用域一栏：`server-only` = 只有 Node 运行时读取、不会进浏览器包；`NEXT_PUBLIC_` = 构建期内联进 JS，任何人都能在 DevTools 里看到。
 
-| 变量 | 必需 | 作用域 | 代码位置 | 默认值 | 不设置/设错会怎样 |
-| --- | --- | --- | --- | --- | --- |
-| `AI_API_KEY` | 否 | server-only | `lib/ai/config.ts:42` | 空 | AI 教练关闭。`configured = Boolean(apiKey && baseUrl)`，缺它 `POST /api/ai/analyze` 返回 503 `not_configured`（实测）。训练/日志/复习/报告不受影响 |
-| `AI_BASE_URL` | 否 | server-only | `config.ts:43` | 空 | 同上，AI 关闭。格式如 `https://api.openai.com/v1` |
-| `AI_MODEL` | 否 | server-only | `config.ts:44` | `gpt-4o-mini` | 用默认模型名；界面与状态接口的 `defaultModel` 就是它 |
-| `AI_ALLOWED_BASE_URLS` | 否 | server-only | `config.ts:45`、`lib/ai/ssrf.ts:68` | 空 | SSRF 允许列表。**为什么存在**：出站前 `resolveSafeTarget()` 要求目标必须命中允许列表，否则 `unsafe_url`（403）。`config.ts:46-48` 会在 `AI_BASE_URL` 没被列表覆盖时自动把它 unshift 进去，所以留空也能用自配的一个上游。列表项若无 scheme 会被当 `https://` 处理（`normalizeAllowEntry`） |
-| `AI_ALLOW_CLIENT_BASE_URL` | 否 | server-only | `config.ts:56`、`service.ts:171-182` | `false` | 保持 `false`。为 `true` 时客户端可指定 `baseUrl`，但仍必须在允许列表内 |
-| `AI_ALLOW_LOOPBACK` | 否 | server-only | `service.ts:211` | `false` | 仅本地开发把 `http://127.0.0.1`（如 Ollama）放行。生效条件是两个：`NODE_ENV !== 'production'` **且** 该值为 `true`。生产必须 `false` |
-| `AI_MAX_INPUT_CHARS` | 否 | server-only | `config.ts:57` | `12000`，钳制区间 500–60000 | 只是配置快照（出现在状态接口 limits 里）；实际请求的硬门槛是 `service.ts:200` 用 `TASK_INPUT_LIMITS[task] + 4000` 判断，超出返回 `budget_exceeded` |
-| `AI_MAX_OUTPUT_TOKENS` | 否 | server-only | `config.ts:58` | `900`，128–4000 | 服务端上限；客户端请求的 `maxOutputTokens` 会被 `Math.min` 夹住 |
-| `AI_TIMEOUT_MS` | 否 | server-only | `config.ts:59` | `25000`，3000–120000 | 超时返回 504 `timeout`；`ping` 任务另按 15s 更严 |
-| `AI_DAILY_LIMIT` | 否 | server-only | `config.ts:60` | `60`，0–5000 | 每「限流身份 + 任务」每日（UTC）次数上限，超出 429 `budget/rate_limited`。设 0 = 全部拒绝 |
-| `AI_RATE_LIMIT_PER_MIN` | 否 | server-only | `config.ts:61` | `12`，1–300 | 每分钟滑动窗口，超出 429 并带 `retry-after` |
-| `AI_RETRY_LIMIT` | 否 | server-only | `config.ts:62` | `2`，0–5 | provider 重试次数，直接影响账单 |
-| `TRUST_PROXY_HEADERS` | 否 | 服务端（`app/api/ai/analyze/route.ts`） | 逗号分隔的头名 | 空 = 不读任何转发头 | 见 5.2：留空时所有请求共用 `shared` 一个配额桶；配置后必须确保代理**覆写**该头 |
-| `NEXT_PUBLIC_APP_URL` | 否 | **已不存在** | — | — | 模板里曾声明但全仓库无读取点，已从 `.env.example` 移除；如果你需要对外地址，自行加回并写实现 |
-| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` | 否 | 前端内联 / server-only | — | 空 | **Phase 3 未接入**：实测代码目录（`app lib components features scripts tests public content`）里没有任何读取这些变量的代码，唯一提到 `supabase` 的地方是 `scripts/export-sql-seed.mjs` 的注释与输出路径。`supabase/migrations/` 下有 4 个 SQL（实测 `find`：`0000_local_stubs.sql`、`0001_init.sql`、`0002_auth_rls.sql`、`0003_seed_exercises.sql`），但应用内没有登录、没有同步，**设了这些变量也不会改变产品行为**。特别提醒：`SUPABASE_SERVICE_ROLE_KEY` 是绕过 RLS 的管理员凭据，绝不允许加 `NEXT_PUBLIC_` |
+| 变量                                                                                       | 必需 | 作用域                                  | 代码位置                             | 默认值                      | 不设置/设错会怎样                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------------------------------------------------------------------------------ | ---- | --------------------------------------- | ------------------------------------ | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AI_API_KEY`                                                                               | 否   | server-only                             | `lib/ai/config.ts:42`                | 空                          | AI 教练关闭。`configured = Boolean(apiKey && baseUrl)`，缺它 `POST /api/ai/analyze` 返回 503 `not_configured`（实测）。训练/日志/复习/报告不受影响                                                                                                                                                                                                                                                                                                                                                              |
+| `AI_BASE_URL`                                                                              | 否   | server-only                             | `config.ts:43`                       | 空                          | 同上，AI 关闭。格式如 `https://api.openai.com/v1`                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `AI_MODEL`                                                                                 | 否   | server-only                             | `config.ts:44`                       | `gpt-4o-mini`               | 用默认模型名；界面与状态接口的 `defaultModel` 就是它                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `AI_ALLOWED_BASE_URLS`                                                                     | 否   | server-only                             | `config.ts:45`、`lib/ai/ssrf.ts:68`  | 空                          | SSRF 允许列表。**为什么存在**：出站前 `resolveSafeTarget()` 要求目标必须命中允许列表，否则 `unsafe_url`（403）。`config.ts:46-48` 会在 `AI_BASE_URL` 没被列表覆盖时自动把它 unshift 进去，所以留空也能用自配的一个上游。列表项若无 scheme 会被当 `https://` 处理（`normalizeAllowEntry`）                                                                                                                                                                                                                       |
+| `AI_ALLOW_CLIENT_BASE_URL`                                                                 | 否   | server-only                             | `config.ts:56`、`service.ts:171-182` | `false`                     | 保持 `false`。为 `true` 时客户端可指定 `baseUrl`，但仍必须在允许列表内                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `AI_ALLOW_LOOPBACK`                                                                        | 否   | server-only                             | `service.ts:211`                     | `false`                     | 仅本地开发把 `http://127.0.0.1`（如 Ollama）放行。生效条件是两个：`NODE_ENV !== 'production'` **且** 该值为 `true`。生产必须 `false`                                                                                                                                                                                                                                                                                                                                                                            |
+| `AI_MAX_INPUT_CHARS`                                                                       | 否   | server-only                             | `config.ts:57`                       | `12000`，钳制区间 500–60000 | 只是配置快照（出现在状态接口 limits 里）；实际请求的硬门槛是 `service.ts:200` 用 `TASK_INPUT_LIMITS[task] + 4000` 判断，超出返回 `budget_exceeded`                                                                                                                                                                                                                                                                                                                                                              |
+| `AI_MAX_OUTPUT_TOKENS`                                                                     | 否   | server-only                             | `config.ts:58`                       | `900`，128–4000             | 服务端上限；客户端请求的 `maxOutputTokens` 会被 `Math.min` 夹住                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `AI_TIMEOUT_MS`                                                                            | 否   | server-only                             | `config.ts:59`                       | `25000`，3000–120000        | 超时返回 504 `timeout`；`ping` 任务另按 15s 更严                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `AI_DAILY_LIMIT`                                                                           | 否   | server-only                             | `config.ts:60`                       | `60`，0–5000                | 每「限流身份 + 任务」每日（UTC）次数上限，超出 429 `budget/rate_limited`。设 0 = 全部拒绝                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `AI_RATE_LIMIT_PER_MIN`                                                                    | 否   | server-only                             | `config.ts:61`                       | `12`，1–300                 | 每分钟滑动窗口，超出 429 并带 `retry-after`                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `AI_RETRY_LIMIT`                                                                           | 否   | server-only                             | `config.ts:62`                       | `2`，0–5                    | provider 重试次数，直接影响账单                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `TRUST_PROXY_HEADERS`                                                                      | 否   | 服务端（`app/api/ai/analyze/route.ts`） | 逗号分隔的头名                       | 空 = 不读任何转发头         | 见 5.2：留空时所有请求共用 `shared` 一个配额桶；配置后必须确保代理**覆写**该头                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `NEXT_PUBLIC_APP_URL`                                                                      | 否   | **已不存在**                            | —                                    | —                           | 模板里曾声明但全仓库无读取点，已从 `.env.example` 移除；如果你需要对外地址，自行加回并写实现                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` | 否   | 前端内联 / server-only                  | —                                    | 空                          | **Phase 3 未接入**：实测代码目录（`app lib components features scripts tests public content`）里没有任何读取这些变量的代码，唯一提到 `supabase` 的地方是 `scripts/export-sql-seed.mjs` 的注释与输出路径。`supabase/migrations/` 下有 4 个 SQL（实测 `find`：`0000_local_stubs.sql`、`0001_init.sql`、`0002_auth_rls.sql`、`0003_seed_exercises.sql`），但应用内没有登录、没有同步，**设了这些变量也不会改变产品行为**。特别提醒：`SUPABASE_SERVICE_ROLE_KEY` 是绕过 RLS 的管理员凭据，绝不允许加 `NEXT_PUBLIC_` |
 
 补充：`publicAiStatus()` 只对外暴露 `configured` / `defaultModel` / `allowedBaseUrlCount` / `allowClientBaseUrl` 和 limits，不暴露密钥也不暴露完整 URL（`service.ts:250` 用 `redactUrl()`）。
 
@@ -397,14 +397,14 @@ npm run test:e2e         # playwright test（会自己起 next start -p 3123）
 npm run test:coverage    # vitest run --coverage（v8，统计范围只有 lib/**）
 ```
 
-| 命令 | 覆盖 | 本会话是否运行 |
-| --- | --- | --- |
-| `npm run test` | 15 个文件：12 个单元（`lib/domain` 的 schema、判分、错因归因、调度、掌握度、每日计划、统计、时间、提醒决策 + `ai-security`）与 3 个集成（`local-store`、`training-flow`、`content`），集成用 fake-indexeddb 在 node 环境跑 | 已运行，全绿 |
-| `npm run typecheck` | 全项目 TS 严格检查 | 已运行，exit 0 |
-| `npm run content:validate` | 题库：id 规范、枚举、答案与解析自洽、重复题干、类别覆盖 | 已运行，通过 |
-| `npm run lint` | ESLint flat config | **未运行** |
-| `npm run test:e2e` | `tests/e2e/core-flow.spec.ts` 6 个 + `tests/e2e/data-and-ai.spec.ts` 11 个 = 17 个 `test` 声明（引导、答题与错因归类、日志八步与证据清单、复习、报告、导出→清除→导入、AI 三种降级、393×851 溢出与遮挡）。配置为 `devices['Pixel 7']`、`workers: 1`、headless | **未运行**（3123 已被现有实例占用） |
-| CI（`.github/workflows/ci.yml`） | job `check`：`npm ci` → `typecheck` → `npx eslint . --max-warnings=20` → `content:validate` → `test` → `build`；job `e2e`（needs check）：`npx playwright install --with-deps chromium` → `CI=true npm run test:e2e`，失败上传 `playwright-report/` 与 `test-results/`。Node 22，ubuntu-latest | **本会话未触发 CI** |
+| 命令                             | 覆盖                                                                                                                                                                                                                                                                                           | 本会话是否运行                      |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `npm run test`                   | 15 个文件：12 个单元（`lib/domain` 的 schema、判分、错因归因、调度、掌握度、每日计划、统计、时间、提醒决策 + `ai-security`）与 3 个集成（`local-store`、`training-flow`、`content`），集成用 fake-indexeddb 在 node 环境跑                                                                     | 已运行，全绿                        |
+| `npm run typecheck`              | 全项目 TS 严格检查                                                                                                                                                                                                                                                                             | 已运行，exit 0                      |
+| `npm run content:validate`       | 题库：id 规范、枚举、答案与解析自洽、重复题干、类别覆盖                                                                                                                                                                                                                                        | 已运行，通过                        |
+| `npm run lint`                   | ESLint flat config                                                                                                                                                                                                                                                                             | **未运行**                          |
+| `npm run test:e2e`               | `tests/e2e/core-flow.spec.ts` 6 个 + `tests/e2e/data-and-ai.spec.ts` 11 个 = 17 个 `test` 声明（引导、答题与错因归类、日志八步与证据清单、复习、报告、导出→清除→导入、AI 三种降级、393×851 溢出与遮挡）。配置为 `devices['Pixel 7']`、`workers: 1`、headless                                   | **未运行**（3123 已被现有实例占用） |
+| CI（`.github/workflows/ci.yml`） | job `check`：`npm ci` → `typecheck` → `npx eslint . --max-warnings=20` → `content:validate` → `test` → `build`；job `e2e`（needs check）：`npx playwright install --with-deps chromium` → `CI=true npm run test:e2e`，失败上传 `playwright-report/` 与 `test-results/`。Node 22，ubuntu-latest | **本会话未触发 CI**                 |
 
 本会话的真实输出：
 
@@ -436,17 +436,17 @@ $ npm run content:validate        # 节选
 
 ## 12. 故障排查
 
-| 现象 | 最可能的原因 | 怎么确认 |
-| --- | --- | --- |
+| 现象                                       | 最可能的原因                                                                                    | 怎么确认                                                                                                          |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | 「我的」页显示 AI 未启用，但你明明配了 Key | 变量名拼错、值里有空格、或 CDN/浏览器仍在供旧的 `/api/ai/status` 响应（该处理器本身已改为动态） | `curl -i /api/ai/status` 看返回值与 `cache-control`；确认 `AI_API_KEY` 与 `AI_BASE_URL` **两者**都存在；purge CDN |
-| 少量用户就触发 429 / 当日额度秒空 | 所有请求共享 `anonymous` 桶（代理没传 `X-Forwarded-For`） | 在 Node 侧临时打印 `actorKey`，或看 `meta.usedToday` 是否随不同用户同步增长 |
-| 用户能无限刷 AI | 进程被直接暴露，`X-Forwarded-For` 可伪造 | 检查代理是否**覆写**该头；确认没有直连入口 |
-| 多副本下配额像被放大 | 限流是单进程内存实现 | 见 5.4 |
-| 离线时白屏 / 某些页离线打不开 | 首次联网时没访问过该路由，分块未缓存；或改了 `sw.js` 但旧 SW 还在服务 | DevTools → Application → Service Workers / Cache Storage 看 `logicdaily-v1` 里有什么 |
-| 手机上没有「添加到主屏幕」 | 不是 HTTPS；或 manifest/SW 404；或该浏览器没实现 PWA 安装 | 见 `docs/ANDROID.md` 的安装条件核对表 |
-| `/api/ai/analyze` 一直 403 `forbidden` | 从别的源调用（`sameOriginGuard`） | 只允许同源页面调用；curl 不带 Origin 会被当作同源放行 |
-| 上游报 `unsafe_url` | `AI_BASE_URL` 不在允许列表、带显式端口、或解析到私网 | 检查 `AI_ALLOWED_BASE_URLS`；生产只允许标准 https 443（`resolveSafeTarget` 拒绝显式端口） |
-| 首页长时间「正在载入题库…」 | IndexedDB 被隐私模式禁用 | 页面会显示 `storageOk=false` 的说明文案；换普通模式窗口验证 |
+| 少量用户就触发 429 / 当日额度秒空          | 所有请求共享 `anonymous` 桶（代理没传 `X-Forwarded-For`）                                       | 在 Node 侧临时打印 `actorKey`，或看 `meta.usedToday` 是否随不同用户同步增长                                       |
+| 用户能无限刷 AI                            | 进程被直接暴露，`X-Forwarded-For` 可伪造                                                        | 检查代理是否**覆写**该头；确认没有直连入口                                                                        |
+| 多副本下配额像被放大                       | 限流是单进程内存实现                                                                            | 见 5.4                                                                                                            |
+| 离线时白屏 / 某些页离线打不开              | 首次联网时没访问过该路由，分块未缓存；或改了 `sw.js` 但旧 SW 还在服务                           | DevTools → Application → Service Workers / Cache Storage 看 `logicdaily-v1` 里有什么                              |
+| 手机上没有「添加到主屏幕」                 | 不是 HTTPS；或 manifest/SW 404；或该浏览器没实现 PWA 安装                                       | 见 `docs/ANDROID.md` 的安装条件核对表                                                                             |
+| `/api/ai/analyze` 一直 403 `forbidden`     | 从别的源调用（`sameOriginGuard`）                                                               | 只允许同源页面调用；curl 不带 Origin 会被当作同源放行                                                             |
+| 上游报 `unsafe_url`                        | `AI_BASE_URL` 不在允许列表、带显式端口、或解析到私网                                            | 检查 `AI_ALLOWED_BASE_URLS`；生产只允许标准 https 443（`resolveSafeTarget` 拒绝显式端口）                         |
+| 首页长时间「正在载入题库…」                | IndexedDB 被隐私模式禁用                                                                        | 页面会显示 `storageOk=false` 的说明文案；换普通模式窗口验证                                                       |
 
 ## 附录 A：本会话真实执行过的命令与输出
 
@@ -522,6 +522,7 @@ $ curl -s http://127.0.0.1:3123/ | grep -o '<meta name="viewport"[^>]*>'
 ```
 
 > 上面这段附录是**文档写作当时的真实输出**，其后有三处代码已被修改，因此这些行不再反映当前行为：
+>
 > - `decideReminder` 现在由 `components/reminder-gate.tsx` 在应用打开时调用（此前只有定义）。
 > - `/api/ai/status` 改为 `await connection()`，不再返回 `x-nextjs-cache: HIT` 与一年期 `cache-control`（见 4.1）。
 > - meta viewport 现在包含 `viewport-fit=cover`（见 `docs/ANDROID.md` 3.1）。

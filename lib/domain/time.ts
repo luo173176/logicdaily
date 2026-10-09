@@ -20,9 +20,7 @@ export function isValidDateKey(value: string): value is DateKey {
   const [y, m, d] = value.split('-').map(Number);
   const ts = Date.UTC(y, m - 1, d);
   const back = new Date(ts);
-  return (
-    back.getUTCFullYear() === y && back.getUTCMonth() === m - 1 && back.getUTCDate() === d
-  );
+  return back.getUTCFullYear() === y && back.getUTCMonth() === m - 1 && back.getUTCDate() === d;
 }
 
 export function dateKeyInTimeZone(at: Date, timeZone: string): DateKey {
@@ -47,11 +45,7 @@ function toUtcNoon(key: DateKey): number {
 
 export function addDays(key: DateKey, days: number): DateKey {
   const shifted = new Date(toUtcNoon(key) + days * 86_400_000);
-  return [
-    shifted.getUTCFullYear(),
-    String(shifted.getUTCMonth() + 1).padStart(2, '0'),
-    String(shifted.getUTCDate()).padStart(2, '0'),
-  ].join('-');
+  return [shifted.getUTCFullYear(), String(shifted.getUTCMonth() + 1).padStart(2, '0'), String(shifted.getUTCDate()).padStart(2, '0')].join('-');
 }
 
 export function diffDays(from: DateKey, to: DateKey): number {

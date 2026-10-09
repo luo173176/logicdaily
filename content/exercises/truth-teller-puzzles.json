@@ -6,10 +6,7 @@
       "id": "ex-tru-001",
       "version": 1,
       "category": "truth-teller-puzzles",
-      "knowledgePoints": [
-        "truth-table",
-        "validity-vs-truth"
-      ],
+      "knowledgePoints": ["truth-table", "validity-vs-truth"],
       "difficulty": 3,
       "estimatedSeconds": 80,
       "format": "single-choice",
@@ -40,9 +37,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -73,11 +68,7 @@
         ],
         "takeaway": "先找互相矛盾的那两句，把真话名额锁定在它们内部，剩下的话真假立刻可判。"
       },
-      "reviewTags": [
-        "真假话",
-        "矛盾对",
-        "职场核实"
-      ],
+      "reviewTags": ["真假话", "矛盾对", "职场核实"],
       "provenance": "原创题，场景取自办公室物品失踪后的内部核实，用于训练矛盾句定位法。",
       "status": "validated",
       "grading": {
@@ -89,10 +80,7 @@
       "id": "ex-tru-002",
       "version": 1,
       "category": "truth-teller-puzzles",
-      "knowledgePoints": [
-        "truth-table",
-        "self-reference"
-      ],
+      "knowledgePoints": ["truth-table", "self-reference"],
       "difficulty": 4,
       "estimatedSeconds": 100,
       "format": "single-choice",
@@ -123,9 +111,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "B"
-        ]
+        "keys": ["B"]
       },
       "alternatives": [],
       "explanation": {
@@ -156,11 +142,7 @@
         ],
         "takeaway": "遇到互相评价对方的话，把真假四种组合逐一代回去，比凭直觉快也更可靠。"
       },
-      "reviewTags": [
-        "真假话",
-        "假设法",
-        "商务沟通"
-      ],
+      "reviewTags": ["真假话", "假设法", "商务沟通"],
       "provenance": "原创题，场景取自采购会上两家供应商的互相指认，用于训练赋值穷尽法。",
       "status": "validated",
       "grading": {
@@ -172,10 +154,7 @@
       "id": "ex-tru-003",
       "version": 1,
       "category": "truth-teller-puzzles",
-      "knowledgePoints": [
-        "self-reference",
-        "truth-table"
-      ],
+      "knowledgePoints": ["self-reference", "truth-table"],
       "difficulty": 2,
       "estimatedSeconds": 40,
       "format": "true-false",
@@ -205,11 +184,7 @@
         ],
         "takeaway": "处理自指的说法，先只假设一种赋值并推到矛盾，不要同时接受两边。"
       },
-      "reviewTags": [
-        "自指",
-        "真假话",
-        "赋值检验"
-      ],
+      "reviewTags": ["自指", "真假话", "赋值检验"],
       "provenance": "原创题，场景取自益智卡片游戏，针对自指句的赋值冲突。",
       "status": "validated",
       "grading": {
@@ -221,10 +196,7 @@
       "id": "ex-tru-004",
       "version": 1,
       "category": "truth-teller-puzzles",
-      "knowledgePoints": [
-        "truth-table",
-        "exhaustive-cases"
-      ],
+      "knowledgePoints": ["truth-table", "exhaustive-cases"],
       "difficulty": 5,
       "estimatedSeconds": 145,
       "format": "single-choice",
@@ -255,9 +227,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -288,11 +258,7 @@
         ],
         "takeaway": "没有明显矛盾句时，就按题目给的“恰好几句为真”把所有可能穷举一遍。"
       },
-      "reviewTags": [
-        "真假话",
-        "穷尽情形",
-        "职场评优"
-      ],
+      "reviewTags": ["真假话", "穷尽情形", "职场评优"],
       "provenance": "原创题，场景取自公司年终评优名单的传闻，用于训练列表穷举法。",
       "status": "validated",
       "grading": {
@@ -304,10 +270,7 @@
       "id": "ex-tru-005",
       "version": 1,
       "category": "truth-teller-puzzles",
-      "knowledgePoints": [
-        "truth-table",
-        "validity-vs-truth"
-      ],
+      "knowledgePoints": ["truth-table", "validity-vs-truth"],
       "difficulty": 4,
       "estimatedSeconds": 120,
       "format": "multi-choice",
@@ -340,11 +303,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "B",
-          "C"
-        ]
+        "keys": ["A", "B", "C"]
       },
       "alternatives": [],
       "explanation": {
@@ -370,11 +329,7 @@
         ],
         "takeaway": "带有“身份决定真假”的规则时，把每种身份假设代入，看有没有违背规则的那一句。"
       },
-      "reviewTags": [
-        "真假话",
-        "身份约束",
-        "工作协作"
-      ],
+      "reviewTags": ["真假话", "身份约束", "工作协作"],
       "provenance": "原创题，场景取自研发团队追查一次未登记的线上发布，用于训练身份与真假绑定的推理。",
       "status": "validated",
       "grading": {
@@ -386,10 +341,7 @@
       "id": "ex-tru-006",
       "version": 1,
       "category": "truth-teller-puzzles",
-      "knowledgePoints": [
-        "truth-table",
-        "exhaustive-cases"
-      ],
+      "knowledgePoints": ["truth-table", "exhaustive-cases"],
       "difficulty": 3,
       "estimatedSeconds": 115,
       "format": "short-answer",
@@ -399,40 +351,28 @@
           {
             "id": "c1",
             "label": "指出乙与丙互相矛盾",
-            "keywords": [
-              "矛盾",
-              "必有一真一假"
-            ],
+            "keywords": ["矛盾", "必有一真一假"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c2",
             "label": "用真话名额锁定甲为假",
-            "keywords": [
-              "一句真话",
-              "落在"
-            ],
+            "keywords": ["一句真话", "落在"],
             "weight": 2,
             "required": true
           },
           {
             "id": "c3",
             "label": "给出最终归属",
-            "keywords": [
-              "给了甲",
-              "甲拿到"
-            ],
+            "keywords": ["给了甲", "甲拿到"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c4",
             "label": "回代检验其余组合",
-            "keywords": [
-              "检验",
-              "两句真话"
-            ],
+            "keywords": ["检验", "两句真话"],
             "weight": 1,
             "required": false
           }
@@ -463,11 +403,7 @@
         ],
         "takeaway": "先定位矛盾句，再用真话名额判定其余句子的真假，最后一定回代检验。"
       },
-      "reviewTags": [
-        "真假话",
-        "矛盾对",
-        "升学求职"
-      ],
+      "reviewTags": ["真假话", "矛盾对", "升学求职"],
       "provenance": "原创题，场景取自校招内推名额的传闻，用于训练把矛盾句与数量限制结合写出完整推理。",
       "status": "validated",
       "grading": {
@@ -479,10 +415,7 @@
       "id": "ex-tru-007",
       "version": 1,
       "category": "truth-teller-puzzles",
-      "knowledgePoints": [
-        "dependency-order",
-        "truth-table"
-      ],
+      "knowledgePoints": ["dependency-order", "truth-table"],
       "difficulty": 3,
       "estimatedSeconds": 95,
       "format": "ordering",
@@ -510,13 +443,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "s1",
-          "s2",
-          "s3",
-          "s4",
-          "s5"
-        ]
+        "keys": ["s1", "s2", "s3", "s4", "s5"]
       },
       "alternatives": [],
       "explanation": {
@@ -540,11 +467,7 @@
         ],
         "takeaway": "先形式化、再找矛盾、后用数量限制，最后一定回代检验。"
       },
-      "reviewTags": [
-        "真假话",
-        "步骤顺序",
-        "工作核实"
-      ],
+      "reviewTags": ["真假话", "步骤顺序", "工作核实"],
       "provenance": "原创题，场景取自团队追查共享文档的夜间改动记录，用于整理固定的解题顺序。",
       "status": "validated",
       "grading": {
@@ -556,11 +479,7 @@
       "id": "ex-tru-008",
       "version": 1,
       "category": "truth-teller-puzzles",
-      "knowledgePoints": [
-        "truth-table",
-        "conclusion-identification",
-        "implicit-premise"
-      ],
+      "knowledgePoints": ["truth-table", "conclusion-identification", "implicit-premise"],
       "difficulty": 5,
       "estimatedSeconds": 165,
       "format": "open-response",
@@ -622,12 +541,7 @@
         ],
         "takeaway": "从“某句话是假的”到“这个人不能信”之间，需要一条关于概率的额外前提，先把它写出来再判断。"
       },
-      "reviewTags": [
-        "真假话",
-        "开放题",
-        "同事沟通",
-        "论证评估"
-      ],
+      "reviewTags": ["真假话", "开放题", "同事沟通", "论证评估"],
       "provenance": "原创题，场景取自同事群里的日常争论，量表按从整体接受到分层处理的常见回答层级设计。",
       "status": "validated",
       "grading": {

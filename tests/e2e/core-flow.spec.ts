@@ -42,9 +42,7 @@ test.describe('首次使用与核心训练流程', () => {
     const group = await openTarget(page);
     await expect(page.getByRole('heading', { level: 1, name: /车间规定/ })).toBeVisible();
     await group.getByRole('radio', { name: CORRECT_OPTION }).click();
-    await page
-      .getByLabel('你的推理过程（建议写，写出来才能定位问题）')
-      .fill('没有贴绿色标签说明后件不成立，因此按否定后件式推出没有通过终检。');
+    await page.getByLabel('你的推理过程（建议写，写出来才能定位问题）').fill('没有贴绿色标签说明后件不成立，因此按否定后件式推出没有通过终检。');
     await page.getByRole('radiogroup', { name: '你对这个答案的信心程度' }).getByRole('radio', { name: '4 · 比较确定' }).click();
     await page.getByRole('button', { name: '提交作答' }).click();
 

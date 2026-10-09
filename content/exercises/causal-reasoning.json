@@ -6,10 +6,7 @@
       "id": "ex-cau-001",
       "version": 1,
       "category": "causal-reasoning",
-      "knowledgePoints": [
-        "common-cause",
-        "causal-mechanism"
-      ],
+      "knowledgePoints": ["common-cause", "causal-mechanism"],
       "difficulty": 2,
       "estimatedSeconds": 55,
       "format": "single-choice",
@@ -39,9 +36,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -71,11 +66,7 @@
         ],
         "takeaway": "看到“A 组比 B 组结果更好”，先问两组人除了 A 之外还有哪里不一样。"
       },
-      "reviewTags": [
-        "共同原因",
-        "因果机制",
-        "健康新闻"
-      ],
+      "reviewTags": ["共同原因", "因果机制", "健康新闻"],
       "provenance": "原创题，场景取自健康类调查报道的常见表述，用于训练识别共同原因造成的组间差异。",
       "status": "validated",
       "grading": {
@@ -87,10 +78,7 @@
       "id": "ex-cau-002",
       "version": 1,
       "category": "causal-reasoning",
-      "knowledgePoints": [
-        "confounder",
-        "causal-mechanism"
-      ],
+      "knowledgePoints": ["confounder", "causal-mechanism"],
       "difficulty": 3,
       "estimatedSeconds": 70,
       "format": "single-choice",
@@ -120,9 +108,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -152,11 +138,7 @@
         ],
         "takeaway": "两种干预同时施加时，先找只施加一种或都不施加的可比人群，再谈功劳归谁。"
       },
-      "reviewTags": [
-        "混淆变量",
-        "教育产品宣传",
-        "对照"
-      ],
+      "reviewTags": ["混淆变量", "教育产品宣传", "对照"],
       "provenance": "原创题，场景取自学习硬件的广告话术，用于训练识别同时施加的混淆变量。",
       "status": "validated",
       "grading": {
@@ -168,11 +150,7 @@
       "id": "ex-cau-003",
       "version": 1,
       "category": "causal-reasoning",
-      "knowledgePoints": [
-        "confounder",
-        "common-cause",
-        "causal-mechanism"
-      ],
+      "knowledgePoints": ["confounder", "common-cause", "causal-mechanism"],
       "difficulty": 4,
       "estimatedSeconds": 110,
       "format": "multi-choice",
@@ -204,11 +182,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A",
-          "C",
-          "E"
-        ]
+        "keys": ["A", "C", "E"]
       },
       "alternatives": [],
       "explanation": {
@@ -234,11 +208,7 @@
         ],
         "takeaway": "一项福利只给某类人时，这类人与其他类的差别就不再只属于那个标签。"
       },
-      "reviewTags": [
-        "混淆变量",
-        "公司报表",
-        "描述与因果"
-      ],
+      "reviewTags": ["混淆变量", "公司报表", "描述与因果"],
       "provenance": "原创题，场景来自电商会员制复盘数据，用于训练区分描述性差距与因果增量。",
       "status": "validated",
       "grading": {
@@ -250,10 +220,7 @@
       "id": "ex-cau-004",
       "version": 1,
       "category": "causal-reasoning",
-      "knowledgePoints": [
-        "confounder",
-        "common-cause"
-      ],
+      "knowledgePoints": ["confounder", "common-cause"],
       "difficulty": 2,
       "estimatedSeconds": 45,
       "format": "true-false",
@@ -283,11 +250,7 @@
         ],
         "takeaway": "评估政策效果时，同一时间同一地点发生的其他变化同样要计入解释。"
       },
-      "reviewTags": [
-        "城市政策",
-        "替代解释",
-        "混淆变量"
-      ],
+      "reviewTags": ["城市政策", "替代解释", "混淆变量"],
       "provenance": "原创题，场景取自城市交通政策的成效宣传，用于训练识别同期竞争性原因。",
       "status": "validated",
       "grading": {
@@ -299,11 +262,7 @@
       "id": "ex-cau-005",
       "version": 1,
       "category": "causal-reasoning",
-      "knowledgePoints": [
-        "causal-mechanism",
-        "confounder",
-        "common-cause"
-      ],
+      "knowledgePoints": ["causal-mechanism", "confounder", "common-cause"],
       "difficulty": 4,
       "estimatedSeconds": 130,
       "format": "short-answer",
@@ -313,30 +272,21 @@
           {
             "id": "c1",
             "label": "缺少机制链条的证据",
-            "keywords": [
-              "机制",
-              "中间指标"
-            ],
+            "keywords": ["机制", "中间指标"],
             "weight": 3,
             "required": false
           },
           {
             "id": "c2",
             "label": "缺少对照与自发缓解的考虑",
-            "keywords": [
-              "对照",
-              "自然缓解"
-            ],
+            "keywords": ["对照", "自然缓解"],
             "weight": 3,
             "required": true
           },
           {
             "id": "c3",
             "label": "指出评价人群存在自我选择",
-            "keywords": [
-              "自我选择",
-              "写评价"
-            ],
+            "keywords": ["自我选择", "写评价"],
             "weight": 2,
             "required": false
           }
@@ -370,11 +320,7 @@
         ],
         "takeaway": "评价类数据先问两件事：分母是谁，以及宣称的中间环节有没有被测量。"
       },
-      "reviewTags": [
-        "消费评价",
-        "因果机制",
-        "自我选择"
-      ],
+      "reviewTags": ["消费评价", "因果机制", "自我选择"],
       "provenance": "原创题，场景取自电商商品页的评价话术，用于训练拆解带机制的因果宣称。",
       "status": "validated",
       "grading": {
@@ -386,11 +332,7 @@
       "id": "ex-cau-006",
       "version": 1,
       "category": "causal-reasoning",
-      "knowledgePoints": [
-        "causal-mechanism",
-        "confounder",
-        "common-cause"
-      ],
+      "knowledgePoints": ["causal-mechanism", "confounder", "common-cause"],
       "difficulty": 3,
       "estimatedSeconds": 90,
       "format": "ordering",
@@ -418,13 +360,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "t1",
-          "t2",
-          "t3",
-          "t4",
-          "t5"
-        ]
+        "keys": ["t1", "t2", "t3", "t4", "t5"]
       },
       "alternatives": [],
       "explanation": {
@@ -448,11 +384,7 @@
         ],
         "takeaway": "归因前先完成三步：数字可比、时间对齐、竞争原因列全。"
       },
-      "reviewTags": [
-        "因果归因",
-        "步骤顺序",
-        "公司报表"
-      ],
+      "reviewTags": ["因果归因", "步骤顺序", "公司报表"],
       "provenance": "原创题，场景来自互联网运营复盘会，用于训练把因果检验拆成有依赖顺序的步骤。",
       "status": "validated",
       "grading": {
@@ -464,11 +396,7 @@
       "id": "ex-cau-007",
       "version": 1,
       "category": "causal-reasoning",
-      "knowledgePoints": [
-        "reverse-causation",
-        "common-cause",
-        "confounder"
-      ],
+      "knowledgePoints": ["reverse-causation", "common-cause", "confounder"],
       "difficulty": 5,
       "estimatedSeconds": 180,
       "format": "open-response",
@@ -531,12 +459,7 @@
         ],
         "takeaway": "同一组相关数据可以容纳多个因果方向，列出方向比急于选一个更重要。"
       },
-      "reviewTags": [
-        "因果倒置",
-        "共同原因",
-        "健康新闻",
-        "开放题"
-      ],
+      "reviewTags": ["因果倒置", "共同原因", "健康新闻", "开放题"],
       "provenance": "原创题，场景取自营养流行病学的媒体报道，量表按回答层级设计，供自评与可选的模型反馈使用。",
       "status": "validated",
       "grading": {
@@ -548,10 +471,7 @@
       "id": "ex-cau-008",
       "version": 1,
       "category": "causal-reasoning",
-      "knowledgePoints": [
-        "reverse-causation",
-        "causal-mechanism"
-      ],
+      "knowledgePoints": ["reverse-causation", "causal-mechanism"],
       "difficulty": 4,
       "estimatedSeconds": 75,
       "format": "single-choice",
@@ -581,9 +501,7 @@
         }
       ],
       "answer": {
-        "keys": [
-          "A"
-        ]
+        "keys": ["A"]
       },
       "alternatives": [],
       "explanation": {
@@ -613,11 +531,7 @@
         ],
         "takeaway": "要评估“减少 X 会不会让 Y 变好”，先问是谁在决定 X。"
       },
-      "reviewTags": [
-        "因果倒置",
-        "共同原因",
-        "医疗数据"
-      ],
+      "reviewTags": ["因果倒置", "共同原因", "医疗数据"],
       "provenance": "原创题，场景取自医院手术质量统计的解读争议，用于训练区分治疗关联与治疗效果。",
       "status": "validated",
       "grading": {

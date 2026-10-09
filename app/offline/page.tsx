@@ -20,13 +20,7 @@ export default function OfflinePage() {
   return (
     <div className="stack gap-4">
       <h1 className="text-2xl">离线状态</h1>
-      <p className="muted">
-        {online === false
-          ? '当前没有网络连接。'
-          : online === true
-            ? '网络已恢复，可以回到首页继续。'
-            : '正在检查连接…'}
-      </p>
+      <p className="muted">{online === false ? '当前没有网络连接。' : online === true ? '网络已恢复，可以回到首页继续。' : '正在检查连接…'}</p>
       <div className="card stack gap-2 text-sm">
         <p className="font-semibold">离线时仍然可用</p>
         <ul className="stack gap-1 muted">

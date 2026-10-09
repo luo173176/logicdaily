@@ -90,17 +90,13 @@ describe('出站请求前的强制检查', () => {
 
   it('字面量内网 IP 即使写进允许列表也被拒绝', async () => {
     await expect(resolveSafeTarget('https://127.0.0.1/v1', ['https://127.0.0.1'])).rejects.toThrow('内网或保留地址');
-    await expect(resolveSafeTarget('https://169.254.169.254/latest/meta-data', ['https://169.254.169.254'])).rejects.toThrow(
-      '内网或保留地址',
-    );
+    await expect(resolveSafeTarget('https://169.254.169.254/latest/meta-data', ['https://169.254.169.254'])).rejects.toThrow('内网或保留地址');
   });
 
   it('本机测试模式才放行 127.0.0.1', async () => {
     const target = await resolveSafeTarget('http://127.0.0.1:11434/v1', ['http://127.0.0.1:11434'], { allowLoopback: true });
     expect(target.hostname).toBe('127.0.0.1');
-    await expect(resolveSafeTarget('https://10.0.0.5/v1', ['https://10.0.0.5'], { allowLoopback: true })).rejects.toThrow(
-      '内网或保留地址',
-    );
+    await expect(resolveSafeTarget('https://10.0.0.5/v1', ['https://10.0.0.5'], { allowLoopback: true })).rejects.toThrow('内网或保留地址');
   });
 
   it('公网字面量 IP 正常放行', async () => {

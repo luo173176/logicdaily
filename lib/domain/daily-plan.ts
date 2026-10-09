@@ -3,11 +3,7 @@ import { activityForExercise } from '@/lib/domain/catalog';
 import type { DailyPlanRecord, AttemptRecord } from '@/lib/domain/records';
 import { type ActivityType, type LogicErrorType } from '@/lib/domain/taxonomy';
 import type { AppSettings } from '@/lib/domain/settings';
-import {
-  reviewPriority,
-  isDueForReview,
-  type ReviewState,
-} from '@/lib/domain/scheduling';
+import { reviewPriority, isDueForReview, type ReviewState } from '@/lib/domain/scheduling';
 import { weaknessScore, type KnowledgeState } from '@/lib/domain/mastery';
 import { addDays, diffDays, startOfWeekKey, todayKey, type DateKey } from '@/lib/domain/time';
 
@@ -55,9 +51,7 @@ const RECENT_AVOID_DAYS = 21;
 export function generateDailyPlan(ctx: PlanContext): DailyPlanDraft {
   const weekday = weekdayOf(ctx.dateKey);
   const restDay = ctx.settings.restWeekdays.includes(weekday);
-  const budgetMinutes = restDay
-    ? Math.max(3, Math.round(ctx.settings.dailyBudgetMinutes * 0.4))
-    : ctx.settings.dailyBudgetMinutes;
+  const budgetMinutes = restDay ? Math.max(3, Math.round(ctx.settings.dailyBudgetMinutes * 0.4)) : ctx.settings.dailyBudgetMinutes;
   const budgetSeconds = budgetMinutes * 60;
 
   const notes: string[] = [];
@@ -114,10 +108,7 @@ export function generateDailyPlan(ctx: PlanContext): DailyPlanDraft {
       exerciseId: card.id,
       journalId: null,
       estimatedSeconds: REVIEW_SECONDS,
-      reason:
-        overdue > 0
-          ? `已逾期 ${overdue} 天需要复习（累计答错 ${state.lapses} 次）。`
-          : `按计划复习（当前间隔 ${state.intervalDays} 天）。`,
+      reason: overdue > 0 ? `已逾期 ${overdue} 天需要复习（累计答错 ${state.lapses} 次）。` : `按计划复习（当前间隔 ${state.intervalDays} 天）。`,
       kind: 'review',
       required: false,
     });
@@ -148,9 +139,7 @@ export function generateDailyPlan(ctx: PlanContext): DailyPlanDraft {
   const rng = makeRng(`${ctx.profileId}|${ctx.dateKey}`);
   const usedCategories = new Set(items.map((i) => categoryOf(ctx.catalog, i.exerciseId)));
 
-  const pool = ctx.catalog.filter(
-    (card) => card.status === 'validated' && !recentSeen.has(card.id),
-  );
+  const pool = ctx.catalog.filter((card) => card.status === 'validated' && !recentSeen.has(card.id));
   const preferred = ctx.settings.preferredCategories;
   const scoped = preferred.length > 0 ? pool.filter((c) => preferred.includes(c.category)) : pool;
   const candidates = scoped.length > 0 ? scoped : pool;
@@ -183,11 +172,7 @@ export function generateDailyPlan(ctx: PlanContext): DailyPlanDraft {
       required: false,
     });
   }
-  notes.push(
-    `新题目标难度 ${targetDifficulty}（依据近 10 次作答表现与难度偏好 ${ctx.settings.difficultyBias.toFixed(
-      2,
-    )}）。`,
-  );
+  notes.push(`新题目标难度 ${targetDifficulty}（依据近 10 次作答表现与难度偏好 ${ctx.settings.difficultyBias.toFixed(2)}）。`);
 
   // 5. 思考日志入口：即使时间紧张也保留一个轻量选项，它是本产品的核心差异化环节。
   if (ctx.settings.journalDailyReminder && items.length > 0) {
@@ -199,9 +184,7 @@ export function generateDailyPlan(ctx: PlanContext): DailyPlanDraft {
         exerciseId: null,
         journalId: null,
         estimatedSeconds: Math.min(JOURNAL_SECONDS, Math.max(60, budgetSeconds - usedSeconds)),
-        reason: restDay
-          ? '休息日只做一篇轻量记录：今天有什么判断值得回头看？'
-          : '把今天工作、阅读或沟通中遇到的真实问题写成一篇思考日志。',
+        reason: restDay ? '休息日只做一篇轻量记录：今天有什么判断值得回头看？' : '把今天工作、阅读或沟通中遇到的真实问题写成一篇思考日志。',
         kind: 'journal',
         required: false,
       });
@@ -252,9 +235,7 @@ export function planCompletion(
   const items = plan.items as PlannedItem[] | DailyPlanRecord['items'];
   const total = items.length;
   const done = items.filter((i) => completedItemIds.includes(i.id)).length;
-  const requiredMissing = items
-    .filter((i) => i.required && !completedItemIds.includes(i.id))
-    .map((i) => i.id);
+  const requiredMissing = items.filter((i) => i.required && !completedItemIds.includes(i.id)).map((i) => i.id);
   return { done, total, percent: total === 0 ? 0 : Math.round((done / total) * 100), requiredMissing };
 }
 
@@ -293,10 +274,7 @@ export function trainingStreak(
   return { current, best: longestRun(activeDateKeys), missedGraceUsed: graceUsed };
 }
 
-export function weeklyActiveDays(
-  activeDateKeys: DateKey[],
-  reference: DateKey,
-): { count: number; days: DateKey[] } {
+export function weeklyActiveDays(activeDateKeys: DateKey[], reference: DateKey): { count: number; days: DateKey[] } {
   const weekStart = startOfWeekKey(reference);
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const set = new Set(activeDateKeys);
@@ -341,8 +319,7 @@ function pickTargetDifficulty(ctx: PlanContext, grouped: Map<string, AttemptReco
     .map((list) => list[list.length - 1])
     .sort((a, b) => b.createdAt - a.createdAt)
     .slice(0, 10);
-  const base =
-    recent.length === 0 ? 0.5 : recent.reduce((s, a) => s + performanceValue(a), 0) / recent.length;
+  const base = recent.length === 0 ? 0.5 : recent.reduce((s, a) => s + performanceValue(a), 0) / recent.length;
   const bias = ctx.settings.difficultyBias;
   return clamp(Math.round(1 + base * 2.6 + bias * 1.8), 1, 5);
 }
@@ -374,11 +351,7 @@ function categoryOf(catalog: ExerciseCard[], id: string | null) {
   return catalog.find((c) => c.id === id)?.category ?? null;
 }
 
-function describeNewReason(
-  card: ExerciseCard,
-  weakWeight: Map<string, number>,
-  targetDifficulty: number,
-): string {
+function describeNewReason(card: ExerciseCard, weakWeight: Map<string, number>, targetDifficulty: number): string {
   const weak = card.knowledgePoints
     .map((id) => ({ id, w: weakWeight.get(id) ?? 0 }))
     .filter((x) => x.w > 0.25)

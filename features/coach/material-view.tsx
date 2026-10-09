@@ -31,13 +31,11 @@ const EVIDENCE_LABELS: Record<string, string> = {
 const SAMPLES = [
   {
     label: '示例：健康类推文',
-    text:
-      '“我们村的人每天都喝这种自制凉茶，八十岁以上的人比城里多得多，说明这个凉茶能长寿。专家都不说，是因为他们不懂传统配方。你也赶紧试试，别等病了才后悔。”',
+    text: '“我们村的人每天都喝这种自制凉茶，八十岁以上的人比城里多得多，说明这个凉茶能长寿。专家都不说，是因为他们不懂传统配方。你也赶紧试试，别等病了才后悔。”',
   },
   {
     label: '示例：产品宣传',
-    text:
-      '“上线新版首页后，转化率从 2.1% 提升到 2.8%，因此新首页的设计是这次增长的原因。竞品最近没有大动作，用户也更喜欢我们的风格了。”',
+    text: '“上线新版首页后，转化率从 2.1% 提升到 2.8%，因此新首页的设计是这次增长的原因。竞品最近没有大动作，用户也更喜欢我们的风格了。”',
   },
 ];
 
@@ -141,10 +139,7 @@ export function MaterialCoachView() {
       {!aiReady ? (
         <Note tone="warn" title="这个功能需要配置模型服务">
           <div className="stack gap-2">
-            <p>
-              {status?.message ??
-                '服务端还没有设置 AI_API_KEY、AI_BASE_URL 与 AI_MODEL。其余训练功能不依赖模型，可以照常使用。'}
-            </p>
+            <p>{status?.message ?? '服务端还没有设置 AI_API_KEY、AI_BASE_URL 与 AI_MODEL。其余训练功能不依赖模型，可以照常使用。'}</p>
             <Link href="/me" className="text-sm text-brand no-underline">
               查看配置说明 →
             </Link>
@@ -157,7 +152,13 @@ export function MaterialCoachView() {
           <textarea rows={8} value={text} maxLength={12_000} onChange={(event) => setText(event.target.value)} placeholder="粘贴一段论述…" />
         </Field>
         <Field label="你特别想弄清楚的问题（可选）">
-          <input type="text" value={question} maxLength={200} onChange={(event) => setQuestion(event.target.value)} placeholder="例如：它有没有把相关当因果？" />
+          <input
+            type="text"
+            value={question}
+            maxLength={200}
+            onChange={(event) => setQuestion(event.target.value)}
+            placeholder="例如：它有没有把相关当因果？"
+          />
         </Field>
         <div className="row wrap gap-2">
           {SAMPLES.map((sample) => (
@@ -169,12 +170,14 @@ export function MaterialCoachView() {
         <Button disabled={state === 'loading' || !aiReady} onClick={run}>
           {state === 'loading' ? '分析中…' : '开始分析'}
         </Button>
-        <p className="faint">
-          这段文字会被发送到模型服务处理。不要粘贴身份证号、住址、健康细节等敏感信息；服务端不会把材料原文写入日志。
-        </p>
+        <p className="faint">这段文字会被发送到模型服务处理。不要粘贴身份证号、住址、健康细节等敏感信息；服务端不会把材料原文写入日志。</p>
       </section>
 
-      {state === 'failed' && error ? <Note tone="bad" title="分析失败">{error}</Note> : null}
+      {state === 'failed' && error ? (
+        <Note tone="bad" title="分析失败">
+          {error}
+        </Note>
+      ) : null}
 
       {state === 'done' && result ? (
         <>
@@ -225,9 +228,7 @@ export function MaterialCoachView() {
 
           <Note tone="neutral" title="这次分析的可靠性">
             <p>{result.uncertainty}</p>
-            <p className="faint mt-1">
-              模型可能出错，也可能漏掉材料之外的背景。把它的结论当作一份待核对的草稿，而不是判定。
-            </p>
+            <p className="faint mt-1">模型可能出错，也可能漏掉材料之外的背景。把它的结论当作一份待核对的草稿，而不是判定。</p>
           </Note>
         </>
       ) : null}

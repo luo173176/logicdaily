@@ -283,12 +283,7 @@ export interface DueReviewItem {
   overdueDays: number;
 }
 
-export async function listDueReviews(
-  store: DataStore,
-  profileId: string,
-  dateKey: string,
-  nowTs: number,
-): Promise<DueReviewItem[]> {
+export async function listDueReviews(store: DataStore, profileId: string, dateKey: string, nowTs: number): Promise<DueReviewItem[]> {
   const states = await store.listReviewStates(profileId);
   const out: DueReviewItem[] = [];
   for (const state of states) {

@@ -181,9 +181,7 @@ describe('open-response 自评', () => {
 
 describe('格式不一致保护', () => {
   it('题目格式与答案格式不同直接抛错', () => {
-    expect(() =>
-      gradeExercise(singleChoiceFixture(), { format: 'multi-choice', keys: ['A'] } as never),
-    ).toThrow(/不一致/);
+    expect(() => gradeExercise(singleChoiceFixture(), { format: 'multi-choice', keys: ['A'] } as never)).toThrow(/不一致/);
   });
 
   it('describeAnswer 对每种题型都能生成可读文本', () => {

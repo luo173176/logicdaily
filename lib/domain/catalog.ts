@@ -1,10 +1,5 @@
 import type { Exercise, ExerciseFormat } from '@/lib/domain/exercise-schema';
-import {
-  ACTIVITY_TYPES,
-  CATEGORY_LABELS,
-  type ActivityType,
-  type ExerciseCategory,
-} from '@/lib/domain/taxonomy';
+import { ACTIVITY_TYPES, CATEGORY_LABELS, type ActivityType, type ExerciseCategory } from '@/lib/domain/taxonomy';
 
 /**
  * 题库索引卡片：日常调度只需要这些轻量字段，完整题目按 id 取用，

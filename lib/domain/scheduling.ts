@@ -76,8 +76,7 @@ export function reviewQuality(input: {
     }
   }
 
-  const timeRatio =
-    input.estimatedSeconds > 0 ? input.timeSpentSeconds / input.estimatedSeconds : 1;
+  const timeRatio = input.estimatedSeconds > 0 ? input.timeSpentSeconds / input.estimatedSeconds : 1;
 
   if (input.outcome === 'correct') {
     // 又快又确信才算“牢固”，否则只是勉强答对。
@@ -129,11 +128,7 @@ export function scheduleNext(prev: ReviewState | null, input: ScheduleInput): Re
     else if (repetitions === 2) intervalDays = Math.round(3 * diffMult * 2) / 2 || 1;
     else intervalDays = Math.round(base.intervalDays * ease * diffMult);
 
-    intervalDays = clamp(
-      Math.max(1, Math.round(intervalDays)),
-      SRS_LIMITS.minIntervalDays,
-      SRS_LIMITS.maxIntervalDays,
-    );
+    intervalDays = clamp(Math.max(1, Math.round(intervalDays)), SRS_LIMITS.minIntervalDays, SRS_LIMITS.maxIntervalDays);
 
     return {
       ...base,
@@ -172,21 +167,13 @@ export function isDueForReview(state: ReviewState, todayKey: DateKey, nowTs: num
   if (state.dueDateKey === null) return false;
   if (state.dueDateKey > todayKey) {
     // 次日到期，但当天重学时间已到：同日再练优先。
-    return (
-      state.sameDayRelearn &&
-      state.sameDayRelearnAfterTs !== null &&
-      nowTs >= state.sameDayRelearnAfterTs
-    );
+    return state.sameDayRelearn && state.sameDayRelearnAfterTs !== null && nowTs >= state.sameDayRelearnAfterTs;
   }
   return true;
 }
 
 /** 复习优先级：逾期天数 > 反复次数 > 新加入的错题。 */
-export function reviewPriority(
-  state: ReviewState,
-  todayKey: DateKey,
-  nowTs: number,
-): number {
+export function reviewPriority(state: ReviewState, todayKey: DateKey, nowTs: number): number {
   const overdue = state.dueDateKey ? daysOverdue(state.dueDateKey, todayKey) : 0;
   let priority = overdue * 10 + state.lapses * 4 + (state.repetitions === 0 ? 3 : 0);
   if (isDueForReview(state, todayKey, nowTs) && state.sameDayRelearn) priority += 25;

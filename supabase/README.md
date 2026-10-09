@@ -14,12 +14,12 @@ seam (`lib/db/store.ts`) on top of Postgres.
 
 ## Files
 
-| File | Applied to a real project | Purpose |
-| --- | --- | --- |
-| `migrations/0000_local_stubs.sql` | **NO — never** | Local validation only. Stubs `auth.users`, `auth.uid()`, `auth.role()` and the `anon` / `authenticated` / `service_role` roles so `0001`/`0002` can be tested against a throwaway Postgres. On real Supabase all of these already exist and are managed; applying it would replace authenticated behaviour with a GUC-trusting fake. |
-| `migrations/0001_init.sql` | yes | Tables mirroring `lib/domain/records.ts`, `journal.ts`, `settings.ts`, `exercise-schema.ts`. Snake_case columns, one comment per column naming the TS field it maps to, PKs/FKs, defaults, and indexes matching the Dexie query patterns. |
-| `migrations/0002_auth_rls.sql` | yes | `owner_id` isolation: RLS enabled on all 13 tables, four owner-scoped policies per user table, read-only exercise bank. Contains the project's trust-boundary statement. |
-| `migrations/0003_seed_exercises.sql` | yes | **Generated.** The shared question bank seeded from `content/exercises/*.json` (112 exercises as of writing). |
+| File                                 | Applied to a real project | Purpose                                                                                                                                                                                                                                                                                                                              |
+| ------------------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `migrations/0000_local_stubs.sql`    | **NO — never**            | Local validation only. Stubs `auth.users`, `auth.uid()`, `auth.role()` and the `anon` / `authenticated` / `service_role` roles so `0001`/`0002` can be tested against a throwaway Postgres. On real Supabase all of these already exist and are managed; applying it would replace authenticated behaviour with a GUC-trusting fake. |
+| `migrations/0001_init.sql`           | yes                       | Tables mirroring `lib/domain/records.ts`, `journal.ts`, `settings.ts`, `exercise-schema.ts`. Snake_case columns, one comment per column naming the TS field it maps to, PKs/FKs, defaults, and indexes matching the Dexie query patterns.                                                                                            |
+| `migrations/0002_auth_rls.sql`       | yes                       | `owner_id` isolation: RLS enabled on all 13 tables, four owner-scoped policies per user table, read-only exercise bank. Contains the project's trust-boundary statement.                                                                                                                                                             |
+| `migrations/0003_seed_exercises.sql` | yes                       | **Generated.** The shared question bank seeded from `content/exercises/*.json` (112 exercises as of writing).                                                                                                                                                                                                                        |
 
 No file in this directory contains a key, token or credential. Model-provider
 keys are read server-side from env / a secret manager (`.env.example`:

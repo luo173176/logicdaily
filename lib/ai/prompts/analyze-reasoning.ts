@@ -48,9 +48,7 @@ export function buildReasoningMessages(input: ReasoningPromptInput) {
   };
 }
 
-export function buildFollowUpMessages(
-  input: ReasoningPromptInput & { history: { role: 'user' | 'assistant'; content: string }[] },
-) {
+export function buildFollowUpMessages(input: ReasoningPromptInput & { history: { role: 'user' | 'assistant'; content: string }[] }) {
   const base = buildReasoningMessages(input);
   return {
     promptVersion: `${ANALYZE_REASONING_PROMPT_VERSION}-followup`,

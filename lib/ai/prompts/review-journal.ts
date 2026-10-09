@@ -27,7 +27,10 @@ export function buildJournalMessages(input: JournalPromptInput) {
         .join('\n')
     : '（用户还没有列出任何证据）';
 
-  const stepLines = input.stepNotes.filter((s) => s.text.trim()).map((s) => `- ${s.stepId}：${s.text}`).join('\n');
+  const stepLines = input.stepNotes
+    .filter((s) => s.text.trim())
+    .map((s) => `- ${s.stepId}：${s.text}`)
+    .join('\n');
 
   const user = [
     '任务：复盘这篇真实生活思考日志。',

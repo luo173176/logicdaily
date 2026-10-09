@@ -38,7 +38,11 @@ export const journalSchema = z.object({
   /** 1～5，写下结论时的信心；后续复盘可以对比。 */
   selfConfidence: z.number().int().min(1).max(5).default(3),
   status: z.enum(['open', 'review-due', 'reviewed', 'decided', 'archived']).default('open'),
-  reviewDueDateKey: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().default(null),
+  reviewDueDateKey: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .nullable()
+    .default(null),
   createdAt: z.number(),
   updatedAt: z.number(),
   /** 软删除标记，同步时需要传播。 */
@@ -68,12 +72,7 @@ export const EVIDENCE_STANCE_LABELS: Record<JournalEvidence['stance'], string> =
 };
 
 /** 快速记录模式只要求标题与问题，向导字段可留空。 */
-export function createEmptyJournal(input: {
-  id: string;
-  profileId: string;
-  nowTs: number;
-  title?: string;
-}): Journal {
+export function createEmptyJournal(input: { id: string; profileId: string; nowTs: number; title?: string }): Journal {
   return journalSchema.parse({
     id: input.id,
     profileId: input.profileId,
@@ -94,8 +93,7 @@ export function journalCompleteness(journal: Journal): { filled: number; total: 
     'keyUncertainties',
     'verificationActions',
   ];
-  const filled = coreFields.filter((f) => typeof journal[f] === 'string' && (journal[f] as string).trim().length > 0)
-    .length;
+  const filled = coreFields.filter((f) => typeof journal[f] === 'string' && (journal[f] as string).trim().length > 0).length;
   const total = coreFields.length;
   return { filled, total, percent: Math.round((filled / total) * 100) };
 }

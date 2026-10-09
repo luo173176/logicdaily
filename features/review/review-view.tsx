@@ -38,7 +38,12 @@ export function ReviewView() {
   }, [ready, load]);
 
   if (!ready) return <Skeleton lines={4} />;
-  if (error) return <Note tone="bad" title="读取失败">{error}</Note>;
+  if (error)
+    return (
+      <Note tone="bad" title="读取失败">
+        {error}
+      </Note>
+    );
   if (!rows) return <Skeleton lines={4} />;
 
   const leeches = rows.filter((r) => r.state.leech);
@@ -51,9 +56,7 @@ export function ReviewView() {
     <div className="stack gap-4">
       <header className="stack gap-1">
         <h1 className="text-2xl">复习</h1>
-        <p className="muted text-sm">
-          复习队列按间隔调度生成：答错的题当天再来一次，答对的题逐渐拉长间隔（最长 {SRS_LIMITS.maxIntervalDays} 天）。
-        </p>
+        <p className="muted text-sm">复习队列按间隔调度生成：答错的题当天再来一次，答对的题逐渐拉长间隔（最长 {SRS_LIMITS.maxIntervalDays} 天）。</p>
       </header>
 
       <div className="card row-between">
@@ -89,9 +92,7 @@ export function ReviewView() {
                 <DifficultyPips level={row.exercise.difficulty} />
                 <span className="faint">
                   重复 {row.state.repetitions} 次 · 答错 {row.state.lapses} 次
-                  {row.state.lastErrorTypes.length > 0
-                    ? ` · ${row.state.lastErrorTypes.map((t) => LOGIC_ERROR_LABELS[t]).join('、')}`
-                    : ''}
+                  {row.state.lastErrorTypes.length > 0 ? ` · ${row.state.lastErrorTypes.map((t) => LOGIC_ERROR_LABELS[t]).join('、')}` : ''}
                 </span>
               </div>
               <p className="faint">{describeSchedule(row.state)}</p>
@@ -120,7 +121,9 @@ export function ReviewView() {
           <p>· 作答结果与信心程度共同决定一个 0～5 的复习质量分。</p>
           <p>· 质量分达到 3：间隔按易度系数增长；低于 3：间隔重置为 1 天，并在当天约 30 分钟后再出现一次。</p>
           <p>· 越难的题在答对后获得越短的间隔，因为难题的记忆保持更脆弱。</p>
-          <p>· 间隔上下限：{SRS_LIMITS.minIntervalDays} ～ {SRS_LIMITS.maxIntervalDays} 天；易度系数限制在 {SRS_LIMITS.minEase}～{SRS_LIMITS.maxEase}。</p>
+          <p>
+            · 间隔上下限：{SRS_LIMITS.minIntervalDays} ～ {SRS_LIMITS.maxIntervalDays} 天；易度系数限制在 {SRS_LIMITS.minEase}～{SRS_LIMITS.maxEase}。
+          </p>
         </div>
       </details>
     </div>

@@ -186,12 +186,7 @@ export class LocalStore implements DataStore {
     const all = await this.db.attempts
       .where('[profileId+dateKey]')
       // Dexie 的 between 默认左闭右开，这里必须闭区间，否则“今天”的记录会被整段丢掉。
-      .between(
-        [query.profileId, query.fromKey ?? '0000-00-00'],
-        [query.profileId, query.toKey ?? '9999-99-99'],
-        true,
-        true,
-      )
+      .between([query.profileId, query.fromKey ?? '0000-00-00'], [query.profileId, query.toKey ?? '9999-99-99'], true, true)
       .toArray();
     const filtered = query.exerciseId ? all.filter((a) => a.exerciseId === query.exerciseId) : all;
     const sorted = filtered.sort((a, b) => a.createdAt - b.createdAt);
@@ -250,16 +245,11 @@ export class LocalStore implements DataStore {
   }
 
   async getPlan(profileId: string, dateKey: DateKey): Promise<DailyPlanRecord | null> {
-    return (
-      (await this.db.plans.where('[profileId+dateKey]').equals([profileId, dateKey]).first()) ?? null
-    );
+    return (await this.db.plans.where('[profileId+dateKey]').equals([profileId, dateKey]).first()) ?? null;
   }
 
   async listPlans(profileId: string, fromKey: DateKey, toKey: DateKey): Promise<DailyPlanRecord[]> {
-    return this.db.plans
-      .where('[profileId+dateKey]')
-      .between([profileId, fromKey], [profileId, toKey], true, true)
-      .toArray();
+    return this.db.plans.where('[profileId+dateKey]').between([profileId, fromKey], [profileId, toKey], true, true).toArray();
   }
 
   async getProgress(profileId: string, dateKey: DateKey): Promise<DailyProgressRecord | null> {
@@ -267,10 +257,7 @@ export class LocalStore implements DataStore {
   }
 
   async listProgress(profileId: string, fromKey: DateKey, toKey: DateKey): Promise<DailyProgressRecord[]> {
-    return this.db.progress
-      .where('[profileId+dateKey]')
-      .between([profileId, fromKey], [profileId, toKey], true, true)
-      .toArray();
+    return this.db.progress.where('[profileId+dateKey]').between([profileId, fromKey], [profileId, toKey], true, true).toArray();
   }
 
   async saveProgress(progress: DailyProgressRecord): Promise<void> {
@@ -343,19 +330,18 @@ export class LocalStore implements DataStore {
   }
 
   async exportBackup(profileId: string): Promise<BackupPayload> {
-    const [settings, attempts, knowledgeStates, reviewStates, journals, plans, progress, exerciseIssues, aiAnalyses, aiUsage] =
-      await Promise.all([
-        this.db.settings.get(profileId),
-        this.db.attempts.where('profileId').equals(profileId).toArray(),
-        this.db.knowledgeStates.where('profileId').equals(profileId).toArray(),
-        this.db.reviewStates.where('profileId').equals(profileId).toArray(),
-        this.db.journals.where('profileId').equals(profileId).toArray(),
-        this.db.plans.where('profileId').equals(profileId).toArray(),
-        this.db.progress.where('profileId').equals(profileId).toArray(),
-        this.db.exerciseIssues.where('profileId').equals(profileId).toArray(),
-        this.db.aiAnalyses.where('profileId').equals(profileId).toArray(),
-        this.db.aiUsage.where('profileId').equals(profileId).toArray(),
-      ]);
+    const [settings, attempts, knowledgeStates, reviewStates, journals, plans, progress, exerciseIssues, aiAnalyses, aiUsage] = await Promise.all([
+      this.db.settings.get(profileId),
+      this.db.attempts.where('profileId').equals(profileId).toArray(),
+      this.db.knowledgeStates.where('profileId').equals(profileId).toArray(),
+      this.db.reviewStates.where('profileId').equals(profileId).toArray(),
+      this.db.journals.where('profileId').equals(profileId).toArray(),
+      this.db.plans.where('profileId').equals(profileId).toArray(),
+      this.db.progress.where('profileId').equals(profileId).toArray(),
+      this.db.exerciseIssues.where('profileId').equals(profileId).toArray(),
+      this.db.aiAnalyses.where('profileId').equals(profileId).toArray(),
+      this.db.aiUsage.where('profileId').equals(profileId).toArray(),
+    ]);
 
     return {
       app: 'logicdaily',
@@ -384,10 +370,7 @@ export class LocalStore implements DataStore {
     };
   }
 
-  async importBackup(
-    payload: unknown,
-    options?: { replaceExisting?: boolean },
-  ): Promise<{ added: number; merged: number; skipped: number }> {
+  async importBackup(payload: unknown, options?: { replaceExisting?: boolean }): Promise<{ added: number; merged: number; skipped: number }> {
     const parsed = validateBackupPayload(payload);
     const profileId = parsed.profileId;
     let added = 0;
@@ -419,9 +402,7 @@ export class LocalStore implements DataStore {
           await this.db.knowledgeStates.where('profileId').equals(profileId).delete();
         }
 
-        const existingAttempts = new Set(
-          (await this.db.attempts.where('profileId').equals(profileId).toArray()).map((a) => a.id),
-        );
+        const existingAttempts = new Set((await this.db.attempts.where('profileId').equals(profileId).toArray()).map((a) => a.id));
         for (const attempt of parsed.data.attempts) {
           if (existingAttempts.has(attempt.id)) {
             skipped += 1;
@@ -431,9 +412,7 @@ export class LocalStore implements DataStore {
           added += 1;
         }
 
-        const existingJournals = new Map(
-          (await this.db.journals.where('profileId').equals(profileId).toArray()).map((j) => [j.id, j]),
-        );
+        const existingJournals = new Map((await this.db.journals.where('profileId').equals(profileId).toArray()).map((j) => [j.id, j]));
         for (const journal of parsed.data.journals) {
           const prior = existingJournals.get(journal.id);
           if (!prior) {
@@ -569,21 +548,11 @@ function stripSeedFields(row: ExerciseRow): Omit<ExerciseRow, 'seededFrom'> {
 }
 
 function toDateKey(ts: number, zone = 'UTC'): DateKey {
-  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(
-    new Date(ts),
-  );
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(ts));
   return parts.replace(/\//g, '-');
 }
 
-const BACKUP_TOP_KEYS = [
-  'app',
-  'backupSchemaVersion',
-  'localDbVersion',
-  'exportedAt',
-  'profileId',
-  'counts',
-  'data',
-] as const;
+const BACKUP_TOP_KEYS = ['app', 'backupSchemaVersion', 'localDbVersion', 'exportedAt', 'profileId', 'counts', 'data'] as const;
 
 const BACKUP_DATA_KEYS = [
   'settings',

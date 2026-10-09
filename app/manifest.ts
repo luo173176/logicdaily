@@ -5,8 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     id: '/',
     name: 'LogicDaily · 每日逻辑思维训练',
     short_name: 'LogicDaily',
-    description:
-      '每天 5～15 分钟的中文逻辑思维训练：逻辑推理、论证分析、因果辨析与真实生活思考日志，配合间隔复习与可选的 AI 思维教练。',
+    description: '每天 5～15 分钟的中文逻辑思维训练：逻辑推理、论证分析、因果辨析与真实生活思考日志，配合间隔复习与可选的 AI 思维教练。',
     lang: 'zh-CN',
     dir: 'ltr',
     start_url: '/',

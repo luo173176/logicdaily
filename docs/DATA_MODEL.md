@@ -15,21 +15,21 @@
 
 库名 `logicdaily`，`this.version(1)`（`lib/db/database.ts:43-57`）。`LOCAL_DB_VERSION = 1`（`lib/db/database.ts:19`）只是给人看的常量，`version()` 里写的是字面量 `1`，改 schema 时两处都要动。
 
-| store | 主键 | 索引 | 存什么 |
-| --- | --- | --- | --- |
-| `meta` | `key` | 无 | `MetaRecord = { key, value, updatedAt }`（`lib/domain/records.ts:125-129`）：预留键值槽位，**无读写实现**，只有 `clearLocalData` 防御性删 `onboarded:<profileId>`（`lib/db/store.ts:543`）。不要用它绕开 `settings` 存配置 |
-| `settings` | `profileId` | 无 | 每 profile 一份 `AppSettings` |
-| `exercises` | `id` | `category`、`format`、`difficulty`、`status` | 播种进来的题库，行结构 `Exercise & { seededFrom }`（`lib/db/database.ts:23`） |
-| `attempts` | `id` | `profileId`、`[profileId+dateKey]`、`[profileId+exerciseId]`、`exerciseId`、`dateKey`、`createdAt` | 每次作答的完整快照 |
-| `knowledgeStates` | `[profileId+knowledgePointId]` | `profileId`、`knowledgePointId` | 知识点掌握度（EWMA），无 `id` 字段 |
-| `reviewStates` | `[profileId+exerciseId]` | `profileId`、`exerciseId`、`dueDateKey` | LD-SRS 复习状态，无 `id` 字段 |
-| `journals` | `id` | `profileId`、`[profileId+deleted]`、`[profileId+updatedAt]`、`createdAt`、`reviewDueDateKey` | 思考日志（软删除） |
-| `plans` | `id` | `profileId`、`[profileId+dateKey]`、`dateKey` | 每日计划，id 为 `plan-<profileId>-<dateKey>` |
-| `progress` | `[profileId+dateKey]` | `profileId`、`dateKey` | 当日完成/跳过，一天一行 |
-| `exerciseIssues` | `id` | `profileId`、`exerciseId`、`status`、`createdAt` | 题库复核清单 |
-| `aiAnalyses` | `id` | `profileId`、`[profileId+subjectKind]`、`subjectId`、`createdAt` | AI 结构化分析结果 |
-| `aiUsage` | `id` | `profileId`、`[profileId+createdAt]`、`task`、`createdAt` | AI 用量与错误元数据（不含正文） |
-| `syncState` | `profileId` | 无 | 本地修订号与同步游标，每 profile 一行 |
+| store             | 主键                           | 索引                                                                                               | 存什么                                                                                                                                                                                                                     |
+| ----------------- | ------------------------------ | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `meta`            | `key`                          | 无                                                                                                 | `MetaRecord = { key, value, updatedAt }`（`lib/domain/records.ts:125-129`）：预留键值槽位，**无读写实现**，只有 `clearLocalData` 防御性删 `onboarded:<profileId>`（`lib/db/store.ts:543`）。不要用它绕开 `settings` 存配置 |
+| `settings`        | `profileId`                    | 无                                                                                                 | 每 profile 一份 `AppSettings`                                                                                                                                                                                              |
+| `exercises`       | `id`                           | `category`、`format`、`difficulty`、`status`                                                       | 播种进来的题库，行结构 `Exercise & { seededFrom }`（`lib/db/database.ts:23`）                                                                                                                                              |
+| `attempts`        | `id`                           | `profileId`、`[profileId+dateKey]`、`[profileId+exerciseId]`、`exerciseId`、`dateKey`、`createdAt` | 每次作答的完整快照                                                                                                                                                                                                         |
+| `knowledgeStates` | `[profileId+knowledgePointId]` | `profileId`、`knowledgePointId`                                                                    | 知识点掌握度（EWMA），无 `id` 字段                                                                                                                                                                                         |
+| `reviewStates`    | `[profileId+exerciseId]`       | `profileId`、`exerciseId`、`dueDateKey`                                                            | LD-SRS 复习状态，无 `id` 字段                                                                                                                                                                                              |
+| `journals`        | `id`                           | `profileId`、`[profileId+deleted]`、`[profileId+updatedAt]`、`createdAt`、`reviewDueDateKey`       | 思考日志（软删除）                                                                                                                                                                                                         |
+| `plans`           | `id`                           | `profileId`、`[profileId+dateKey]`、`dateKey`                                                      | 每日计划，id 为 `plan-<profileId>-<dateKey>`                                                                                                                                                                               |
+| `progress`        | `[profileId+dateKey]`          | `profileId`、`dateKey`                                                                             | 当日完成/跳过，一天一行                                                                                                                                                                                                    |
+| `exerciseIssues`  | `id`                           | `profileId`、`exerciseId`、`status`、`createdAt`                                                   | 题库复核清单                                                                                                                                                                                                               |
+| `aiAnalyses`      | `id`                           | `profileId`、`[profileId+subjectKind]`、`subjectId`、`createdAt`                                   | AI 结构化分析结果                                                                                                                                                                                                          |
+| `aiUsage`         | `id`                           | `profileId`、`[profileId+createdAt]`、`task`、`createdAt`                                          | AI 用量与错误元数据（不含正文）                                                                                                                                                                                            |
+| `syncState`       | `profileId`                    | 无                                                                                                 | 本地修订号与同步游标，每 profile 一行                                                                                                                                                                                      |
 
 补充事实：`lib/db/database.ts:72-82` 的 `knowledgeStateKey`/`reviewStateKey`/`progressKey`（拼成 `p1::ex-cond-001`）**没有任何调用点**，实际读写复合键用数组形式（`lib/db/store.ts:203`、`218`、`266`），两种键形式不通用。`exercises.format`、`attempts.[profileId+exerciseId]`、`journals.[profileId+deleted]`、`journals.[profileId+updatedAt]`、`journals.reviewDueDateKey` 这些索引当前没有查询使用（`lib/db/store.ts:168-174`、`242-246`），属于为云端映射预留。
 
@@ -39,25 +39,25 @@
 
 构造与落库：`submitAttempt()`（`lib/services/training.ts:68-90`）；`reviseSelfReport()` 用同一 `id` 覆盖写回（`lib/services/training.ts:365-372`）。`id` = `atp-<nowTs 的 base36>-<exerciseId>`，同毫秒同题会碰撞并覆盖。
 
-| 字段 | 类型 | 含义 / 何时变化 |
-| --- | --- | --- |
-| `id` / `profileId` | `string` | 主键 / 所有者 |
-| `exerciseId` / `exerciseVersion` | `string` / `number` | 题目 id / 作答时版本，题目更新后旧记录仍可解释 |
-| `dateKey` | `string` | 归属日（本地时区），进度与统计按它聚合 |
-| `createdAt` | `number` | 提交毫秒 |
-| `answer` | `AnswerInput` | 原样保留的作答，按 `format` 区分的联合类型（`lib/domain/grading.ts:6-11`） |
-| `outcome` | `GradeOutcome` | `'correct' \| 'partial' \| 'incorrect' \| 'self-assessed'`（`lib/domain/grading.ts:4`） |
-| `score` | `number` | 0～1，来自判分，不被后续归因改写 |
-| `timeSpentSeconds` | `number` | 界面计时，最小 1 秒（`features/training/training-view.tsx:327`） |
-| `confidence` | `number` | 1～5 提交前自评信心 |
-| `reasoning` | `string` | 用户自己写的推理过程，可为空串 |
-| `selfReport` | `SelfReport` | `'careless' \| 'unknown-term' \| 'misread' \| 'ambiguous' \| null`（`lib/domain/mistake.ts:6`），看解析后可修正 |
-| `errorTypes` | `LogicErrorType[]` | 归因后的错误类型，来自所选项的 `errorType` 标记或判分规则 |
-| `cause` | `CauseType` | 错因类别；修正自评只改这里 |
-| `planItemId` | `string \| null` | 对应今日计划项 id，用于把作答计入进度 |
-| `isReview` | `boolean` | 是否复习作答，复习效果指标依赖它 |
-| `flaggedForReview` | `boolean` | 用户认为题目有歧义；仅 `selfReport === 'ambiguous'` 时为真 |
-| `aiAnalysisId` | `string \| null` | 预留关联字段，**当前恒为 `null`**（`lib/services/training.ts:87`），无回填代码 |
+| 字段                             | 类型                | 含义 / 何时变化                                                                                                 |
+| -------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `id` / `profileId`               | `string`            | 主键 / 所有者                                                                                                   |
+| `exerciseId` / `exerciseVersion` | `string` / `number` | 题目 id / 作答时版本，题目更新后旧记录仍可解释                                                                  |
+| `dateKey`                        | `string`            | 归属日（本地时区），进度与统计按它聚合                                                                          |
+| `createdAt`                      | `number`            | 提交毫秒                                                                                                        |
+| `answer`                         | `AnswerInput`       | 原样保留的作答，按 `format` 区分的联合类型（`lib/domain/grading.ts:6-11`）                                      |
+| `outcome`                        | `GradeOutcome`      | `'correct' \| 'partial' \| 'incorrect' \| 'self-assessed'`（`lib/domain/grading.ts:4`）                         |
+| `score`                          | `number`            | 0～1，来自判分，不被后续归因改写                                                                                |
+| `timeSpentSeconds`               | `number`            | 界面计时，最小 1 秒（`features/training/training-view.tsx:327`）                                                |
+| `confidence`                     | `number`            | 1～5 提交前自评信心                                                                                             |
+| `reasoning`                      | `string`            | 用户自己写的推理过程，可为空串                                                                                  |
+| `selfReport`                     | `SelfReport`        | `'careless' \| 'unknown-term' \| 'misread' \| 'ambiguous' \| null`（`lib/domain/mistake.ts:6`），看解析后可修正 |
+| `errorTypes`                     | `LogicErrorType[]`  | 归因后的错误类型，来自所选项的 `errorType` 标记或判分规则                                                       |
+| `cause`                          | `CauseType`         | 错因类别；修正自评只改这里                                                                                      |
+| `planItemId`                     | `string \| null`    | 对应今日计划项 id，用于把作答计入进度                                                                           |
+| `isReview`                       | `boolean`           | 是否复习作答，复习效果指标依赖它                                                                                |
+| `flaggedForReview`               | `boolean`           | 用户认为题目有歧义；仅 `selfReport === 'ambiguous'` 时为真                                                      |
+| `aiAnalysisId`                   | `string \| null`    | 预留关联字段，**当前恒为 `null`**（`lib/services/training.ts:87`），无回填代码                                  |
 
 不变量：修正 `selfReport` 不改 `score`/`outcome`/复习调度，避免用户通过改口操纵间隔（`lib/services/training.ts:333-336`）。
 
@@ -65,16 +65,16 @@
 
 由 `planToRecord()`（`lib/domain/daily-plan.ts:230-242`）产生，`ensureTodayPlan()` 落库（`lib/services/training.ts:248-250`）；同一天再次进入只读不重写，因此"为什么今天给我这些题"事后可解释。
 
-| 字段 | 类型 | 含义 |
-| --- | --- | --- |
-| `id` | `string` | `plan-<profileId>-<dateKey>`，天然每天每 profile 一条 |
-| `profileId` / `dateKey` | `string` | 所有者 / 归属日 |
-| `budgetMinutes` | `number` | 本次时间预算；休息日降为 `max(3, round(budget×0.4))`（`lib/domain/daily-plan.ts:58-60`） |
-| `restDay` | `boolean` | 当天是否为配置的休息日 |
-| `items` | `DailyPlanItemRecord[]` | 计划项，`id` 为 `item-<序号>` |
-| `notes` | `string[]` | 面向用户的选择理由，界面直接展示 |
-| `generatedAt` | `number` | 生成时刻，也是导入时计划新旧判定键 |
-| `algorithm` | `string` | 固定 `'logicdaily-daily-plan-v1'`（`lib/domain/daily-plan.ts:14`） |
+| 字段                    | 类型                    | 含义                                                                                     |
+| ----------------------- | ----------------------- | ---------------------------------------------------------------------------------------- |
+| `id`                    | `string`                | `plan-<profileId>-<dateKey>`，天然每天每 profile 一条                                    |
+| `profileId` / `dateKey` | `string`                | 所有者 / 归属日                                                                          |
+| `budgetMinutes`         | `number`                | 本次时间预算；休息日降为 `max(3, round(budget×0.4))`（`lib/domain/daily-plan.ts:58-60`） |
+| `restDay`               | `boolean`               | 当天是否为配置的休息日                                                                   |
+| `items`                 | `DailyPlanItemRecord[]` | 计划项，`id` 为 `item-<序号>`                                                            |
+| `notes`                 | `string[]`              | 面向用户的选择理由，界面直接展示                                                         |
+| `generatedAt`           | `number`                | 生成时刻，也是导入时计划新旧判定键                                                       |
+| `algorithm`             | `string`                | 固定 `'logicdaily-daily-plan-v1'`（`lib/domain/daily-plan.ts:14`）                       |
 
 计划项：`activity`（7 种活动类型之一）、`exerciseId`、`journalId`、`estimatedSeconds`、`reason`（一句话解释为什么出现）、`kind`（`'new' \| 'review' \| 'same-day-relearn' \| 'journal'`）、`required`（只有当天重学项为 `true`，`lib/domain/daily-plan.ts:87`）。注意 `savePlan()` 不调 `bumpRevision`（`lib/db/store.ts:248`）。
 
@@ -82,13 +82,13 @@
 
 主键 `[profileId+dateKey]`。创建者 `ensureTodayPlan()`（`lib/services/training.ts:252-263`，带 `planId`），更新者 `markPlanItemDone()` / `markJournalItemDone()` / `skipPlanItem()`（`lib/services/training.ts:146-207`、`396-419`）。
 
-| 字段 | 类型 | 含义 |
-| --- | --- | --- |
-| `dateKey` / `profileId` | `string` | 复合主键两半 |
-| `planId` | `string \| null` | 创建时关联的计划 id；后续更新只透传不重算 |
-| `completedItemIds` / `skippedItemIds` | `string[]` | 已完成 / 已跳过项 id，写入时按 Set 去重（`lib/services/training.ts:165-169`） |
-| `totalSeconds` / `attempts` | `number` | 累计用时 / 计入的作答次数。`markJournalItemDone` 不累加 `attempts`，`markPlanItemDone` 两者都加 |
-| `updatedAt` | `number` | 每次写入刷新，是导入冲突判定键 |
+| 字段                                  | 类型             | 含义                                                                                            |
+| ------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------- |
+| `dateKey` / `profileId`               | `string`         | 复合主键两半                                                                                    |
+| `planId`                              | `string \| null` | 创建时关联的计划 id；后续更新只透传不重算                                                       |
+| `completedItemIds` / `skippedItemIds` | `string[]`       | 已完成 / 已跳过项 id，写入时按 Set 去重（`lib/services/training.ts:165-169`）                   |
+| `totalSeconds` / `attempts`           | `number`         | 累计用时 / 计入的作答次数。`markJournalItemDone` 不累加 `attempts`，`markPlanItemDone` 两者都加 |
+| `updatedAt`                           | `number`         | 每次写入刷新，是导入冲突判定键                                                                  |
 
 ### 3.4 ExerciseIssueReport（`lib/domain/records.ts:65-74`）
 
@@ -101,39 +101,39 @@
 
 写入者：`features/coach/coach-panel.tsx:132-150`（作答/日志教练）、`features/coach/material-view.tsx:80-96`（材料分析）。`saveAIUsage()` 不 `bumpRevision`（`lib/db/store.ts:300`）。`id` = `usage-<Date.now() base36>-<场景后缀>`。
 
-| 字段 | 类型 | 含义 |
-| --- | --- | --- |
-| `profileId` / `task` | `string` | 所有者 / 任务名（6 个任务，`lib/ai/output-schema.ts:84-91`） |
-| `provider` / `model` / `promptVersion` | `string` | 设置里的供应商标签 / 服务端回传的实际模型名（回退 `settings.ai.model`）/ 提示词版本，未知时 `'unknown'` |
-| `createdAt` | `number` | 用量按它 + 时区分日统计（`lib/db/store.ts:304-308`），本类型没有 `dateKey` |
-| `latencyMs` / `inputChars` / `outputChars` | `number` | 性能与体量 |
-| `promptTokens` / `completionTokens` | `number \| null` | 供应商不返回 usage 时为 `null` |
-| `status` | 枚举 | `'ok' \| 'error' \| 'rejected' \| 'degraded'`；当前只写前两个 |
-| `errorCode` / `errorMessage` | `string \| null` | 只存错误类别与可公开描述，**不存用户隐私正文** |
+| 字段                                       | 类型             | 含义                                                                                                    |
+| ------------------------------------------ | ---------------- | ------------------------------------------------------------------------------------------------------- |
+| `profileId` / `task`                       | `string`         | 所有者 / 任务名（6 个任务，`lib/ai/output-schema.ts:84-91`）                                            |
+| `provider` / `model` / `promptVersion`     | `string`         | 设置里的供应商标签 / 服务端回传的实际模型名（回退 `settings.ai.model`）/ 提示词版本，未知时 `'unknown'` |
+| `createdAt`                                | `number`         | 用量按它 + 时区分日统计（`lib/db/store.ts:304-308`），本类型没有 `dateKey`                              |
+| `latencyMs` / `inputChars` / `outputChars` | `number`         | 性能与体量                                                                                              |
+| `promptTokens` / `completionTokens`        | `number \| null` | 供应商不返回 usage 时为 `null`                                                                          |
+| `status`                                   | 枚举             | `'ok' \| 'error' \| 'rejected' \| 'degraded'`；当前只写前两个                                           |
+| `errorCode` / `errorMessage`               | `string \| null` | 只存错误类别与可公开描述，**不存用户隐私正文**                                                          |
 
 ### 3.6 AIAnalysisRecord（`lib/domain/records.ts:95-111`）
 
 写入者：`features/coach/coach-panel.tsx:152-166`（`subjectKind: 'journal'`）、`features/coach/material-view.tsx:97-112`（`'material'`）。`id` = `ana-<Date.now() base36>`，`profileId` 为所有者。
 
-| 字段 | 类型 | 含义 |
-| --- | --- | --- |
-| `subjectKind` / `subjectId` | 枚举 / `string \| null` | `'attempt' \| 'journal' \| 'material' \| 'profile'`，其中 `'attempt'`、`'profile'` **无写入路径**；`subjectId` 是对应日志 id，材料分析为 `null` |
-| `task` / `provider` / `model` / `promptVersion` | `string` | 产生该结果所需的模型元数据 |
-| `createdAt` | `number` | 生成时刻 |
-| `result` | `unknown` | 已通过 zod 校验的结构化结果（`lib/ai/output-schema.ts:13-73`），界面按字段渲染 |
-| `uncertainty` | `string` | 模型自己声明的不确定之处 |
-| `retainedInputSummary` | `string \| null` | 是否保留输入全文摘要；**所有写入都是 `null`**，即不长期保存私人输入原文 |
+| 字段                                            | 类型                    | 含义                                                                                                                                            |
+| ----------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `subjectKind` / `subjectId`                     | 枚举 / `string \| null` | `'attempt' \| 'journal' \| 'material' \| 'profile'`，其中 `'attempt'`、`'profile'` **无写入路径**；`subjectId` 是对应日志 id，材料分析为 `null` |
+| `task` / `provider` / `model` / `promptVersion` | `string`                | 产生该结果所需的模型元数据                                                                                                                      |
+| `createdAt`                                     | `number`                | 生成时刻                                                                                                                                        |
+| `result`                                        | `unknown`               | 已通过 zod 校验的结构化结果（`lib/ai/output-schema.ts:13-73`），界面按字段渲染                                                                  |
+| `uncertainty`                                   | `string`                | 模型自己声明的不确定之处                                                                                                                        |
+| `retainedInputSummary`                          | `string \| null`        | 是否保留输入全文摘要；**所有写入都是 `null`**，即不长期保存私人输入原文                                                                         |
 
 ### 3.7 SyncStateRecord（`lib/domain/records.ts:113-123`）
 
 只有 `bumpRevision()`（`lib/db/store.ts:329-343`）与 `importBackup()`（`lib/db/store.ts:495-505`）写它。主键 `profileId`，一 profile 一行。
 
-| 字段 | 类型 | 含义 |
-| --- | --- | --- |
-| `localRevision` | `number` | 单调递增。写 `settings`/`attempts`/`knowledgeStates`/`reviewStates`/`journals`/`progress`/`aiAnalyses` 时 +1；`plans`/`exerciseIssues`/`aiUsage` 不自增 |
-| `lastSyncedAt` / `lastSyncedRevision` | `number \| null` / `number` | 本地模式下恒为 `null` / `0` |
-| `pendingOps` / `conflicts` | `number` | 每次 `bumpRevision` +1，导入后重置为 `0` / 导入时被较新数据覆盖的条目数（`merged`） |
-| `mode` / `updatedAt` | `'local' \| 'cloud'` / `number` | 目前恒为 `'local'` / `Date.now()` |
+| 字段                                  | 类型                            | 含义                                                                                                                                                    |
+| ------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `localRevision`                       | `number`                        | 单调递增。写 `settings`/`attempts`/`knowledgeStates`/`reviewStates`/`journals`/`progress`/`aiAnalyses` 时 +1；`plans`/`exerciseIssues`/`aiUsage` 不自增 |
+| `lastSyncedAt` / `lastSyncedRevision` | `number \| null` / `number`     | 本地模式下恒为 `null` / `0`                                                                                                                             |
+| `pendingOps` / `conflicts`            | `number`                        | 每次 `bumpRevision` +1，导入后重置为 `0` / 导入时被较新数据覆盖的条目数（`merged`）                                                                     |
+| `mode` / `updatedAt`                  | `'local' \| 'cloud'` / `number` | 目前恒为 `'local'` / `Date.now()`                                                                                                                       |
 
 界面在"我的 → 数据与隐私"展示 `mode` 与 `localRevision`（`features/me/me-view.tsx:357`）。
 
@@ -145,21 +145,21 @@
 
 `journalSchema`（`lib/domain/journal.ts:20-49`）：
 
-| 字段 | 限制 / 默认 | 说明 |
-| --- | --- | --- |
-| `id` / `profileId` | `min(1)` | 主键 / 所有者 |
-| `title` | 1～120 | 必填；快速记录时缺省 `'未命名思考'`（`lib/domain/journal.ts:80`） |
-| `problem` / `background` | ≤4000，默认 `''` | 问题描述、发生背景 |
-| `facts` / `assumptions` / `conclusion` / `alternativeExplanations` / `keyUncertainties` / `verificationActions` / `reviewOutcome` | ≤6000，默认 `''` | 向导正文；`reviewOutcome` 是复盘后的实际结果 |
-| `reviewDelta` | 枚举，默认 `'unknown'` | `'better' \| 'as-expected' \| 'worse' \| 'unknown'` |
-| `steps` / `evidence` | 数组，默认 `[]` | 向导作答与证据清单 |
-| `tags` | 每项 1～24，最多 12 个，默认 `[]` | 标签过滤 |
-| `selfConfidence` | 1～5 整数，默认 3 | 写下结论时的信心，复盘时对比 |
-| `status` | 默认 `'open'` | `'open' \| 'review-due' \| 'reviewed' \| 'decided' \| 'archived'` |
-| `reviewDueDateKey` | `^\d{4}-\d{2}-\d{2}$` 或 `null` | 到期复盘日，会进入次日计划（`lib/services/training.ts:233-235`） |
-| `createdAt` / `updatedAt` | 必填数字 | `updatedAt` 是导入冲突判定键 |
-| `deleted` / `deletedAt` | `false` / `null` | 软删除标记，同步时需传播；`listJournals` 默认过滤（`lib/db/store.ts:244`） |
-| `aiConsent` | 默认 `false` | 只有用户勾选后日志正文才会被送去 AI（`features/coach/coach-panel.tsx:95`） |
+| 字段                                                                                                                              | 限制 / 默认                       | 说明                                                                       |
+| --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | -------------------------------------------------------------------------- |
+| `id` / `profileId`                                                                                                                | `min(1)`                          | 主键 / 所有者                                                              |
+| `title`                                                                                                                           | 1～120                            | 必填；快速记录时缺省 `'未命名思考'`（`lib/domain/journal.ts:80`）          |
+| `problem` / `background`                                                                                                          | ≤4000，默认 `''`                  | 问题描述、发生背景                                                         |
+| `facts` / `assumptions` / `conclusion` / `alternativeExplanations` / `keyUncertainties` / `verificationActions` / `reviewOutcome` | ≤6000，默认 `''`                  | 向导正文；`reviewOutcome` 是复盘后的实际结果                               |
+| `reviewDelta`                                                                                                                     | 枚举，默认 `'unknown'`            | `'better' \| 'as-expected' \| 'worse' \| 'unknown'`                        |
+| `steps` / `evidence`                                                                                                              | 数组，默认 `[]`                   | 向导作答与证据清单                                                         |
+| `tags`                                                                                                                            | 每项 1～24，最多 12 个，默认 `[]` | 标签过滤                                                                   |
+| `selfConfidence`                                                                                                                  | 1～5 整数，默认 3                 | 写下结论时的信心，复盘时对比                                               |
+| `status`                                                                                                                          | 默认 `'open'`                     | `'open' \| 'review-due' \| 'reviewed' \| 'decided' \| 'archived'`          |
+| `reviewDueDateKey`                                                                                                                | `^\d{4}-\d{2}-\d{2}$` 或 `null`   | 到期复盘日，会进入次日计划（`lib/services/training.ts:233-235`）           |
+| `createdAt` / `updatedAt`                                                                                                         | 必填数字                          | `updatedAt` 是导入冲突判定键                                               |
+| `deleted` / `deletedAt`                                                                                                           | `false` / `null`                  | 软删除标记，同步时需传播；`listJournals` 默认过滤（`lib/db/store.ts:244`） |
+| `aiConsent`                                                                                                                       | 默认 `false`                      | 只有用户勾选后日志正文才会被送去 AI（`features/coach/coach-panel.tsx:95`） |
 
 `journalCompleteness()` 只统计 8 个向导字段是否非空（`lib/domain/journal.ts:86-101`）；`searchJournals()` 把标题、8 字段、`reviewOutcome`、标签、步骤作答、证据拼成小写全文做多词 AND 匹配并排除 `deleted`（`lib/domain/journal.ts:103-131`）。
 
@@ -167,28 +167,28 @@
 
 `exerciseSchema` 是对 `format` 的判别式联合（`lib/domain/exercise-schema.ts:147-154`），6 个分支共享 `baseFields`（`lib/domain/exercise-schema.ts:56-71`）：
 
-| 字段 | 规则 |
-| --- | --- |
-| `id` | ≥3 字符，`^[a-z0-9][a-z0-9._-]*$`；内容目录额外要求 `^ex-[a-z-]+-\d{3}$`（`scripts/validate-exercises.mjs:75`） |
-| `version` | 正整数，播种时用于判断是否覆盖 |
-| `category` / `knowledgePoints` | 14 类枚举之一 / 1～4 个 `KNOWLEDGE_POINT_IDS` |
-| `difficulty` / `estimatedSeconds` | 1～5 整数 / 20～600 整数 |
-| `context` / `prompt` / `stem` | 可选 ≥4 / 可选 ≥4 / 必填 ≥6 |
-| `explanation` | `summary`(≥8) + `steps`(每项≥6，≥1 条) + `commonMistakes`(默认 `[]`，每项含 `errorType` 与 `why`≥8，`option` 可选) + `takeaway`(≥6)，见 `lib/domain/exercise-schema.ts:41-54` |
-| `reviewTags` / `provenance` | 1～6 项非空 / ≥4 字（题目来源或编写说明） |
-| `status` | 默认 `'validated'`；`'draft'`、`'retired'` 不进计划与复习（`lib/services/training.ts:227`、`301`） |
-| `grading` | `gradingConfigSchema`，默认 `{ partialCredit: true, orderTolerance: 0.2 }`，且 `.strict()`（`lib/domain/exercise-schema.ts:32-39`） |
+| 字段                              | 规则                                                                                                                                                                          |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                              | ≥3 字符，`^[a-z0-9][a-z0-9._-]*$`；内容目录额外要求 `^ex-[a-z-]+-\d{3}$`（`scripts/validate-exercises.mjs:75`）                                                               |
+| `version`                         | 正整数，播种时用于判断是否覆盖                                                                                                                                                |
+| `category` / `knowledgePoints`    | 14 类枚举之一 / 1～4 个 `KNOWLEDGE_POINT_IDS`                                                                                                                                 |
+| `difficulty` / `estimatedSeconds` | 1～5 整数 / 20～600 整数                                                                                                                                                      |
+| `context` / `prompt` / `stem`     | 可选 ≥4 / 可选 ≥4 / 必填 ≥6                                                                                                                                                   |
+| `explanation`                     | `summary`(≥8) + `steps`(每项≥6，≥1 条) + `commonMistakes`(默认 `[]`，每项含 `errorType` 与 `why`≥8，`option` 可选) + `takeaway`(≥6)，见 `lib/domain/exercise-schema.ts:41-54` |
+| `reviewTags` / `provenance`       | 1～6 项非空 / ≥4 字（题目来源或编写说明）                                                                                                                                     |
+| `status`                          | 默认 `'validated'`；`'draft'`、`'retired'` 不进计划与复习（`lib/services/training.ts:227`、`301`）                                                                            |
+| `grading`                         | `gradingConfigSchema`，默认 `{ partialCredit: true, orderTolerance: 0.2 }`，且 `.strict()`（`lib/domain/exercise-schema.ts:32-39`）                                           |
 
 分支差异（`lib/domain/exercise-schema.ts:73-145`）：
 
-| `format` | options | answer | alternatives |
-| --- | --- | --- | --- |
-| `single-choice` | 2～6 项，`key` 大写字母且不重复 | `{ keys: 恰好 1 }` | 默认 `[]`，每项 `keys≥1` + `note≥4` |
-| `multi-choice` | 3～8 项 | `{ keys: ≥1 }` | 同上 |
-| `true-false` | 无 | `{ value: boolean }` | 有，判分未使用 |
-| `short-answer` | 无 | `{ checkpoints(≥2), correctRatio(0.5～1, 默认 0.8), partialRatio(0.2～0.9, 默认 0.5), modelAnswer(≥8) }` | 有，判分未使用 |
-| `open-response` | 无 | `{ scale(≥3 档，score 0～4), guidance(≥8), selfAssessed: 恒 true }` | 有，判分未使用 |
-| `ordering` | `items` 3～6 项（按正确顺序给出，界面负责打乱） | `{ keys: ≥3 }` | 有，判分未使用 |
+| `format`        | options                                         | answer                                                                                                   | alternatives                        |
+| --------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `single-choice` | 2～6 项，`key` 大写字母且不重复                 | `{ keys: 恰好 1 }`                                                                                       | 默认 `[]`，每项 `keys≥1` + `note≥4` |
+| `multi-choice`  | 3～8 项                                         | `{ keys: ≥1 }`                                                                                           | 同上                                |
+| `true-false`    | 无                                              | `{ value: boolean }`                                                                                     | 有，判分未使用                      |
+| `short-answer`  | 无                                              | `{ checkpoints(≥2), correctRatio(0.5～1, 默认 0.8), partialRatio(0.2～0.9, 默认 0.5), modelAnswer(≥8) }` | 有，判分未使用                      |
+| `open-response` | 无                                              | `{ scale(≥3 档，score 0～4), guidance(≥8), selfAssessed: 恒 true }`                                      | 有，判分未使用                      |
+| `ordering`      | `items` 3～6 项（按正确顺序给出，界面负责打乱） | `{ keys: ≥3 }`                                                                                           | 有，判分未使用                      |
 
 `optionSchema.errorType`（`lib/domain/exercise-schema.ts:16-22`）是题目预先标注的典型推理错误：正确选项不应带它，`reason`(≥4) 可选；用户选中带该标记的选项即命中错误（`lib/domain/grading.ts:34-39`）。`checkpointSchema`（`lib/domain/exercise-schema.ts:24-30`）含 `id`、`label`、`keywords`(≥1)、`weight`(1～5，默认 1)、`required`(默认 false)，简答判分按加权覆盖率与必要要点判定（`lib/domain/grading.ts:271-331`）。
 
@@ -198,23 +198,23 @@
 
 `settingsSchema` 顶层 `.strict()`（未知键即解析失败）；嵌套 `ai`、`reminders` 非 strict，未知键被 zod 剥离。每个 profile 一行，主键就是 `profileId`。
 
-| 分组 | 字段 | 规则（默认值） |
-| --- | --- | --- |
-| 身份 | `profileId` / `displayName` / `onboarded` | 必填非空 / ≤40（`'我'`） / boolean（`false`） |
-| 训练 | `dailyBudgetMinutes` | 3～60 整数（`10`） |
-| | `newToReviewRatio` | 0～1（`0.4`），新题占比 |
-| | `preferredCategories` | 14 类子集（`[]` = 不限） |
-| | `restWeekdays` | 0～6 整数数组（`[]`），0=周日；休息日只减轻任务，不清零连续天数 |
-| | `difficultyBias` / `timezone` | 0～1（`0.5`） / 非空字符串（`'UTC'`，首次启动写设备时区，`app/providers.tsx:104-107`） |
-| 日志/提醒 | `journalDailyReminder` | boolean（`true`），控制计划里是否总留一篇日志入口（`lib/domain/daily-plan.ts:193`） |
-| | `reminders.enabled` / `.paused` | boolean（`false` / `false`） |
-| | `reminders.time` / `.quietStart` / `.quietEnd` | 必须匹配 `TIME_RE`（`'20:00'` / `'22:30'` / `'07:30'`） |
-| | `reminders.weeklyReviewDay` | 0～6（`0`） |
-| 外观 | `theme` | `'system' \| 'light' \| 'dark'`（`'system'`） |
-| AI | `ai.enabled` | boolean（`false`），默认关闭 |
-| | `ai.provider` | 8 个预设标签之一（`'openai-compatible'`，`lib/domain/settings.ts:5-14`） |
-| | `ai.model` / `ai.baseUrlLabel` | ≤80（`''`，留空用服务端默认模型） / ≤120（`''`）**仅展示用标签；API Key 永不进入客户端设置**（`lib/domain/settings.ts:72-73`） |
-| | `ai.temperature` / `ai.timeoutMs` / `ai.maxOutputTokens` / `ai.dailyCallLimit` | 0～2（`0.4`）/ 3000～120000（`25000`）/ 128～4000（`900`）/ 0～200（`20`） |
+| 分组      | 字段                                                                           | 规则（默认值）                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| 身份      | `profileId` / `displayName` / `onboarded`                                      | 必填非空 / ≤40（`'我'`） / boolean（`false`）                                                                                  |
+| 训练      | `dailyBudgetMinutes`                                                           | 3～60 整数（`10`）                                                                                                             |
+|           | `newToReviewRatio`                                                             | 0～1（`0.4`），新题占比                                                                                                        |
+|           | `preferredCategories`                                                          | 14 类子集（`[]` = 不限）                                                                                                       |
+|           | `restWeekdays`                                                                 | 0～6 整数数组（`[]`），0=周日；休息日只减轻任务，不清零连续天数                                                                |
+|           | `difficultyBias` / `timezone`                                                  | 0～1（`0.5`） / 非空字符串（`'UTC'`，首次启动写设备时区，`app/providers.tsx:104-107`）                                         |
+| 日志/提醒 | `journalDailyReminder`                                                         | boolean（`true`），控制计划里是否总留一篇日志入口（`lib/domain/daily-plan.ts:193`）                                            |
+|           | `reminders.enabled` / `.paused`                                                | boolean（`false` / `false`）                                                                                                   |
+|           | `reminders.time` / `.quietStart` / `.quietEnd`                                 | 必须匹配 `TIME_RE`（`'20:00'` / `'22:30'` / `'07:30'`）                                                                        |
+|           | `reminders.weeklyReviewDay`                                                    | 0～6（`0`）                                                                                                                    |
+| 外观      | `theme`                                                                        | `'system' \| 'light' \| 'dark'`（`'system'`）                                                                                  |
+| AI        | `ai.enabled`                                                                   | boolean（`false`），默认关闭                                                                                                   |
+|           | `ai.provider`                                                                  | 8 个预设标签之一（`'openai-compatible'`，`lib/domain/settings.ts:5-14`）                                                       |
+|           | `ai.model` / `ai.baseUrlLabel`                                                 | ≤80（`''`，留空用服务端默认模型） / ≤120（`''`）**仅展示用标签；API Key 永不进入客户端设置**（`lib/domain/settings.ts:72-73`） |
+|           | `ai.temperature` / `ai.timeoutMs` / `ai.maxOutputTokens` / `ai.dailyCallLimit` | 0～2（`0.4`）/ 3000～120000（`25000`）/ 128～4000（`900`）/ 0～200（`20`）                                                     |
 
 `TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/`（`lib/domain/settings.ts:36`）：拒绝 `24:00` 与单位数小时，错误文案"时间格式必须是 HH:MM"。`defaultSettings(profileId)` 就是 `settingsSchema.parse({ profileId })`（`lib/domain/settings.ts:85-87`）。
 
@@ -222,16 +222,16 @@
 
 主键 `[profileId+exerciseId]`（`exerciseId` 是主键一半，行上没有 `id`），写入者 `submitAttempt()`（`lib/services/training.ts:92-105`）。`SRS_LIMITS`（`lib/domain/scheduling.ts:12-20`）：间隔 1～45 天、ease 1.8～2.8（默认 2.5）、同日重学延迟 30 分钟、连错 3 次标 `leech`。
 
-| 字段 | 含义 |
-| --- | --- |
-| `ease` | 间隔系数；`q≥3` 增益 `0.1-(5-q)×(0.08+(5-q)×0.02)`，`q<3` 时 `-0.2` |
-| `intervalDays` | 当前间隔：`repetitions=1` 固定 1 天，`=2` 为 `round(3×难度系数×2)/2`，其后 `round(间隔×ease×难度系数)`，最终夹到 1～45 |
-| `repetitions` / `lapses` | 连续成功次数 / 遗忘次数；答错时 `repetitions` 归 0 |
-| `dueDateKey` | 下次到期日，`null` 表示不在队列 |
-| `sameDayRelearn` / `sameDayRelearnAfterTs` | 答错当天约 30 分钟后再练一次 |
-| `leech` | `lapses ≥ 3`，建议先读解析再做同类题 |
+| 字段                                                | 含义                                                                                                                   |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `ease`                                              | 间隔系数；`q≥3` 增益 `0.1-(5-q)×(0.08+(5-q)×0.02)`，`q<3` 时 `-0.2`                                                    |
+| `intervalDays`                                      | 当前间隔：`repetitions=1` 固定 1 天，`=2` 为 `round(3×难度系数×2)/2`，其后 `round(间隔×ease×难度系数)`，最终夹到 1～45 |
+| `repetitions` / `lapses`                            | 连续成功次数 / 遗忘次数；答错时 `repetitions` 归 0                                                                     |
+| `dueDateKey`                                        | 下次到期日，`null` 表示不在队列                                                                                        |
+| `sameDayRelearn` / `sameDayRelearnAfterTs`          | 答错当天约 30 分钟后再练一次                                                                                           |
+| `leech`                                             | `lapses ≥ 3`，建议先读解析再做同类题                                                                                   |
 | `lastOutcome` / `lastConfidence` / `lastErrorTypes` | 最近一次表现；`scheduleNext` 透传旧 `lastErrorTypes`，由服务层在返回后覆盖为本次归因（`lib/services/training.ts:104`） |
-| `updatedAt` | 导入冲突判定键 |
+| `updatedAt`                                         | 导入冲突判定键                                                                                                         |
 
 难度系数 `clamp(1-(difficulty-3)×0.08, 0.7, 1.3)`（`lib/domain/scheduling.ts:95-97`）：越难间隔越短。质量分 `q`（`lib/domain/scheduling.ts:54-89`）：答对 4、部分正确 3、答错 1、开放题 `score+1`；答对且信心≥4 且用时/预估≤1.2 加 1；信心≤2 减 1；夹在 0～5。
 
@@ -254,14 +254,14 @@ ewma' = clamp(ewma + 0.3 × 难度权重 × 信心信号 × (表现值 − ewma)
 
 ## 5. 受控词表（`lib/domain/taxonomy.ts`）
 
-| 词表 | 数量 | 位置 | 用在 |
-| --- | --- | --- | --- |
-| `EXERCISE_CATEGORIES` | 14 | `taxonomy.ts:1-16` | `Exercise.category`、`settings.preferredCategories`、`exerciseFileSchema.category` |
-| `LOGIC_ERROR_TYPES` | 15 | `taxonomy.ts:54-70` | `option.errorType`、`explanation.commonMistakes[].errorType`、`AttemptRecord.errorTypes`、AI 输出 `issues[].errorType` |
-| `CAUSE_TYPES` | 7 | `taxonomy.ts:112-120` | `AttemptRecord.cause` |
-| `KNOWLEDGE_POINTS` / `KNOWLEDGE_POINT_IDS` | 45 | `taxonomy.ts:144-197` | `Exercise.knowledgePoints`、`KnowledgeState.knowledgePointId` |
-| `ACTIVITY_TYPES` | 7 | `taxonomy.ts:262-270` | `DailyPlanItemRecord.activity` |
-| `JOURNAL_STEPS` | 8 | `taxonomy.ts:203-260` | `Journal.steps[].stepId` |
+| 词表                                       | 数量 | 位置                  | 用在                                                                                                                   |
+| ------------------------------------------ | ---- | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `EXERCISE_CATEGORIES`                      | 14   | `taxonomy.ts:1-16`    | `Exercise.category`、`settings.preferredCategories`、`exerciseFileSchema.category`                                     |
+| `LOGIC_ERROR_TYPES`                        | 15   | `taxonomy.ts:54-70`   | `option.errorType`、`explanation.commonMistakes[].errorType`、`AttemptRecord.errorTypes`、AI 输出 `issues[].errorType` |
+| `CAUSE_TYPES`                              | 7    | `taxonomy.ts:112-120` | `AttemptRecord.cause`                                                                                                  |
+| `KNOWLEDGE_POINTS` / `KNOWLEDGE_POINT_IDS` | 45   | `taxonomy.ts:144-197` | `Exercise.knowledgePoints`、`KnowledgeState.knowledgePointId`                                                          |
+| `ACTIVITY_TYPES`                           | 7    | `taxonomy.ts:262-270` | `DailyPlanItemRecord.activity`                                                                                         |
+| `JOURNAL_STEPS`                            | 8    | `taxonomy.ts:203-260` | `Journal.steps[].stepId`                                                                                               |
 
 `Journal.steps[].stepId` 与 `JOURNAL_STEPS` 之间**没有 schema 级校验**（`lib/domain/journal.ts:15` 只要求非空字符串），编辑器按固定 id 写入（`features/journal/journal-views.tsx:237`）。新增步骤不会让旧数据报错，但会失去解释。`activityForExercise()` 把题型映射到活动类型，`reviewTags` 含"事实与推测"时优先返回 `fact-vs-inference`（`lib/domain/catalog.ts:41-62`）。
 
@@ -335,16 +335,16 @@ ewma' = clamp(ewma + 0.3 × 难度权重 × 信心信号 × (表现值 − ewma)
 
 `importBackup()`（`lib/db/store.ts:387-511`）在一个读写事务里按 store 应用不同规则，返回 `{ added, merged, skipped }`：
 
-| store | 规则 |
-| --- | --- |
-| `settings` | 无条件用文件内容覆盖，键为文件的 `profileId` |
-| `attempts` | 按 `id` 去重：已存在则 `skipped`，绝不改写作答历史 |
-| `journals` | 同 `id` 比 `updatedAt`：文件更新才覆盖（`merged`），否则 `skipped`；无旧值则 `added` |
-| `reviewStates` / `knowledgeStates` | 复合键查旧值，`prior.updatedAt >= 新值` 即 `skipped`，否则覆盖 |
-| `plans` | 用 `[profileId, dateKey]` 查旧值，`prior.generatedAt >= 新值` 即 `skipped`（不计入返回值） |
-| `progress` | 同上，比较 `updatedAt` |
-| `exerciseIssues` / `aiAnalyses` / `aiUsage` | 无条件 `put`（按 `id` 覆盖），不计数 |
-| `syncState` | 重置为 `{ localRevision: 旧值+1, lastSyncedAt: null, lastSyncedRevision: 0, pendingOps: 0, conflicts: merged, mode: 'local' }`，事务后再调一次 `bumpRevision` |
+| store                                       | 规则                                                                                                                                                          |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `settings`                                  | 无条件用文件内容覆盖，键为文件的 `profileId`                                                                                                                  |
+| `attempts`                                  | 按 `id` 去重：已存在则 `skipped`，绝不改写作答历史                                                                                                            |
+| `journals`                                  | 同 `id` 比 `updatedAt`：文件更新才覆盖（`merged`），否则 `skipped`；无旧值则 `added`                                                                          |
+| `reviewStates` / `knowledgeStates`          | 复合键查旧值，`prior.updatedAt >= 新值` 即 `skipped`，否则覆盖                                                                                                |
+| `plans`                                     | 用 `[profileId, dateKey]` 查旧值，`prior.generatedAt >= 新值` 即 `skipped`（不计入返回值）                                                                    |
+| `progress`                                  | 同上，比较 `updatedAt`                                                                                                                                        |
+| `exerciseIssues` / `aiAnalyses` / `aiUsage` | 无条件 `put`（按 `id` 覆盖），不计数                                                                                                                          |
+| `syncState`                                 | 重置为 `{ localRevision: 旧值+1, lastSyncedAt: null, lastSyncedRevision: 0, pendingOps: 0, conflicts: merged, mode: 'local' }`，事务后再调一次 `bumpRevision` |
 
 `options.replaceExisting` 为真时事务开始先删该 profile 的 `attempts`、`journals`、`reviewStates`、`knowledgeStates`（**不含 `plans` 与 `progress`**，`lib/db/store.ts:415-420`）；界面当前不传该选项，只调 `importBackup(JSON.parse(text))`（`features/me/me-view.tsx:398`）。`clearLocalData()`（`lib/db/store.ts:513-547`）删该 profile 的 9 个数据 store + `settings` + `syncState` + `meta.onboarded:*`；题库默认一起清空，`{ keepExercises: true }` 时保留（`lib/db/store.ts:544`）。日志硬删除走 `deleteJournalPermanently()`，id 不存在或不属于该 profile 时抛 `RevisionConflictError`（`lib/db/store.ts:549-556`）。
 

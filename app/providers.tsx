@@ -7,7 +7,6 @@ import { LocalStore, type DataStore } from '@/lib/db/store';
 import { defaultSettings, migrateSettings, type AppSettings } from '@/lib/domain/settings';
 import { detectTimeZone, todayKey } from '@/lib/domain/time';
 
-
 export const GUEST_PROFILE = 'local';
 
 interface AppContextValue {
@@ -70,8 +69,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         const current = await target.listExercises();
         // 内容包版本变化或题量变化时重新播种，其余情况直接使用本地缓存。
         const needsReseed =
-          current.length !== exercises.length ||
-          current.some((e) => !exercises.some((next) => next.id === e.id && next.version === e.version));
+          current.length !== exercises.length || current.some((e) => !exercises.some((next) => next.id === e.id && next.version === e.version));
         if (!needsReseed) {
           setSeeding({ status: 'done', message: `本地题库已就绪（${current.length} 题）` });
           return;
@@ -102,9 +100,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         const local = new LocalStore(db);
         const stored = await local.getSettings(GUEST_PROFILE);
         const tz = detectTimeZone();
-        const nextSettings = stored
-          ? migrateSettings(stored)
-          : { ...defaultSettings(GUEST_PROFILE), timezone: tz };
+        const nextSettings = stored ? migrateSettings(stored) : { ...defaultSettings(GUEST_PROFILE), timezone: tz };
         if (!stored) await local.saveSettings(nextSettings);
         if (cancelled) return;
         setStore(local);

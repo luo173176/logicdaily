@@ -5,14 +5,7 @@ import Link from 'next/link';
 
 import { useApp } from '@/app/providers';
 import { Button, Note, StatusBadge } from '@/components/ui';
-import {
-  analyzeReasoning,
-  describeAiError,
-  readAiStatus,
-  reviewJournal,
-  type AiStatus,
-  type CoachResponse,
-} from '@/lib/ai/client';
+import { analyzeReasoning, describeAiError, readAiStatus, reviewJournal, type AiStatus, type CoachResponse } from '@/lib/ai/client';
 import { CATEGORY_LABELS, KNOWLEDGE_POINT_LABELS } from '@/lib/domain/taxonomy';
 import type { Exercise } from '@/lib/domain/exercise-schema';
 import type { AnswerInput } from '@/lib/domain/grading';
@@ -161,7 +154,7 @@ export function CoachPanel({ context }: { context: CoachContext }) {
         errorMessage: response.ok ? null : (response.message ?? null),
       });
     }
-    if (response.ok && context.kind === "journal") {
+    if (response.ok && context.kind === 'journal') {
       await store?.saveAIAnalysis({
         id: `ana-${Date.now().toString(36)}`,
         profileId,
@@ -320,9 +313,7 @@ export function CoachPanel({ context }: { context: CoachContext }) {
           {payload.result.uncertainty ? (
             <Note tone="warn" title="这次反馈的可靠性">
               <p>{payload.result.uncertainty}</p>
-              <p className="faint mt-1">
-                模型输出不是事实判定。若与题目解析冲突，以解析与你自己的核对为准，并欢迎在“我的 → 题库复核清单”里反馈。
-              </p>
+              <p className="faint mt-1">模型输出不是事实判定。若与题目解析冲突，以解析与你自己的核对为准，并欢迎在“我的 → 题库复核清单”里反馈。</p>
             </Note>
           ) : null}
 
@@ -339,8 +330,8 @@ export function CoachPanel({ context }: { context: CoachContext }) {
 
           {payload.meta ? (
             <p className="faint">
-              {payload.meta.model} · 提示词 {payload.meta.promptVersion} · {payload.meta.latencyMs}ms · 输入 {payload.meta.inputChars} 字 ·
-              今日已用 {payload.meta.usedToday}/{payload.meta.usedToday + payload.meta.remainingToday}
+              {payload.meta.model} · 提示词 {payload.meta.promptVersion} · {payload.meta.latencyMs}ms · 输入 {payload.meta.inputChars} 字 · 今日已用{' '}
+              {payload.meta.usedToday}/{payload.meta.usedToday + payload.meta.remainingToday}
             </p>
           ) : null}
         </div>
@@ -349,7 +340,10 @@ export function CoachPanel({ context }: { context: CoachContext }) {
       {state === 'idle' ? (
         <p className="faint">
           教练默认采用苏格拉底式提问：先问你，而不是直接给答案。发送内容只包含
-          {context.kind === 'attempt' ? `本题题干、你的答案与推理（题型：${CATEGORY_LABELS[context.exercise.category]}，${outcomeLabel(context.grade.outcome)}）` : '这篇日志的结构化字段与证据'}。
+          {context.kind === 'attempt'
+            ? `本题题干、你的答案与推理（题型：${CATEGORY_LABELS[context.exercise.category]}，${outcomeLabel(context.grade.outcome)}）`
+            : '这篇日志的结构化字段与证据'}
+          。
         </p>
       ) : null}
     </section>

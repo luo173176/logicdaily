@@ -33,9 +33,7 @@ const EMPTY_MSG = '未提交作答，不计入正确率，也不更新复习队�
 
 function trapTypes(options: ExerciseOption[] | undefined, keys: string[]): LogicErrorType[] {
   if (!options) return [];
-  return options
-    .filter((o) => keys.includes(o.key) && o.errorType)
-    .map((o) => o.errorType as LogicErrorType);
+  return options.filter((o) => keys.includes(o.key) && o.errorType).map((o) => o.errorType as LogicErrorType);
 }
 
 export function normalizeForKeyword(text: string): string {
@@ -45,10 +43,7 @@ export function normalizeForKeyword(text: string): string {
     .replace(/[，。、；：！？“”‘’（）《》【】…—－\-_,.;:!?"'`()<>[\]{}\/\\|+*=^%$#@&~`]/g, '');
 }
 
-function gradeChoice(
-  exercise: Extract<Exercise, { format: 'single-choice' | 'multi-choice' }>,
-  keys: string[],
-): GradeResult {
+function gradeChoice(exercise: Extract<Exercise, { format: 'single-choice' | 'multi-choice' }>, keys: string[]): GradeResult {
   const expected = [...exercise.answer.keys].sort();
   const selected = [...new Set(keys)].sort();
   const wrongKeys = selected.filter((k) => !expected.includes(k));
@@ -86,9 +81,7 @@ function gradeChoice(
     };
   }
 
-  const alternative = exercise.alternatives.find(
-    (a) => [...a.keys].sort().join('|') === selected.join('|'),
-  );
+  const alternative = exercise.alternatives.find((a) => [...a.keys].sort().join('|') === selected.join('|'));
   if (alternative) {
     return {
       outcome: 'correct',
@@ -164,10 +157,7 @@ function gradeChoice(
   };
 }
 
-function gradeTrueFalse(
-  exercise: Extract<Exercise, { format: 'true-false' }>,
-  value: boolean | null,
-): GradeResult {
+function gradeTrueFalse(exercise: Extract<Exercise, { format: 'true-false' }>, value: boolean | null): GradeResult {
   if (value === null) {
     return {
       outcome: 'incorrect',
@@ -193,16 +183,11 @@ function gradeTrueFalse(
     matchedCheckpoints: [],
     missedCheckpoints: [],
     acceptedAlternative: null,
-    rationale: correct
-      ? '判断与参考答案一致。'
-      : `参考答案为“${exercise.answer.value ? '正确' : '错误'}”。`,
+    rationale: correct ? '判断与参考答案一致。' : `参考答案为“${exercise.answer.value ? '正确' : '错误'}”。`,
   };
 }
 
-function gradeOrdering(
-  exercise: Extract<Exercise, { format: 'ordering' }>,
-  keys: string[],
-): GradeResult {
+function gradeOrdering(exercise: Extract<Exercise, { format: 'ordering' }>, keys: string[]): GradeResult {
   const expected = exercise.answer.keys;
   if (keys.length === 0) {
     return {
@@ -262,16 +247,11 @@ function gradeOrdering(
     matchedCheckpoints: [],
     missedCheckpoints: [],
     acceptedAlternative: null,
-    rationale: `按两两先后关系计分：${concordant}/${totalPairs} 对顺序正确。漏排：${
-      missedKeys.join('、') || '无'
-    }。`,
+    rationale: `按两两先后关系计分：${concordant}/${totalPairs} 对顺序正确。漏排：${missedKeys.join('、') || '无'}。`,
   };
 }
 
-function gradeShortAnswer(
-  exercise: Extract<Exercise, { format: 'short-answer' }>,
-  text: string,
-): GradeResult {
+function gradeShortAnswer(exercise: Extract<Exercise, { format: 'short-answer' }>, text: string): GradeResult {
   const haystack = normalizeForKeyword(text);
   if (haystack.length === 0) {
     return {
@@ -298,9 +278,7 @@ function gradeShortAnswer(
   const totalWeight = exercise.answer.checkpoints.reduce((s, c) => s + c.weight, 0);
   const hitWeight = matched.reduce((s, c) => s + c.weight, 0);
   const ratio = totalWeight === 0 ? 0 : hitWeight / totalWeight;
-  const missingRequired = exercise.answer.checkpoints
-    .filter((c) => c.required)
-    .some((c) => !matched.includes(c));
+  const missingRequired = exercise.answer.checkpoints.filter((c) => c.required).some((c) => !matched.includes(c));
 
   let outcome: GradeOutcome = 'incorrect';
   if (ratio >= exercise.answer.correctRatio && !missingRequired) outcome = 'correct';
@@ -330,11 +308,7 @@ function gradeShortAnswer(
   };
 }
 
-function gradeOpenResponse(
-  exercise: Extract<Exercise, { format: 'open-response' }>,
-  text: string,
-  score: number,
-): GradeResult {
+function gradeOpenResponse(exercise: Extract<Exercise, { format: 'open-response' }>, text: string, score: number): GradeResult {
   const clamped = Math.max(0, Math.min(4, Math.round(score ?? 0)));
   const level = exercise.answer.scale.find((s) => s.score === clamped) ?? null;
   const trimmed = text.trim();
@@ -348,9 +322,7 @@ function gradeOpenResponse(
     matchedCheckpoints: [],
     missedCheckpoints: [],
     acceptedAlternative: null,
-    rationale: `开放题没有唯一正确答案，记录你的自评等级：${
-      level ? `${level.label} —— ${level.criteria}` : '未选择等级'
-    }。`,
+    rationale: `开放题没有唯一正确答案，记录你的自评等级：${level ? `${level.label} —— ${level.criteria}` : '未选择等级'}。`,
   };
 }
 

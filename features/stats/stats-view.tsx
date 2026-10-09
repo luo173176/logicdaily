@@ -112,9 +112,7 @@ export function StatsView() {
     <div className="stack gap-4">
       <header className="stack gap-2">
         <h1 className="text-2xl">训练报告</h1>
-        <p className="muted text-sm">
-          这里只统计你的练习行为与作答表现。它不是智力或逻辑能力的测量，每一项都能展开看计算方式。
-        </p>
+        <p className="muted text-sm">这里只统计你的练习行为与作答表现。它不是智力或逻辑能力的测量，每一项都能展开看计算方式。</p>
         <div className="row wrap gap-2" role="tablist" aria-label="时间范围">
           {(Object.keys(RANGE_LABELS) as RangeKey[]).map((key) => (
             <button
@@ -141,10 +139,7 @@ export function StatsView() {
       </section>
 
       <SectionTitle>近 30 天作答量</SectionTitle>
-      <BarChart
-        points={series.map((point) => ({ label: point.dateKey.slice(5), value: point.attempts }))}
-        emptyText="还没有作答记录。"
-      />
+      <BarChart points={series.map((point) => ({ label: point.dateKey.slice(5), value: point.attempts }))} emptyText="还没有作答记录。" />
 
       <SectionTitle>题型表现</SectionTitle>
       {categories.length === 0 ? (
@@ -224,7 +219,9 @@ export function StatsView() {
           </span>
         </div>
         <p className="faint">{trend.note}</p>
-        <p className="faint">连续训练：当前 {streak.current} 天，历史最长 {streak.best} 天。连续天数不代表能力变化。</p>
+        <p className="faint">
+          连续训练：当前 {streak.current} 天，历史最长 {streak.best} 天。连续天数不代表能力变化。
+        </p>
       </div>
 
       <SectionTitle>现实中的复盘结果</SectionTitle>

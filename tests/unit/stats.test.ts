@@ -243,7 +243,10 @@ describe('日志统计', () => {
     const list = [
       journal({ id: 'j-1', evidence: [{ id: 'e1', journalId: 'j-1', stance: 'support', text: '支持', source: '', reliability: 3, createdAt: 1 }] }),
       journal({ id: 'j-2', evidence: [{ id: 'e2', journalId: 'j-2', stance: 'oppose', text: '反对', source: '', reliability: 3, createdAt: 1 }] }),
-      journal({ id: 'j-3', evidence: [{ id: 'e3', journalId: 'j-3', stance: 'alternative', text: '另一种解释', source: '', reliability: 3, createdAt: 1 }] }),
+      journal({
+        id: 'j-3',
+        evidence: [{ id: 'e3', journalId: 'j-3', stance: 'alternative', text: '另一种解释', source: '', reliability: 3, createdAt: 1 }],
+      }),
     ];
     const stats = journalStats(list);
     expect(stats.withOpposingEvidence).toBe(2);

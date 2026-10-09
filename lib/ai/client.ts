@@ -130,8 +130,7 @@ export async function testAiConnection(): Promise<{ ok: boolean; reply?: string;
 export function applyTheme(theme: AppSettings['theme']): void {
   if (typeof document === 'undefined') return;
   const dark =
-    theme === 'dark' ||
-    (theme === 'system' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    theme === 'dark' || (theme === 'system' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
   try {
     localStorage.setItem('logicdaily:theme', theme);
