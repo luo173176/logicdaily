@@ -12,6 +12,14 @@
 
 # testing
 /coverage
+/test-results
+/playwright-report
+/blob-report
+
+# env files (can opt-in for committing if needed)
+.env*
+# 模板文件必须入库，它是配置说明的一部分
+!.env.example
 
 # next.js
 /.next/
@@ -29,9 +37,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
 
 # vercel
 .vercel

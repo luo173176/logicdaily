@@ -1,0 +1,627 @@
+{
+  "schemaVersion": 1,
+  "category": "correlation-vs-causation",
+  "exercises": [
+    {
+      "id": "ex-cor-001",
+      "version": 1,
+      "category": "correlation-vs-causation",
+      "knowledgePoints": [
+        "correlation-scenarios",
+        "common-cause"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 50,
+      "format": "single-choice",
+      "stem": "某连锁咖啡店运营周报：上周下雨天数多，雨天外卖订单量比晴天高 40%，同时差评率从晴天的 3% 升到雨天的 5.1%。周报结论写“订单量大导致差评增多”。下列哪项评价最准确？",
+      "options": [
+        {
+          "key": "A",
+          "text": "天气同时推动两个指标：雨天点单的人更多，配送也更慢更容易超时，差评上升可能来自超时而不是订单量本身"
+        },
+        {
+          "key": "B",
+          "text": "订单量与差评率同向变化，这就足以说明是单量增加造成了差评增多",
+          "errorType": "correlation-as-causation",
+          "reason": "由两个指标共变直接推出因果关系"
+        },
+        {
+          "key": "C",
+          "text": "只要先核对 5.1% 这个数有没有算错，原因就能确定下来",
+          "errorType": "missing-reasoning-step",
+          "reason": "把核对数据当成完成因果归因"
+        },
+        {
+          "key": "D",
+          "text": "差评率只上升了 2.1 个百分点，幅度很小，可见天气根本没有影响",
+          "errorType": "equivocation",
+          "reason": "把百分点的小差异偷换成影响不存在"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "订单量与差评率都被天气推着走，共变方向一致并不说明二者互相导致；要判断因果，得看超时率这类中间指标。",
+        "steps": [
+          "把两个数字对齐：以晴天订单量为 1，雨天为 1.4；差评率晴天 3%、雨天 5.1%。",
+          "算出差评条数之比：1.4×5.1% ÷ 3% = 7.14 ÷ 3 = 2.38，即雨天差评条数约为晴天的 2.4 倍，其中一部分只是订单变多的结果。",
+          "比较率的两种说法：绝对上升 5.1% − 3% = 2.1 个百分点，相对上升 5.1 ÷ 3 = 1.7，即约 70%。",
+          "列出竞争解释：雨天配送慢、超时增多、骑手人手紧张同样能解释差评率上升。",
+          "给出区分办法：按是否超时拆开差评率，或比较晴天与雨天在相同超时水平下的差评率差异。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "correlation-as-causation",
+            "why": "两指标同涨只说明存在关联，共同的天气原因也能造出这种同步。"
+          },
+          {
+            "option": "C",
+            "errorType": "missing-reasoning-step",
+            "why": "确认数字没错只解决了前提真假，从关联到因果还需要排除第三因素这一步。"
+          },
+          {
+            "option": "D",
+            "errorType": "equivocation",
+            "why": "2.1 个百分点听起来小，但对应的相对幅度约 70%，用绝对差否认影响是换了口径。"
+          }
+        ],
+        "takeaway": "两个指标一起变化时，先找出同时推着它们走的那个变量。"
+      },
+      "reviewTags": [
+        "共同原因",
+        "百分点与相对幅度",
+        "消费数据"
+      ],
+      "provenance": "原创题，场景取自连锁餐饮的运营周报，用于训练识别天气这类共同驱动因素。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cor-002",
+      "version": 1,
+      "category": "correlation-vs-causation",
+      "knowledgePoints": [
+        "spurious-correlation",
+        "correlation-scenarios"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 65,
+      "format": "single-choice",
+      "stem": "过去五年，某市新建地铁运营里程从 40 公里增至 160 公里，同期少儿编程机构从 12 家增至 48 家。有人据此写道“地铁修到哪里，孩子的编程学习兴趣就被带到哪里”。对这个说法，下列哪项判断最合适？",
+      "options": [
+        {
+          "key": "A",
+          "text": "两条曲线都随城市扩张与家庭收入增长而上升，同步更可能来自共同的第三方变化，而不是彼此导致"
+        },
+        {
+          "key": "B",
+          "text": "两者同步增长，说明地铁沿线家庭确实更倾向给孩子报编程班",
+          "errorType": "correlation-as-causation",
+          "reason": "由整体趋势同步直接推出具体机制"
+        },
+        {
+          "key": "C",
+          "text": "把两个数都换成年均增长率，就能看出谁导致谁",
+          "errorType": "missing-reasoning-step",
+          "reason": "同一倍数的两条曲线换成增长率后依然完全同步"
+        },
+        {
+          "key": "D",
+          "text": "五年这么长的时间都保持同步，说明这条关系已经不需要别的证据",
+          "errorType": "insufficient-evidence",
+          "reason": "用观察时间长短替代机制与对照证据"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "两条各自增长到 4 倍的曲线必然同步，这种同步可以只反映城市整体的变化趋势，属于典型的时间趋势型伪相关。",
+        "steps": [
+          "核对倍数：地铁 160 ÷ 40 = 4，编程机构 48 ÷ 12 = 4，两者都是 5 年增至 4 倍。",
+          "换算成增速：4 的五次方根约为 1.32，两条曲线的年均增速都约 32%，完全一致。",
+          "由此说明 C 的问题：把绝对量换成增长率，同步性一点没变，也就无法区分方向。",
+          "列出共同原因：城市人口、可支配收入、商业密度、教育投入同时推高两类供给。",
+          "说明什么证据才有帮助：控制家庭收入与城区后，比较新开通地铁的街区与未开通街区在同一时期的编程班变化差异。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "correlation-as-causation",
+            "why": "全市总量层面的同步推不出“沿线家庭”这一具体机制，方向与中介都没有证据。"
+          },
+          {
+            "option": "C",
+            "errorType": "missing-reasoning-step",
+            "why": "指标换算不增加新信息，因果判断还需要差异化的对照数据。"
+          },
+          {
+            "option": "D",
+            "errorType": "insufficient-evidence",
+            "why": "长期共变仍然只是共变，时间长度不能替代对照与机制。"
+          }
+        ],
+        "takeaway": "两条一起上升的曲线，先怀疑它们背后有一条共同的上升趋势。"
+      },
+      "reviewTags": [
+        "伪相关",
+        "时间趋势",
+        "城市数据"
+      ],
+      "provenance": "原创题，场景取自城市基建与培训行业数据的对比报道，用于训练识别趋势型伪相关。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cor-003",
+      "version": 1,
+      "category": "correlation-vs-causation",
+      "knowledgePoints": [
+        "correlation-scenarios",
+        "common-cause",
+        "reverse-causation"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 110,
+      "format": "multi-choice",
+      "stem": "一项调查收集了 1,200 名小学生的教育平板日均使用时长与期末数学成绩，算得两者的相关系数约为 0.35。下列哪些说法与这份数据相容、且表述是稳妥的？（选出所有正确的）",
+      "options": [
+        {
+          "key": "A",
+          "text": "更重视学习的家庭既买平板又多花时间辅导，家庭投入作为共同原因同样能造出 0.35 的相关"
+        },
+        {
+          "key": "B",
+          "text": "也可能是数学成绩较好的孩子更愿意用平板练习，即方向与宣传所说相反"
+        },
+        {
+          "key": "C",
+          "text": "相关系数为正且样本有 1,200 人，已经足以证明平板使用直接提高了成绩",
+          "errorType": "correlation-as-causation",
+          "reason": "把正相关的统计显著当成因果机制被证实"
+        },
+        {
+          "key": "D",
+          "text": "0.35 只说明存在正向线性关联，并不能排除两个变量同时被第三个变量推动"
+        },
+        {
+          "key": "E",
+          "text": "可以把 0.35 读成“平板解释了 35% 的成绩差异，其余 65% 来自其他因素”",
+          "errorType": "equivocation",
+          "reason": "把相关系数与它平方后的方差解释比例混为一谈"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A",
+          "B",
+          "D"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "相关系数只描述关联强度与方向；0.35 至少容纳平板致效、成绩致用、家庭投入共同推动等多种解释。",
+        "steps": [
+          "先明确数据形态：日均使用时长与数学成绩同向变化，r 约 0.35，属于中等偏弱正相关。",
+          "把共变的几种解释列全：使用提高成绩；成绩好促使更多使用；家庭投入同时提高两者；成绩好的孩子被允许用更多功能。",
+          "算清 E 的错误：0.35 的平方约为 0.1225，即约 12% 的方差伴随变化，而且这仍是统计关联量，不是因果效应占比。",
+          "说明 C 的错误：样本量大只让估计更精确，不会改变横断面数据无法排除混淆这一结构问题。",
+          "给出能区分方向的证据：随机分到使用组与不限使用组的对照，或追踪同一批学生使用时长变化先于还是后于成绩变化。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "C",
+            "errorType": "correlation-as-causation",
+            "why": "相关方向与样本规模都不是因果证据，横断面关联仍然缺排除混淆这一步。"
+          },
+          {
+            "option": "E",
+            "errorType": "equivocation",
+            "why": "同一个数字在前半句是相关系数、后半句被换成解释比例，词义中途发生了变化。"
+          }
+        ],
+        "takeaway": "看到一个相关系数，先写出它能容纳的几种方向，再谈它有多大。"
+      },
+      "reviewTags": [
+        "相关系数",
+        "教育产品宣传",
+        "多种解释"
+      ],
+      "provenance": "原创题，场景取自教育硬件厂商引用的调研数据，用于训练对单个相关系数做多种因果解释。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cor-004",
+      "version": 1,
+      "category": "correlation-vs-causation",
+      "knowledgePoints": [
+        "correlation-scenarios"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 55,
+      "format": "true-false",
+      "stem": "某健身 App 报告：“会员每周锻炼天数与静息心率的相关系数约为 0.02，几乎为零，说明锻炼与心率之间毫无关系。”判断：这个结论的下法是不正确的。",
+      "answer": {
+        "value": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "0.02 说明几乎不存在线性关联，但“没有关系”比它强得多；曲线关系、口径问题都可能被同一个数字掩盖。",
+        "steps": [
+          "确认该指标度量的是什么：常见的相关系数只刻画线性趋势的强弱与方向。",
+          "构造一个能被它漏掉的情形：适度锻炼降低静息心率、训练量过大又让它回升，倒 U 形关系的线性相关可以接近 0。",
+          "检查口径：用“天数”而不是训练强度或时长，可能把真正起作用的变量抹平。",
+          "比较两个命题的强度：“无线性相关”成立时，“毫无关系”并不成立，因此该结论超出了证据范围。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "equivocation",
+            "why": "把“线性相关接近 0”与“两者毫无关系”当成同一件事，是关键词含义被替换。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "由一个只测线性的数字推出关于一切关系的总判断，结论比证据走得远。"
+          }
+        ],
+        "takeaway": "先弄清指标测的是什么关系，再决定能否认掉整类关系。"
+      },
+      "reviewTags": [
+        "相关系数",
+        "非线性关系",
+        "指标口径"
+      ],
+      "provenance": "原创题，场景取自运动类应用的数据周报，用于训练区分“无线性相关”与“无任何关系”。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cor-005",
+      "version": 1,
+      "category": "correlation-vs-causation",
+      "knowledgePoints": [
+        "correlation-scenarios",
+        "spurious-correlation",
+        "confounder"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 140,
+      "format": "short-answer",
+      "stem": "某公司 1 至 6 月的投放费用（万元）为 20、25、30、40、50、55，同期销售额（万元）为 80、100、120、160、200、220。市场部说：“两者完全同步，投放每多花 1 元就多带来 4 元销售。”请用两三句话指出这个说法最可疑之处。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "指出需要反事实证据",
+            "keywords": [
+              "反事实"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "指出共同驱动因素",
+            "keywords": [
+              "共同驱动"
+            ],
+            "weight": 2,
+            "required": false
+          },
+          {
+            "id": "c3",
+            "label": "怀疑两数同源或口径相同",
+            "keywords": [
+              "口径",
+              "同源"
+            ],
+            "weight": 2,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "六个月里销售与投放的比值全都等于 4，这种完美同步本身就是疑点：它更像是同一张计划表推出来的同源数字，或者两个数被同一个预算变量一起决定，而不是投放造成了销售。要检验这个 4 倍，至少需要三件事。第一，看反事实，也就是在减量甚至暂停投放的月份与渠道里销售怎样变化。第二，排除共同驱动，季节、平台大促和渠道库存会同时抬高两个数字。第三，核对口径，确认销售不是从投放预算倒推填出来的。三点都处理之后，4 倍这个说法才有讨论价值。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "六个点严格落在同一条正比例直线上，相关系数恰好为 1，这种完美同步在真实市场里几乎不会出现，更像数据同源而非因果效应。",
+        "steps": [
+          "逐一算比值：80÷20、100÷25、120÷30、160÷40、200÷50、220÷55 全都等于 4.0。",
+          "由此推出关联强度：所有点都满足销售 = 4×投放，两点之间的散布为零，线性相关系数为 1。",
+          "质疑完美性：真实投放通常存在边际递减与滞后，六个月都保持同一比例，更可能两个数来自同一份预算或目标计划。",
+          "指出因果缺口：即使同步是真的，也需要只改变投放的观察，例如暂停或减量渠道的对照，也就是反事实。",
+          "列出需要排除的共同驱动：季节需求、大促档期、渠道备货、竞品断货都会同时推高两个数字。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "correlation-as-causation",
+            "why": "把比值稳定当成因果系数，等于用“多花 1 元多卖 4 元”给一条直线安排了方向。"
+          },
+          {
+            "errorType": "insufficient-evidence",
+            "why": "六个月共 6 个观测点且没有任何未投放的对照，不足以支撑可外推的投入产出比。"
+          },
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "从“同步”到“投放导致销售”之间缺少排除共同原因与构造反事实的中间步骤。"
+          }
+        ],
+        "takeaway": "关联完美得没有误差时，先怀疑两个数字是不是出自同一张表。"
+      },
+      "reviewTags": [
+        "公司报表",
+        "同源数据",
+        "反事实"
+      ],
+      "provenance": "原创题，场景取自营销投放复盘，六个数据点由编写者构造为严格正比例，用于训练对完美同步的怀疑。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cor-006",
+      "version": 1,
+      "category": "correlation-vs-causation",
+      "knowledgePoints": [
+        "correlation-scenarios",
+        "confounder"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 95,
+      "format": "ordering",
+      "stem": "某市 3 月在中心城区推行共享单车电子围栏，随后 6 月人行道占用投诉量比 3 月下降 22%，媒体写“电子围栏让投诉少了”。请按最合理的先后顺序排列评估这项说法的步骤。",
+      "items": [
+        {
+          "key": "u1",
+          "text": "查清投诉量的来源与统计口径，确认下降 22% 是与哪个月、哪个范围比较得出的"
+        },
+        {
+          "key": "u2",
+          "text": "拉出政策之前至少半年的逐月投诉曲线，判断下降是 3 月才开始还是早已存在趋势"
+        },
+        {
+          "key": "u3",
+          "text": "列出同期其他可能改变投诉量的变化，如骑行总量、季节、投诉入口改版、其他城管措施"
+        },
+        {
+          "key": "u4",
+          "text": "找未安装围栏的相似城区或另一座城市作对照，比较两地投诉曲线的变化差异"
+        },
+        {
+          "key": "u5",
+          "text": "比较各解释对不同数据的预测，写出暂时结论并说明还剩哪些不确定"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "u1",
+          "u2",
+          "u3",
+          "u4",
+          "u5"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "评估一项政策与指标的相关，顺序是：统一口径、检查既有趋势、枚举同期变化、构造对照、最后按预测差异收敛结论。",
+        "steps": [
+          "第一步固定指标定义，口径一变（例如投诉入口改版）任何百分比都失去意义。",
+          "第二步看政策之前的趋势，如果投诉早已逐月下降，3 月后的 22% 就可能只是趋势延续。",
+          "第三步枚举同期变化，为后面选择对照提供依据。",
+          "第四步用对照隔离共同因素：两地都受季节与骑行总量影响，差值更能反映政策本身。",
+          "第五步区分预测而非收集支持性例子，并明确结论仍是暂时的。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过政策前的趋势检查就直接比较前后两个月，等于把已有下降记成新政策的功劳。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "只看政策与投诉在时间上对应，就把对应关系写成因果结论。"
+          }
+        ],
+        "takeaway": "判断政策效果，关键是比较“有政策的地方”与“没有政策的地方”，而不是比较前后两个月。"
+      },
+      "reviewTags": [
+        "城市政策",
+        "步骤顺序",
+        "对照"
+      ],
+      "provenance": "原创题，场景取自城市治理措施成效报道，用于训练把共变核查排成有依赖顺序的步骤。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cor-007",
+      "version": 1,
+      "category": "correlation-vs-causation",
+      "knowledgePoints": [
+        "correlation-scenarios",
+        "confounder",
+        "survivorship-bias"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 190,
+      "format": "open-response",
+      "stem": "某商品页面写着：“本商品好评率 96%，其中 78% 的五星评价都提到‘到货快’，可见到货快是我们获得好评的主要原因。”请评价这段论证：除了它给出的因果解释，你还能想到哪几种同样能说明 78% 这个比例的说法？需要什么数据才能真正区分？",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "接受论证",
+            "criteria": "认为 78% 已经说明到货快是好评的主要原因。"
+          },
+          {
+            "score": 1,
+            "label": "仅表怀疑",
+            "criteria": "觉得这个推论有点跳，但说不清哪一步缺了依据。"
+          },
+          {
+            "score": 2,
+            "label": "指出文本共现不等于原因",
+            "criteria": "能说明提到到货快只是评价文本里的共现，不衡量它对好评的贡献大小。"
+          },
+          {
+            "score": 3,
+            "label": "补出替代解释",
+            "criteria": "至少给出共同原因、评价人群自我选择、默认好评模板等两种以上替代解释。"
+          },
+          {
+            "score": 4,
+            "label": "设计可区分的数据",
+            "criteria": "进一步写出能区分这些解释的具体数据或分组，并说明自己最倾向哪一种及其余可能。"
+          }
+        ],
+        "guidance": "先分清“评价里提到某词的比例”与“该词造成好评的比例”是两个不同指标，再列出至少两种替代解释，最后给出能区分它们的分组数据。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "78% 是五星评价文本中提到“到货快”的比例，分母已经限定在好评之中，因此它无法衡量到货对好评的贡献。",
+        "steps": [
+          "把 78% 的分母说清楚：它统计的是五星评价，而不是全部下单者，因此只描述好评内部的用词分布。",
+          "解释一（共同原因）：同一仓储体系既让到货快又让商品完好，两者都由履约能力推动，评价里同时出现。",
+          "解释二（自我选择）：满意的人更愿意写长评，不满意的人直接退货而不评价，五星评价样本本身就偏向满意者。",
+          "解释三（表述习惯）：平台有默认好评文案与快捷标签，提到到货快可能只是点了模板按钮，与真实原因无关。",
+          "解释四（口径混淆）：96% 好评率的分母是评价者而非购买者，两个百分比不能直接连成因果链。",
+          "给出区分数据：把差评与中评的文本同样统计，比较“提到到货快”在好评与差评中的比例差；或按实际配送时长分层比较好评率；同时公开下单人数与评价人数的比值。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "correlation-as-causation",
+            "why": "由“好评里常提到到货快”直接写成就“到货快导致好评”。"
+          },
+          {
+            "errorType": "base-rate-neglect",
+            "why": "只看到好评内部的 78%，不看差评与中评里同样的词出现多少，也不看有多少人根本没评价。"
+          },
+          {
+            "errorType": "premise-misidentification",
+            "why": "把两个分母不同的百分比当成同一件事的两个证据。"
+          }
+        ],
+        "takeaway": "拿到一个百分比，先问它的分母是谁；分母不同的两个百分比连不成因果。"
+      },
+      "reviewTags": [
+        "消费评价",
+        "分母与口径",
+        "开放题"
+      ],
+      "provenance": "原创题，场景取自电商详情页的好评话术，量表按回答层级设计，供自评与可选的模型反馈使用。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cor-008",
+      "version": 1,
+      "category": "correlation-vs-causation",
+      "knowledgePoints": [
+        "correlation-scenarios",
+        "common-cause",
+        "confounder"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 60,
+      "format": "single-choice",
+      "stem": "某体检机构随访 30,000 名会员，发现常年服用鱼油者报告的心血管事件比不服用者少 30%。同一份数据显示，服用组人均每年体检 2.1 次，不服用组仅 0.7 次。下列哪项评价最准确？",
+      "options": [
+        {
+          "key": "A",
+          "text": "两组连体检频率都是三倍关系（2.1 次对 0.7 次），说明他们在健康关注程度上本就系统不同，30% 的差距可能来自这种差别"
+        },
+        {
+          "key": "B",
+          "text": "样本有 30,000 人，规模足够大，所以鱼油的作用已经被证实",
+          "errorType": "missing-reasoning-step",
+          "reason": "把样本规模当成可以替代对照的那一步"
+        },
+        {
+          "key": "C",
+          "text": "鱼油要么是唯一原因，要么完全无关，结论只能在这两者里挑",
+          "errorType": "false-dilemma",
+          "reason": "把多种可能压缩成非此即彼的两项"
+        },
+        {
+          "key": "D",
+          "text": "不服用组里也有人每年体检多次，可见两组在健康关注程度上没有实际差别",
+          "errorType": "hasty-generalization",
+          "reason": "由组内少数个例否定两组整体的平均差别"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "体检频率是健康意识的可见标记，它与是否服鱼油同向变化，正是一个与结果相关的混淆变量。",
+        "steps": [
+          "记录两组差异：事件率相差 30%，体检频率 2.1 次对 0.7 次，约为三倍。",
+          "把体检频率读作标记：会按时体检的人通常也更注意饮食、运动与用药，这些同样影响心血管事件。",
+          "指出结构：健康意识同时决定“是否服鱼油”和“事件多少”，因此 30% 可以被共同原因解释。",
+          "说明需要什么：在健康意识、年龄、吸烟状况等条件相同的人群内部比较，或随机分配的试验；大样本只让估计更窄，不改变分组不可比。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "missing-reasoning-step",
+            "why": "样本量大能减少随机误差，却无法补上排除混淆变量这一步。"
+          },
+          {
+            "option": "C",
+            "errorType": "false-dilemma",
+            "why": "忽略了共同原因、部分效应、口径差异等中间可能。"
+          },
+          {
+            "option": "D",
+            "errorType": "hasty-generalization",
+            "why": "组内存在少数反例不等于两组均值没有差别，推的方向正好相反。"
+          }
+        ],
+        "takeaway": "两组连生活习惯都不一样时，组间差异就先别算在唯一因素头上。"
+      },
+      "reviewTags": [
+        "混淆变量",
+        "健康新闻",
+        "共同原因"
+      ],
+      "provenance": "原创题，场景取自体检机构发布的会员随访数据，用于训练把生活方式差异识别为混淆变量。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    }
+  ]
+}

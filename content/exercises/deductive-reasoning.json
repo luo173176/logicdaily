@@ -1,0 +1,651 @@
+{
+  "schemaVersion": 1,
+  "category": "deductive-reasoning",
+  "exercises": [
+    {
+      "id": "ex-ded-001",
+      "version": 1,
+      "category": "deductive-reasoning",
+      "knowledgePoints": [
+        "syllogism",
+        "validity-vs-truth"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 50,
+      "format": "single-choice",
+      "stem": "线上读书群里两条笔记：①所有被标成重点的章节都收进了目录；②有些收进目录的章节没有配套练习。如果这两条都为真，下面哪项必然为真？",
+      "options": [
+        {
+          "key": "A",
+          "text": "有些被标成重点的章节没有配套练习",
+          "errorType": "missing-reasoning-step",
+          "reason": "把两个前提各自提到的集合直接当成有交集"
+        },
+        {
+          "key": "B",
+          "text": "凡是收进目录的章节都被标成了重点",
+          "errorType": "premise-misidentification",
+          "reason": "把第一条前提的方向弄反了"
+        },
+        {
+          "key": "C",
+          "text": "有配套练习的章节里，有些被标成了重点",
+          "errorType": "conclusion-overreach",
+          "reason": "从可能为空的集合里推出存在性结论"
+        },
+        {
+          "key": "D",
+          "text": "现有前提不足以确定“重点章节”与“没有配套练习的章节”是否重叠"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "D"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "两条前提只给出“包含”和“有交集”两种关系，没有锁定那两个子集的位置，所以任何关于它们交集的存在性结论都不能必然推出。",
+        "steps": [
+          "把第一条改写成集合关系：重点章节 ⊆ 目录章节。",
+          "第二条是：目录章节 与 没有练习的章节 至少有一个共同成员。",
+          "那个共同成员可能完全落在重点章节之外，也可能部分落在其中，前提没有排除任一种。",
+          "A 断言存在“既是重点又没练习”的章节，无法保证；B 是第一条的非法换位；C 还需要知道重点章节有没有练习。",
+          "因此唯一稳妥的判断是 D：现有前提不足以确定这两个集合是否重叠。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "missing-reasoning-step",
+            "why": "两条前提分别只说到目录，中间缺少把“没练习”和“重点”连起来的一环。"
+          },
+          {
+            "option": "B",
+            "errorType": "premise-misidentification",
+            "why": "“所有重点都在目录里”不等于“所有目录里的都是重点”，换位后前提变了。"
+          },
+          {
+            "option": "C",
+            "errorType": "conclusion-overreach",
+            "why": "前提甚至没有保证重点章节一定存在，更不能保证它们有配套练习。"
+          }
+        ],
+        "takeaway": "看到“所有／有些”的推理，先画集合图，问清前提是否真的锁定了两个集合的相对位置。"
+      },
+      "reviewTags": [
+        "三段论",
+        "必然为真",
+        "集合关系"
+      ],
+      "provenance": "原创题，场景取自线上读书群的笔记约定，用于训练判断结论是否被前提必然推出。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ded-002",
+      "version": 1,
+      "category": "deductive-reasoning",
+      "knowledgePoints": [
+        "modus-tollens",
+        "contrapositive",
+        "denying-antecedent"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 80,
+      "format": "single-choice",
+      "context": "项目在群里同步了三条约定，成员据此讨论本周发布安排。",
+      "stem": "项目群三条记录：①如果这次代码评审通过，测试排期就会提前；②测试排期没有提前；③只要测试排期提前，就能赶在本周五发布。据此必然能推出下列哪一项？",
+      "options": [
+        {
+          "key": "A",
+          "text": "代码评审没有通过，本周五也无法发布",
+          "errorType": "denying-antecedent",
+          "reason": "由排期没提前就断言周五发布不了"
+        },
+        {
+          "key": "B",
+          "text": "代码评审没有通过；本周五能否发布，现有条件不足以确定"
+        },
+        {
+          "key": "C",
+          "text": "代码评审其实通过了，只是排期被别的事挡住了",
+          "errorType": "insufficient-evidence",
+          "reason": "引入前提里没有的新信息来替换已推出的结论"
+        },
+        {
+          "key": "D",
+          "text": "③说明“排期提前”是“周五发布”的必要条件",
+          "errorType": "premise-misidentification",
+          "reason": "把“只要……就……”的充分条件读成必要条件"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "①②合起来是否定后件式，能有效推出评审未通过；但③只说排期提前足以赶上周五，没提前时周五情况保持开放。",
+        "steps": [
+          "符号化：P＝评审通过，Q＝排期提前，R＝周五能发布。三条记录是 P→Q、非 Q、Q→R。",
+          "由 P→Q 与 非 Q，用否定后件式得到 非 P，即评审没有通过。",
+          "Q→R 与非 Q 组合属于否定前件，推不出 非 R，所以周五能否发布无法确定。",
+          "检查选项：A 多算了“周五无法发布”；C 与已推出的 非 P 冲突且另加假设；D 把充分条件说成必要条件。",
+          "只有 B 恰好停在前提允许的距离上。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "denying-antecedent",
+            "why": "排期没提前只是失去一条充分路径，不能据此宣布周五一定发不了。"
+          },
+          {
+            "option": "C",
+            "errorType": "insufficient-evidence",
+            "why": "“被别的事挡住”在前提里没有任何依据，却推掉了有效的否定后件结论。"
+          },
+          {
+            "option": "D",
+            "errorType": "premise-misidentification",
+            "why": "“只要 Q 就 R”给出的是充分条件，必要条件应是“若 R 则 Q”。"
+          }
+        ],
+        "takeaway": "多条条件串起来时，逐条问“这一条给我一个方向还是双向”，不要顺路把方向换掉。"
+      },
+      "reviewTags": [
+        "演绎链条",
+        "否定后件式",
+        "条件推理"
+      ],
+      "provenance": "原创题，场景取自软件项目群里的排班与发布约定，用于训练多前提链条。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ded-003",
+      "version": 1,
+      "category": "deductive-reasoning",
+      "knowledgePoints": [
+        "validity-vs-truth",
+        "syllogism",
+        "affirming-consequent"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 100,
+      "format": "single-choice",
+      "stem": "一篇数码测评写道：“凡是通过 3C 认证的充电器都不会过热；这款充电器没有过热；所以它通过了 3C 认证。”对这段论证，下列哪项评价是正确的？",
+      "options": [
+        {
+          "key": "A",
+          "text": "推理形式是有效的，只是第一条前提未必属实",
+          "errorType": "premise-misidentification",
+          "reason": "把结论听起来合理当成了形式有效"
+        },
+        {
+          "key": "B",
+          "text": "推理形式无效：从“通过认证就不会过热”和“没有过热”，推不出“通过了认证”"
+        },
+        {
+          "key": "C",
+          "text": "只要两条前提为真，结论就一定为真",
+          "errorType": "conclusion-overreach",
+          "reason": "在形式无效的前提下仍宣布结论必然成立"
+        },
+        {
+          "key": "D",
+          "text": "结论一定为假，这款充电器肯定没通过认证",
+          "errorType": "insufficient-evidence",
+          "reason": "由推理无效反手宣布结论为假"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "论证形式是“若 P 则 Q；Q；所以 P”，属于肯定后件；能找到前提全真而结论为假的解释，因此形式无效，结论真假也不由它决定。",
+        "steps": [
+          "拆出结构：P＝通过 3C 认证，Q＝不会过热；前提是 P→Q 与 Q，结论是 P。",
+          "检验有效性的方法：设想前提都真而结论为假，看是否有矛盾。",
+          "构造解释：某充电器没通过认证，但本身发热极低，同样满足“没有过热”。前提全真、结论为假且无矛盾。",
+          "所以形式无效，A 与 C 都不成立；无效也不等于结论为假，D 说过头了。",
+          "B 准确地只判定形式层面出了问题。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "premise-misidentification",
+            "why": "有效性只看形式，这段的形式本身就漏环，不能只归因到前提真假。"
+          },
+          {
+            "option": "C",
+            "errorType": "conclusion-overreach",
+            "why": "“前提真则结论必真”是有效性的定义，此处并不满足。"
+          },
+          {
+            "option": "D",
+            "errorType": "insufficient-evidence",
+            "why": "无效推理的结论可真可假，需要额外证据才能判定。"
+          }
+        ],
+        "takeaway": "评一段演绎，只问一句：前提全真时结论还能是假的吗？能，它就无效。"
+      },
+      "reviewTags": [
+        "有效性",
+        "真理与有效",
+        "论证评估"
+      ],
+      "provenance": "原创题，场景取自网购数码产品的测评文章，用于区分推理有效性与前提真实性。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ded-004",
+      "version": 1,
+      "category": "deductive-reasoning",
+      "knowledgePoints": [
+        "syllogism",
+        "validity-vs-truth"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "format": "true-false",
+      "stem": "团购群里有人说：“这次到货的草莓里有几盒是坏的，所以坏草莓里肯定有几盒不是这次到货的。”请判断：这个推理在形式上是否有效？",
+      "answer": {
+        "value": false
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "前提只说“到货的草莓”与“坏草莓”两个集合有交集，结论却要求存在不属于本次到货的坏草莓，这一步前提里没有依据。",
+        "steps": [
+          "把前提改写为：有些到货的草莓是坏的，即两个集合至少共用一个成员。",
+          "结论要求的是：有些坏的草莓不在本次到货范围内，这是一个新的存在性断言。",
+          "设想所有坏草莓都出自本次到货，此时前提仍为真，结论却为假。",
+          "存在前提真而结论假的解释，说明推理无效，应判为“否”。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "premise-misidentification",
+            "why": "把“有些 S 是 P”的合法换位（有些 P 是 S）当成了“有些 P 不是 S”。"
+          },
+          {
+            "errorType": "ignoring-counterexample",
+            "why": "没有考虑“坏草莓全部来自本次到货”这种同样符合前提的情形。"
+          }
+        ],
+        "takeaway": "“有些”开头的判断只能对称换位，不能顺手加上“不是”。"
+      },
+      "reviewTags": [
+        "三段论",
+        "换位",
+        "有效性判断"
+      ],
+      "provenance": "原创题，场景取自社区团购的售后对话，针对“有些”命题的换位错误。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ded-005",
+      "version": 1,
+      "category": "deductive-reasoning",
+      "knowledgePoints": [
+        "modus-tollens",
+        "necessary-condition",
+        "exhaustive-cases"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 130,
+      "format": "multi-choice",
+      "context": "车间本周只排早班与晚班，每条约定都已张贴在看板上。",
+      "stem": "车间排班约定：①如果小李排早班，小王也会排早班；②只有小陈排早班，小周才排早班；③小陈和小王不会同周都排早班；④本周小周排了早班。关于本周，下面哪些判断必然为真？（选出所有必然为真的）",
+      "options": [
+        {
+          "key": "A",
+          "text": "小陈本周排了早班"
+        },
+        {
+          "key": "B",
+          "text": "小王本周没有排早班"
+        },
+        {
+          "key": "C",
+          "text": "小李本周没有排早班"
+        },
+        {
+          "key": "D",
+          "text": "小李本周排了早班",
+          "errorType": "missing-reasoning-step",
+          "reason": "跳过③④两环，链条没推到底"
+        },
+        {
+          "key": "E",
+          "text": "仅凭这些条件无法确定小陈是否排早班",
+          "errorType": "premise-misidentification",
+          "reason": "把②里的必要条件当成了充分条件"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "②“只有小陈排早班，小周才排早班”等于“小周排早班则小陈排早班”，配合④就能一环环推出三个人的班次。",
+        "steps": [
+          "翻译②：只有 P 才 Q 等于 若 Q 则 P，即 小周早班 → 小陈早班。",
+          "由④小周排早班，肯定前件得 小陈排早班，即 A 为真。",
+          "由③小陈与小王不同周都排早班，且小陈已排早班，得 小王没排早班，即 B 为真。",
+          "由①小李早班 → 小王早班；现已知小王没排早班，否定后件得 小李没排早班，即 C 为真。",
+          "D 与 C 直接冲突；E 低估了②的翻译结果，小陈是否排早班已被④确定。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "D",
+            "errorType": "missing-reasoning-step",
+            "why": "只用了①，漏掉④→②→③这条主线，才误以为小李可以排早班。"
+          },
+          {
+            "option": "E",
+            "errorType": "premise-misidentification",
+            "why": "把“只有小陈排早班”读成“小陈排早班就一定人人都排早班”，方向反了。"
+          }
+        ],
+        "takeaway": "链条题先把每句条件统一成“若……则……”，再从已知事实那一端一路推到底。"
+      },
+      "reviewTags": [
+        "多前提链条",
+        "必要条件",
+        "排班场景"
+      ],
+      "provenance": "原创题，场景取自制造车间的排班看板，用于训练把自然语言条件转成链条推理。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ded-006",
+      "version": 1,
+      "category": "deductive-reasoning",
+      "knowledgePoints": [
+        "affirming-consequent",
+        "implicit-premise",
+        "necessary-condition"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 140,
+      "format": "short-answer",
+      "stem": "业主群里有人写：“凡是装了门禁卡的住户都能刷卡进地库，老张能刷卡进地库，所以他一定装了门禁卡。”请用两三句话指出这段推理的问题，并说明要让它成立还需要补充什么前提。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "判定推理形式无效",
+            "keywords": [
+              "无效",
+              "不能必然推出"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "点明肯定后件的错误",
+            "keywords": [
+              "肯定后件",
+              "后件"
+            ],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "给出需要补充的前提",
+            "keywords": [
+              "补充前提",
+              "必要条件"
+            ],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c4",
+            "label": "举出同样成立的解释",
+            "keywords": [
+              "代刷",
+              "访客二维码"
+            ],
+            "weight": 1,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "这段推理形式无效：第一条话只说明装了门禁卡足以刷卡进地库，而老张能进地库属于肯定后件，不能反推他装了卡。也可能是家人代刷或用了访客二维码。要补充前提“凡是能刷卡进地库的住户都装了门禁卡”，也就是把装卡说成进地库的必要条件，结论才站得住。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "原规则只把“装门禁卡”写成“能刷卡进地库”的充分条件，推理却从结果反推原因，必须补上反向规则才有效。",
+        "steps": [
+          "符号化：P＝装了门禁卡，Q＝能刷卡进地库；群里的话是 若 P 则 Q。",
+          "已知 Q，结论写 P，这是肯定后件，形式无效。",
+          "列出前提兼容的其他解释：家人代刷、访客二维码、物业临时授权。",
+          "补出反向规则 若 Q 则 P，也就是“装卡是进地库的必要条件”，此时 P→Q 与 Q→P 合成充要条件，结论才成立。",
+          "顺带检查：补充前提本身是否为真，需要向物业核实，它是新增假设而不是群里那句话。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "affirming-consequent",
+            "why": "把“有卡就能进”听成“能进就一定有卡”。"
+          },
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "没有把缺少的反向规则写出来，就直接宣布结论可靠。"
+          }
+        ],
+        "takeaway": "看到“能……所以一定……”，先问一句：这条规则反过来也成立吗？"
+      },
+      "reviewTags": [
+        "肯定后件",
+        "隐含前提",
+        "业主群场景"
+      ],
+      "provenance": "原创题，场景取自小区业主群关于门禁的日常争论。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ded-007",
+      "version": 1,
+      "category": "deductive-reasoning",
+      "knowledgePoints": [
+        "dependency-order",
+        "validity-vs-truth",
+        "implicit-premise"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 95,
+      "format": "ordering",
+      "stem": "同事在周报里写了一段推论，你要判断它是否站得住。按最合理的先后顺序排列下列步骤。",
+      "items": [
+        {
+          "key": "s1",
+          "text": "把周报里的推论拆成“前提—结论”的形式，逐条编号"
+        },
+        {
+          "key": "s2",
+          "text": "假设这些前提都为真，检查结论是否被它们唯一确定"
+        },
+        {
+          "key": "s3",
+          "text": "找出推导中被省略的一环，尤其是没说出口的限定条件"
+        },
+        {
+          "key": "s4",
+          "text": "逐条核对前提本身是否为真，包括制度条款是否已换新版"
+        },
+        {
+          "key": "s5",
+          "text": "写出结论：哪部分已被保证，哪部分还依赖未确认的事实"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "s1",
+          "s2",
+          "s3",
+          "s4",
+          "s5"
+        ]
+      },
+      "alternatives": [
+        {
+          "keys": [
+            "s1",
+            "s4",
+            "s2",
+            "s3",
+            "s5"
+          ],
+          "note": "也可以先核对前提真实性再做形式检验；两种顺序都能得到同一份结论，只是先查形式更能省下核对成本。"
+        }
+      ],
+      "explanation": {
+        "summary": "评估一段演绎要先把内容格式化，再在“假定前提为真”的条件下检查形式，最后才回到事实层面核对前提。",
+        "steps": [
+          "不先拆成前提与结论，后面既没法检查形式，也没法核对具体条款。",
+          "形式检验只需假设前提为真，因此可以先于事实核对完成，能快速定位问题在结构还是材料。",
+          "推导中缺失的一环通常就藏在限定条件里，必须在形式检验之后立刻找出来。",
+          "确认结构没问题或问题在哪之后，再逐条核对前提真伪，例如制度是否有新版本。",
+          "最后把结论分成“已被保证”和“仍悬着”两部分写下，避免把有效性当成真理性。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过形式检验直接核对事实，会误以为材料充足就等于推论可靠。"
+          },
+          {
+            "errorType": "premise-misidentification",
+            "why": "把周报里的背景介绍当成结论所在的前提，检查对象就错了。"
+          }
+        ],
+        "takeaway": "先问“形式通不通”，再问“材料真不真”，最后写清哪部分还悬着。"
+      },
+      "reviewTags": [
+        "步骤顺序",
+        "论证评估",
+        "职场写作"
+      ],
+      "provenance": "原创题，场景取自团队周报评审，用于训练评估他人推论的操作顺序。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ded-008",
+      "version": 1,
+      "category": "deductive-reasoning",
+      "knowledgePoints": [
+        "validity-vs-truth",
+        "implicit-premise",
+        "evidence-relevance"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 180,
+      "format": "open-response",
+      "stem": "家庭聚会上，一位亲戚说：“我认识的三个抽烟的人都活过了八十岁，可见吸烟没那么可怕，那些医学指南是在吓唬人。”请写出你的评价：他这段话要成立还依赖哪些没说出口的前提？这些前提可靠吗？你会给出一个怎样的结论？",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "照单全收",
+            "criteria": "认为亲眼见到的例子最有说服力，不需要再追问别的条件。"
+          },
+          {
+            "score": 1,
+            "label": "仅表怀疑",
+            "criteria": "觉得这话不对劲，但说不出问题具体出在哪一步。"
+          },
+          {
+            "score": 2,
+            "label": "补出隐含前提",
+            "criteria": "能写出该论证依赖“这三个例子能代表所有吸烟者”“指南的结论与个案可以对照”等未说明的前提。"
+          },
+          {
+            "score": 3,
+            "label": "评估前提强度",
+            "criteria": "进一步指出三个熟人样本量小、年龄层集中，而且只数了活下来的人，前提本身并不可靠。"
+          },
+          {
+            "score": 4,
+            "label": "给出匹配证据的结论",
+            "criteria": "还能说明指南依据的是大样本人群比较，写出自己既不否认风险、也不把个案当证据的结论与信心程度。"
+          }
+        ],
+        "guidance": "先补出他依赖的未说明前提，再逐个评估这些前提的证据强度，最后写一个与证据宽度相匹配的结论。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "这段话把“存在三个高寿命吸烟者”当成对统计结论的反驳，它要成立需要样本可代表、指标可对照两个前提，而这两个前提都站不住。",
+        "steps": [
+          "把论证补全：三个熟人都高寿（前提）→ 他们能代表吸烟者整体（隐含前提）→ 所以指南的关联被推翻（结论）。",
+          "检查隐含前提：样本量 3、来自同一社交圈，且只包含活到八十岁以上还能被认识到的吸烟者，属于有系统性缺失的样本。",
+          "检查对照关系：指南比较的是同龄人群体的死亡率差异，个案寿命无法与之对照，两者说的不是同一件事。",
+          "给出与证据匹配的结论：个案可以提示我们要去看大样本证据，但不能否定它；能说的只是“我对具体风险幅度还不清楚”。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "hasty-generalization",
+            "why": "从三个熟人的寿命推出关于所有吸烟者的结论。"
+          },
+          {
+            "errorType": "ignoring-counterexample",
+            "why": "只统计能被见到的长寿吸烟者，没有把早逝的吸烟者纳入同一份观察。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "由“我的例子和指南不一致”跳到“指南是在吓唬人”。"
+          }
+        ],
+        "takeaway": "有人用身边个例反驳统计结论时，先问：他的样本是怎么被挑出来的，和结论比的是同一件事吗？"
+      },
+      "reviewTags": [
+        "隐含前提",
+        "证据强度",
+        "家庭沟通",
+        "开放题"
+      ],
+      "provenance": "原创题，场景取自家庭聚会的健康话题讨论；量表依据从接受到补前提、再到评估证据强度的常见回答层级设计。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    }
+  ]
+}

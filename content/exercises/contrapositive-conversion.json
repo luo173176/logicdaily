@@ -1,0 +1,506 @@
+{
+  "schemaVersion": 1,
+  "category": "contrapositive-conversion",
+  "exercises": [
+    {
+      "id": "ex-cpv-001",
+      "version": 1,
+      "category": "contrapositive-conversion",
+      "knowledgePoints": ["contrapositive", "converse-error", "modus-tollens"],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "format": "single-choice",
+      "context": "安装包发布流程。",
+      "stem": "测试负责人说：“如果这批安装包通过了兼容性测试，它就能进入灰度发布。”以下哪句话与这句话逻辑等价？",
+      "options": [
+        {
+          "key": "A",
+          "text": "如果这批安装包没有进入灰度发布，那么它没有通过兼容性测试"
+        },
+        {
+          "key": "B",
+          "text": "如果这批安装包进入了灰度发布，那么它通过了兼容性测试",
+          "errorType": "affirming-consequent",
+          "reason": "把逆命题当成等价形式"
+        },
+        {
+          "key": "C",
+          "text": "如果这批安装包没有通过兼容性测试，它就不能进入灰度发布",
+          "errorType": "denying-antecedent",
+          "reason": "把否命题当成等价形式"
+        },
+        {
+          "key": "D",
+          "text": "这批安装包要么通过兼容性测试，要么进入灰度发布，二者必居其一",
+          "errorType": "false-dilemma",
+          "reason": "把一条条件关系压缩成二选一"
+        }
+      ],
+      "answer": { "keys": ["A"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“若 P 则 Q”只与它的逆否命题“若非 Q 则非 P”等价。逆命题和否命题都可能与原命题真值不同。",
+        "steps": [
+          "符号化：P＝通过兼容性测试，Q＝进入灰度发布，原命题为 若 P 则 Q。",
+          "写出逆否命题：若非 Q 则非 P，即“没进入灰度 → 没通过测试”，就是 A。",
+          "B 是逆命题（若 Q 则 P），C 是否命题（若非 P 则非 Q），两者都不是等价改写。",
+          "用一个情形检查：测试没通过但仍被特批灰度，这与原命题相容、与 C 冲突，说明 C 不等价。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "affirming-consequent",
+            "why": "进入灰度的通道可能不止兼容性测试这一条，看到结果就反推原因。"
+          },
+          {
+            "option": "C",
+            "errorType": "denying-antecedent",
+            "why": "原命题没有对“没通过测试”的情形作任何承诺。"
+          },
+          {
+            "option": "D",
+            "errorType": "false-dilemma",
+            "why": "条件关系允许两个都发生，强行二选一会漏掉中间情形。"
+          }
+        ],
+        "takeaway": "改写条件句时，只有“前后件都否定并调换位置”这一种是等价的。"
+      },
+      "reviewTags": ["逆否命题", "等价改写", "发布流程"],
+      "provenance": "原创题，场景为安装包灰度发布，用于区分四种命题形式。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cpv-002",
+      "version": 1,
+      "category": "contrapositive-conversion",
+      "knowledgePoints": ["converse-error", "affirming-consequent", "modus-tollens"],
+      "difficulty": 3,
+      "estimatedSeconds": 70,
+      "format": "single-choice",
+      "context": "合同违约金条款复盘。",
+      "stem": "合同附件规定：“若供应商在 3 月 31 日前交付，则不需要支付违约金。”已知供应商最终没有支付违约金。以下哪项最准确？",
+      "options": [
+        {
+          "key": "A",
+          "text": "供应商一定在 3 月 31 日前交付了"
+        },
+        {
+          "key": "B",
+          "text": "仅凭这两条信息，无法确定供应商是否按期交付"
+        },
+        {
+          "key": "C",
+          "text": "这条规定同样说明：逾期交付就必须支付违约金",
+          "errorType": "denying-antecedent",
+          "reason": "由否定前件推出否定后件"
+        },
+        {
+          "key": "D",
+          "text": "既然没付违约金，可见该交付期条款并未实际生效",
+          "errorType": "missing-reasoning-step",
+          "reason": "结论依赖条款效力这一未给出的前提"
+        }
+      ],
+      "answer": { "keys": ["B"] },
+      "alternatives": [
+        {
+          "keys": ["A"],
+          "note": "如果把附件条款理解成交付期与违约金的充要约定（“当且仅当按期交付才免违约金”），A 才成立；但题干原文只给出单向条件，故默认按 B 判。"
+        }
+      ],
+      "explanation": {
+        "summary": "已知的是后件成立（没付违约金）。由“若 P 则 Q”和 Q 推不出 P，因为可能存在其他免违约金的情形。",
+        "steps": [
+          "符号化：P＝3 月 31 日前交付，Q＝不需要支付违约金，条款为 若 P 则 Q。",
+          "已知事实是 Q，属于肯定后件，形式上无效。",
+          "列举可能的其他免违约金情形：买方书面豁免、不可抗力、双方协商变更交付期。",
+          "反过来检查有效推理长什么样：若已知“支付了违约金”（非 Q），由逆否可得“未按期交付”（非 P）；但本题给的是 Q，推不出任何关于 P 的结论。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "affirming-consequent",
+            "why": "把“按期交付足以免违约金”读成“免违约金只能来自按期交付”。"
+          },
+          {
+            "option": "C",
+            "errorType": "denying-antecedent",
+            "why": "条款没有规定逾期一定罚，可能逾期仍被豁免。"
+          },
+          {
+            "option": "D",
+            "errorType": "missing-reasoning-step",
+            "why": "从一条免除结果直接跳到条款效力判断，中间环节没有给出。"
+          }
+        ],
+        "takeaway": "看到“结果已经发生”，先问规则给的是单向条件还是双向约定。"
+      },
+      "reviewTags": ["肯定后件", "合同条款", "逆否"],
+      "provenance": "原创题，场景取自采购合同违约金争议，训练识别后件成立时的可推出范围。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cpv-003",
+      "version": 1,
+      "category": "contrapositive-conversion",
+      "knowledgePoints": ["contrapositive", "only-if", "converse-error"],
+      "difficulty": 4,
+      "estimatedSeconds": 85,
+      "format": "single-choice",
+      "context": "招聘筛选口径统一。",
+      "stem": "招聘条件写：“只有通过初筛的候选人，才会收到面试邀请。”下列四句话中，哪一句与原句逻辑等价？",
+      "options": [
+        {
+          "key": "A",
+          "text": "没有通过初筛的候选人，不会收到面试邀请"
+        },
+        {
+          "key": "B",
+          "text": "通过了初筛的候选人，都会收到面试邀请",
+          "errorType": "affirming-consequent",
+          "reason": "由条件成立反推结果成立"
+        },
+        {
+          "key": "C",
+          "text": "没有收到面试邀请的候选人，一定没有通过初筛",
+          "errorType": "denying-antecedent",
+          "reason": "否定前件推出否定后件"
+        },
+        {
+          "key": "D",
+          "text": "只有收到面试邀请，才算通过了初筛",
+          "errorType": "premise-misidentification",
+          "reason": "把前件与后件的位置对调"
+        }
+      ],
+      "answer": { "keys": ["A"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "原句译为“若收到邀请则通过初筛”。它的逆否命题是“若没通过初筛则不会收到邀请”，正是 A。",
+        "steps": [
+          "先做句式翻译：“只有 P 才 Q”＝若 Q 则 P；这里 P＝通过初筛，Q＝收到面试邀请。",
+          "对 若 Q 则 P 取逆否：若非 P 则非 Q，即“没通过初筛 → 收不到邀请”，得 A。",
+          "B 是 P→Q，即原命题的逆命题，不等价；初筛通过者也可能因名额已满而不被邀请。",
+          "C 是 非Q→非P，等于对原命题否定前件；D 把“收到邀请”说成“通过初筛”的必要条件，同样只是逆命题的另一种说法。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "affirming-consequent",
+            "why": "把必要条件当成充分条件，认为过了初筛就必然被邀请。"
+          },
+          {
+            "option": "C",
+            "errorType": "denying-antecedent",
+            "why": "没收到邀请的原因很多，不能反推没通过初筛。"
+          },
+          {
+            "option": "D",
+            "errorType": "premise-misidentification",
+            "why": "“只有……才……”里被“只有”修饰的是必要条件，位置一换含义就变。"
+          }
+        ],
+        "takeaway": "两步走：先把“只有”句式译成“若 Q 则 P”，再统一用逆否改写来比对选项。"
+      },
+      "reviewTags": ["逆否等价", "只有句式", "招聘条件"],
+      "provenance": "原创题，把“只有……才……”与逆否改写合并训练，常见于口径统一讨论。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cpv-004",
+      "version": 1,
+      "category": "contrapositive-conversion",
+      "knowledgePoints": ["contrapositive", "converse-error", "exhaustive-cases"],
+      "difficulty": 4,
+      "estimatedSeconds": 105,
+      "format": "multi-choice",
+      "context": "客服 SLA 指标复盘。",
+      "stem": "客服指标口径写：“只要投诉在 24 小时内得到响应，客户满意度就不低于 80%。”下列哪些说法与这条口径逻辑等价？（选出所有等价的说明）",
+      "options": [
+        {
+          "key": "A",
+          "text": "若客户满意度低于 80%，则该投诉没有在 24 小时内得到响应"
+        },
+        {
+          "key": "B",
+          "text": "或者该投诉没有在 24 小时内得到响应，或者客户满意度不低于 80%"
+        },
+        {
+          "key": "C",
+          "text": "若客户满意度不低于 80%，则该投诉在 24 小时内得到了响应",
+          "errorType": "affirming-consequent",
+          "reason": "以逆命题冒充等价形式"
+        },
+        {
+          "key": "D",
+          "text": "该投诉没有在 24 小时内得到响应，所以客户满意度低于 80%",
+          "errorType": "denying-antecedent",
+          "reason": "否定前件就否定后件"
+        },
+        {
+          "key": "E",
+          "text": "不可能出现“24 小时内响应了、客户满意度却低于 80%”的情形"
+        }
+      ],
+      "answer": { "keys": ["A", "B", "E"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“若 P 则 Q”有三种等价说法：逆否命题 若非 Q 则非 P；选言式 非 P 或 Q；以及“P 且非 Q 不可能出现”。C、D 分别落在逆命题和否命题上。",
+        "steps": [
+          "符号化：“只要 P 就 Q”给出充分条件，这里 P＝24 小时内响应，Q＝满意度不低于 80%，口径即 若 P 则 Q。",
+          "A 是 若非 Q 则非 P，属于标准逆否改写，等价。",
+          "B 是 非 P 或 Q。用穷尽情形检查：响应不及时（非 P）时该句为真；响应及时（P）时要求 Q 为真，恰与口径一致，故等价。",
+          "E 说的是“P 且非 Q”不存在，这正是口径被违反的唯一形式，等价。",
+          "C 是 Q→P，D 是 非P→非Q。满意度 80% 可能来自长期服务口碑，响应不及时也可能因客户本来满意，两者都不与口径同真同假。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "C",
+            "errorType": "affirming-consequent",
+            "why": "由满意度达标反推一定响应及时，忽略了达标的其他来源。"
+          },
+          {
+            "option": "D",
+            "errorType": "denying-antecedent",
+            "why": "口径没有规定响应不及时会怎样，推不出满意度低。"
+          }
+        ],
+        "takeaway": "判断等价时，只需检查两句话是否在同一个情形集上成立。"
+      },
+      "reviewTags": ["逆否", "选言等价", "多选", "指标口径"],
+      "provenance": "原创题，场景为客服指标口径评审，覆盖条件式的三种常见等价表述。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cpv-005",
+      "version": 1,
+      "category": "contrapositive-conversion",
+      "knowledgePoints": ["contrapositive", "converse-error"],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "format": "true-false",
+      "context": "命题形式基础判断。",
+      "stem": "“若 P 则 Q”成立时，它的逆否命题“若非 Q 则非 P”一定成立；而它的否命题“若非 P 则非 Q”不一定成立。",
+      "answer": { "value": true },
+      "alternatives": [],
+      "explanation": {
+        "summary": "原命题与逆否命题真值条件完全相同；否命题与逆命题只彼此等价，与原命题可以一真一假。",
+        "steps": [
+          "列出四种形式：原命题 P→Q、逆命题 Q→P、否命题 非P→非Q、逆否命题 非Q→非P。",
+          "逐一检查使之为假的情形：P→Q 只在“P 真 Q 假”时为假；非Q→非P 也只在“非Q 真且非P 假”即同样情形为假，两者同真同假。",
+          "反例验证否命题：设 P→Q 为真，而某情形中 P 假 Q 真，此时 非P→非Q 为假，说明否命题不必然成立。",
+          "因此题中两个分句都为真，判断为对。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "affirming-consequent",
+            "why": "误把逆命题也当作等价形式，就会认为后半句说错了。"
+          },
+          {
+            "errorType": "denying-antecedent",
+            "why": "误以为否定前件就能否定后件，会把否命题当成等价的。"
+          }
+        ],
+        "takeaway": "四种形式里只有原命题与逆否命题互为等价，其余都要另找证据。"
+      },
+      "reviewTags": ["命题形式", "逆否等价", "判断题"],
+      "provenance": "原创题，用于快速检验四种命题形式之间等价关系的掌握。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cpv-006",
+      "version": 1,
+      "category": "contrapositive-conversion",
+      "knowledgePoints": ["contrapositive", "modus-tollens", "affirming-consequent"],
+      "difficulty": 3,
+      "estimatedSeconds": 90,
+      "format": "short-answer",
+      "context": "来料批次溯源核查。",
+      "stem": "质检员说：“如果这批元件来自 A 供应商，那么它一定带有溯源码。”小王说：“这批元件没有溯源码，所以它不是 A 供应商的。”请判断小王的推理是否有效，并写出他实际用到的推理形式。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "判定推理有效并指出形式",
+            "keywords": ["逆否"],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "说明等价的理由",
+            "keywords": ["等价"],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "排除两种无效形式",
+            "keywords": ["肯定后件", "否定前件"],
+            "weight": 1,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.7,
+        "partialRatio": 0.45,
+        "modelAnswer": "小王的推理有效，他用的是逆否推理：原命题是“若来自 A 供应商则有溯源码”，其逆否命题为“若没有溯源码则不是 A 供应商的”，两者等价，所以结论可以可靠地推出。需要注意他并不是在肯定后件，也没有否定前件，而是把已知事实“没有溯源码”当作否定后件的一步；若他改说“这批元件有溯源码，所以来自 A 供应商”，那才是无效的逆推。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "由“若 P 则 Q”和“非 Q”可靠推出“非 P”，这是否定后件式，也等于使用与原命题等价的逆否命题。",
+        "steps": [
+          "符号化：P＝来自 A 供应商，Q＝带溯源码，原命题为 若 P 则 Q。",
+          "小王的前提给出 非 Q，结论给出 非 P，形式为 若 P 则 Q；非 Q；所以非 P。",
+          "对照逆否命题：非 Q → 非 P 与 原命题 P → Q 等价，因此推理有效。",
+          "对比错误方向：由“有溯源码”推“来自 A 供应商”是肯定后件；由“不来自 A 供应商”推“没有溯源码”是否定前件，两者都不可靠。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "affirming-consequent",
+            "why": "把有效推理误判为无效，通常是把它和“有溯源码所以来自 A”混为一谈。"
+          },
+          {
+            "errorType": "premise-misidentification",
+            "why": "漏掉“没有溯源码”这一关键事实，就会以为结论没有依据。"
+          }
+        ],
+        "takeaway": "先找已知事实否定了哪个部分：否定后件才能否定前件。"
+      },
+      "reviewTags": ["否定后件", "逆否推理", "简答题"],
+      "provenance": "原创题，场景为来料溯源核查，训练识别否定后件与逆否改写的同一性。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cpv-007",
+      "version": 1,
+      "category": "contrapositive-conversion",
+      "knowledgePoints": ["contrapositive", "falsification", "dependency-order"],
+      "difficulty": 3,
+      "estimatedSeconds": 85,
+      "format": "ordering",
+      "context": "数据出境合规核查。",
+      "stem": "合规规则写：“若某批数据出境，则它必须先通过安全评估。”你要用逆否改写来检查这条规则是否被违反。请按最合理的先后顺序排列以下步骤。",
+      "items": [
+        {
+          "key": "s1",
+          "text": "把规则写成标准条件式：若数据出境，则已通过安全评估"
+        },
+        {
+          "key": "s2",
+          "text": "写出等价的逆否命题：若未通过安全评估，则数据没有出境"
+        },
+        {
+          "key": "s3",
+          "text": "依据两个命题确定要观察的字段，并把口径写清楚"
+        },
+        {
+          "key": "s4",
+          "text": "调取系统实际记录，找出“未通过评估但数据已出境”的情形并判定"
+        }
+      ],
+      "answer": { "keys": ["s1", "s2", "s3", "s4"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "核查顺序是：标准化 → 逆否改写 → 确定观察口径 → 用记录检验。逆否改写把要查的情形变得容易观测。",
+        "steps": [
+          "不先写成条件式，就无法保证后续改写没有改变原意，所以 s1 必须第一步。",
+          "s2 的价值在于把“寻找违反情形”转化为可观测的方向：评估状态在先，出境事实在后。",
+          "字段和口径必须在取数之前确定，否则记录到手仍不知如何判定，故 s3 在 s4 之前。",
+          "s4 检查的“未通过评估但已出境”正是 非 Q 且 P，它同时推翻原命题与逆否命题，是有效的违反证据。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过逆否改写直接翻记录，容易把“已评估未出境”这类无关情形当成违反。"
+          },
+          {
+            "errorType": "premise-misidentification",
+            "why": "把规则里的先后关系与条件关系混同，就会找错要观察的字段。"
+          }
+        ],
+        "takeaway": "改写不是为了换说法，而是为了让可观测的违反情形浮现出来。"
+      },
+      "reviewTags": ["逆否改写", "可检验性", "排序"],
+      "provenance": "原创题，场景为数据出境合规核查，训练用逆否命题设计检查步骤。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cpv-008",
+      "version": 1,
+      "category": "contrapositive-conversion",
+      "knowledgePoints": ["contrapositive", "converse-error", "conclusion-identification"],
+      "difficulty": 5,
+      "estimatedSeconds": 150,
+      "format": "open-response",
+      "context": "日常健康信息解读。",
+      "stem": "有人说：“体检报告写着‘若该项指标异常则需要复查’，我没被要求复查，说明我这项指标完全正常。”请评价这个推理：写出它用到的规则形式，指出结论中超出证据的部分，并说明需要补充什么才能把话说满。",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "全盘接受",
+            "criteria": "认为没被要求复查就等于指标完全正常，无需再确认其他条件。"
+          },
+          {
+            "score": 1,
+            "label": "只表疑虑",
+            "criteria": "感觉这句话推得太快，但说不出哪一步不成立或差什么信息。"
+          },
+          {
+            "score": 2,
+            "label": "识别有效形式",
+            "criteria": "能写出 若异常则复查，并指出没复查推出没异常是否定后件，形式有效。"
+          },
+          {
+            "score": 3,
+            "label": "区分结论强度",
+            "criteria": "能区分“不属于该规则判定的异常”与“完全正常”，指出后者超出证据范围。"
+          },
+          {
+            "score": 4,
+            "label": "补出隐含条件",
+            "criteria": "能说明结论成立还依赖规则被严格执行、判定口径覆盖该项指标等前提，并给出核对方法。"
+          }
+        ],
+        "guidance": "先把规则与已知事实分别符号化，检查推理形式；再比较结论措辞的强度与实际推出的强度；最后列出这条推理默认相信的隐含前提，并说明各用什么办法核对。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "否定后件可以可靠地否定前件，因此能得“该项指标未被规则判定为异常”；但“完全正常”比这更强，还要求规则覆盖全、执行到位。",
+        "steps": [
+          "符号化：P＝该项指标异常，Q＝被要求复查，规则为 若 P 则 Q。",
+          "已知 非 Q，套用否定后件式得 非 P，即“不属于该规则所说的异常”。",
+          "比较结论强度：“完全正常”还隐含指标处于理想区间、无临界值、无测量误差，这些都不是 非 P 能保证的。",
+          "补出隐含前提并给出核对方式：报告是否确实执行了该规则（看流程记录）、判定口径是否覆盖该项目（看参考区间说明）。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "conclusion-overreach",
+            "why": "把“未被判为异常”直接升级为“完全正常”，结论强于证据。"
+          },
+          {
+            "errorType": "affirming-consequent",
+            "why": "另一种常见错法是反过来认为“被要求复查所以一定异常”，那是肯定后件。"
+          },
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "没有确认规则是否被严格执行，就把规则内容当成事实结果。"
+          }
+        ],
+        "takeaway": "形式有效只保证结论不比前提弱；措辞一加强，就要重新检查证据。"
+      },
+      "reviewTags": ["逆否", "结论强度", "开放题", "隐含前提"],
+      "provenance": "原创题，场景为体检报告解读，量表按推理深度分层，供自评与可选的模型反馈使用。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    }
+  ]
+}

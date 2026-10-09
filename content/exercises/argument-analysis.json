@@ -1,0 +1,638 @@
+{
+  "schemaVersion": 1,
+  "category": "argument-analysis",
+  "exercises": [
+    {
+      "id": "ex-arg-001",
+      "version": 1,
+      "category": "argument-analysis",
+      "knowledgePoints": [
+        "conclusion-identification"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 55,
+      "format": "single-choice",
+      "stem": "一次公交线网调整讨论被整理成四句话：①本市三条公交支线在过去半年里平均上客人数下降了四成。②因此，这三条支线应该改成了定点发车的区间巴士。③运营方补充说，支线沿路的几个居民点近两年陆续外迁。④另外，市里在去年年底开通了连接两个镇的新道路。这段话的结论是哪一句？",
+      "options": [
+        {
+          "key": "A",
+          "text": "①，因为这一句给出了可以被核对的具体数字",
+          "errorType": "premise-misidentification",
+          "reason": "把带数字的事实句当成被支持的主张"
+        },
+        {
+          "key": "B",
+          "text": "②，因为其他句子都在为它提供依据，它是被支持的那个主张"
+        },
+        {
+          "key": "C",
+          "text": "③，因为这一句解释了上客人数下降的原因"
+        },
+        {
+          "key": "D",
+          "text": "④，因为这一句提到的事情发生时间最近"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "结论是被其他句子支撑的那个主张。②带着“因此”，并且①③④都在为它提供理由，所以它是结论；句子带不带数字、时间新不新，都不是结论的标志。",
+        "steps": [
+          "先找提示词：“因此”“所以”“可见”后面通常是被支持的结论，“因为”“由于”后面通常是前提。",
+          "再做支持方向检验：把②拿去问“为什么”，能自然引出①和③作为回答；反过来问①“所以呢”，②才是回答，说明①服务于②。",
+          "检查④的作用：新道路开通改变了沿路的出行条件；无论把它读成前提还是背景，它都在为②这个建议提供理由，本身不是一条需要被证明的新主张。",
+          "排除两个常见误判：数字只说明可核对性，不说明主张地位；时间新近也不改变一句话在论证中的角色。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "premise-misidentification",
+            "why": "精确数字容易显得像重点，但它在这里是被引用的观测结果，用来支持那个改动建议。"
+          },
+          {
+            "option": "C",
+            "errorType": "missing-reasoning-step",
+            "why": "解释原因的句子是前提一侧的材料，把它当结论就漏掉了“解释服务于建议”这一层关系。"
+          }
+        ],
+        "takeaway": "找结论的办法：把每句话拿去问“它为什么成立”，能被其他句子回答的那句才是结论。"
+      },
+      "reviewTags": [
+        "结论识别",
+        "提示词",
+        "支持方向"
+      ],
+      "provenance": "原创题，场景取自公共交通调整讨论，用于训练区分结论句与前提句。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-arg-002",
+      "version": 1,
+      "category": "argument-analysis",
+      "knowledgePoints": [
+        "implicit-premise",
+        "conclusion-identification"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 75,
+      "format": "single-choice",
+      "stem": "同事在工作群里说：“小林这季度的方案全都通过了评审，所以他做需求分析的功底一定很扎实。”这个推理依赖但没有说出来的假设是哪一条？",
+      "options": [
+        {
+          "key": "A",
+          "text": "方案能否通过评审，能够稳定地反映需求分析做得是否扎实"
+        },
+        {
+          "key": "B",
+          "text": "小林做需求分析用的方法，从去年就已经开始用了"
+        },
+        {
+          "key": "C",
+          "text": "评审专家打分时还会考虑需求分析以外的因素"
+        },
+        {
+          "key": "D",
+          "text": "只要方案通过了评审，这个项目的最终结果就一定好",
+          "errorType": "conclusion-overreach",
+          "reason": "从通过评审又往前推到结果好，超出原论证范围"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "原论证从“方案全过”跳到“需求分析扎实”，中间依赖一条未被说出的对应关系：评审结果能反映需求分析质量。把它取反，推理就断了。",
+        "steps": [
+          "标出两半：前提是“方案全部通过评审”，结论是“需求分析功底扎实”，两者说的是不同的东西。",
+          "寻找桥梁：要让前者支持后者，必须假设通过与否与需求分析质量之间存在稳定联系。",
+          "用取反检验：假设这条联系不成立（评审主要看预算与排期），那么“全过”就推不出“扎实”，可见该假设确实必需。",
+          "对照 B：方法用了多久与推理能否成立无关，它只是补充背景，不是必需假设。",
+          "对照 C：它其实削弱原论证，而不是原论证所依赖的前提；对照 D：它把结论再往前推一步，属于额外的过度推广。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "D",
+            "errorType": "conclusion-overreach",
+            "why": "题干只走到“功底扎实”，把结论扩到“项目结果一定好”需要另外的前提，不是原论证依赖的那一条。"
+          },
+          {
+            "option": "C",
+            "errorType": "premise-misidentification",
+            "why": "会削弱论证的条件不是论证所依赖的假设，两者方向相反，容易在这里认错。"
+          }
+        ],
+        "takeaway": "找隐含前提的诀窍是取反代入：把候选假设反过来说一遍，若论证随之塌掉，它就是那条未说出的前提。"
+      },
+      "reviewTags": [
+        "隐含前提",
+        "取反检验",
+        "论证缺口"
+      ],
+      "provenance": "原创题，场景取自职场评价讨论，专门训练用取反法定位隐含前提。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-arg-003",
+      "version": 1,
+      "category": "argument-analysis",
+      "knowledgePoints": [
+        "conclusion-identification",
+        "evidence-relevance"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 115,
+      "format": "multi-choice",
+      "stem": "关于是否延长中心馆开放时间的发言被整理成六句：①《本市阅读服务年报》显示，18 时后到馆的读者中上班族占 61%。②该年报纸质版为双色印刷，共 68 页。③馆长据此提出：应该把中心馆的闭馆时间从 18 时延长到 21 时。④现在的闭馆时间与上班族的空闲时间几乎重合，多数上班族只能周末到馆。⑤而周末到馆人数已经接近设计容量的 1.4 倍。⑥中心馆建于 2008 年，去年完成了外立面维修。下面关于每句话在这段论证中作用的说法，哪些是正确的？（选出所有正确的）",
+      "options": [
+        {
+          "key": "A",
+          "text": "③是这段话的结论，①④⑤是支持它的三条前提"
+        },
+        {
+          "key": "B",
+          "text": "②只是材料的外观信息，属于与结论无关的背景"
+        },
+        {
+          "key": "C",
+          "text": "⑥说明馆舍条件允许延长开放时间，是支持结论的关键前提",
+          "errorType": "premise-misidentification",
+          "reason": "把建馆与维修年份当成对建议的支持"
+        },
+        {
+          "key": "D",
+          "text": "如果把①里的 61% 改成 8%，④对③的支持力度不会变化",
+          "errorType": "missing-reasoning-step",
+          "reason": "漏掉了上班族比例决定闭馆后需求大小这一环"
+        },
+        {
+          "key": "E",
+          "text": "凡是带数字的句子都自动成为论证的前提，所以②也是前提",
+          "errorType": "premise-misidentification",
+          "reason": "用“有数字”来判定句子的论证角色"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A",
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "判断一句话是前提还是背景，要看它为真时会不会让结论更可能成立：①④⑤都会，②⑥不会；②⑥只是让材料显得完整。",
+        "steps": [
+          "先定结论：③带“据此提出”，是一个建议，其余句子都在为它服务。",
+          "再看支持链：①给出需求集中在 18 时之后，④说明现有闭馆时间与该需求错开，⑤说明周末已接近容量，三者共同指向“延长到 21 时”。",
+          "用变动检验判定相关性：把①的 61% 改成 8%，闭馆后需求就不再集中，④对③的支持明显减弱，说明①确实相关。",
+          "检查②与⑥：页数与印刷方式、建馆年份与外立面维修，都不改变“延长开放时间是否值得做”的判断，属于背景信息。",
+          "纠正一条通用规则：带数字不等于在支持结论。数字只有在与被讨论的量同指向时才是前提，否则只是背景里的统计描述。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "C",
+            "errorType": "premise-misidentification",
+            "why": "题面没有给出馆舍条件与人力的任何信息，把建馆和维修年份读成支持，是自己补了一个说法。"
+          },
+          {
+            "option": "D",
+            "errorType": "missing-reasoning-step",
+            "why": "断言“支持力度不变”之前，需要先说明上班族比例与闭馆后需求无关，而这一点恰好不成立。"
+          },
+          {
+            "option": "E",
+            "errorType": "premise-misidentification",
+            "why": "判断角色靠的是支持方向，不是句子是否含数字；照这条规则，②也会被迫变成前提。"
+          }
+        ],
+        "takeaway": "区分前提与背景的可靠问法：这句话为真时，结论是否变得更可能？没变化就是背景。"
+      },
+      "reviewTags": [
+        "前提识别",
+        "背景信息",
+        "证据相关性",
+        "多选题"
+      ],
+      "provenance": "原创题，场景取自公共图书馆开放时间讨论，用于练习前提与背景的角色划分。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-arg-004",
+      "version": 1,
+      "category": "argument-analysis",
+      "knowledgePoints": [
+        "evidence-relevance",
+        "implicit-premise"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "format": "true-false",
+      "stem": "判断下面这一说法是否正确：一条材料算不算某个结论的相关证据，主要看它为真时会不会让这个结论更可能（或更不可能）成立，而不是看它是不是数字、有没有出自权威机构。",
+      "answer": {
+        "value": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "相关性由“能否改变结论的概率”决定；出处与形式只影响这条相关证据的分量大小，不能替代相关性判断。",
+        "steps": [
+          "把标准写成可操作的问题：假设这条材料为真，结论的成立可能性是否上升或下降。",
+          "举一个反例：官方发布的“去年该馆印刷页数”是权威数字，却与是否延长开放时间无关，说明权威与数字本身不产生相关性。",
+          "再举一个正例：没有单位的口头观察“周末门口排队很长”，若为真会提高结论可能性，属于相关证据，只是分量较轻。",
+          "补充一句：同一材料可以相关但很弱；判断要分两步，先问是否相关，再问强弱，两步不能合并。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "insufficient-evidence",
+            "why": "把“出自权威机构”当成相关性本身，跳过了它与结论之间是否有指向关系这一步。"
+          },
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "看到数字就直接采信，漏掉了核对“这个数字与结论所指的量是否同一个东西”。"
+          }
+        ],
+        "takeaway": "评估证据先问两句：它能改变结论的可能性吗？如果能，它有多强？"
+      },
+      "reviewTags": [
+        "证据相关性",
+        "判断标准",
+        "证据强度"
+      ],
+      "provenance": "原创题，针对“数字与权威自动等于证据”这一常见误解设计。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-arg-005",
+      "version": 1,
+      "category": "argument-analysis",
+      "knowledgePoints": [
+        "conclusion-identification",
+        "implicit-premise",
+        "evidence-relevance"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 130,
+      "format": "short-answer",
+      "stem": "运营负责人在周报里写：“我们客服的首次响应时长从 8 分钟降到了 3 分钟，所以客户满意度一定会回升。”请写三到四句话：这段话的结论是什么；它至少依赖一个什么样的未说出的前提；响应时长这条数据在什么条件下才算真正支持结论，在什么条件下不算。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "写出被支持的结论",
+            "keywords": [
+              "满意度",
+              "回升"
+            ],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "补出未说出的前提",
+            "keywords": [
+              "隐含前提",
+              "前提"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "指出需要排除的同时变化",
+            "keywords": [
+              "同时发生",
+              "其他因素",
+              "价格"
+            ],
+            "weight": 2,
+            "required": false
+          },
+          {
+            "id": "c4",
+            "label": "说明数据不算支持的情形",
+            "keywords": [
+              "口径",
+              "同期",
+              "样本"
+            ],
+            "weight": 3,
+            "required": true
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "这段话的结论是：客户满意度一定会回升。它依赖一个未说出的隐含前提：在响应时长之外，没有其他同时发生的变化会拉低满意度，例如价格上调、投诉处理变慢或产品本身出了新问题。要判断 8 分钟降到 3 分钟这条数据是否真正支持结论，要看它是否与满意度同口径、同期，并且满意度问卷的样本构成没有变化；如果这一期问卷题目或统计口径改过，或者用户结构变了，那么响应时长的改善就不足以支持“一定会回升”，最多支持“响应更快了”。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "该论证的结论是“满意度一定会回升”，它把一条内部指标当成了客户感受的可靠代理，并且默认其他条件不变。",
+        "steps": [
+          "分层：句子里能被直接核对的是“响应时长从 8 分钟降到 3 分钟”，需要被支持的是“满意度一定会回升”，后者才是结论。",
+          "补出隐含前提一：响应速度是客户满意的主要驱动因素，其他影响满意度的因素没有同时变化。",
+          "补出隐含前提二：这里的时长统计与实际客户感受之间有对应关系，例如统计口径、时段与工单类型可比。",
+          "判断支持条件：满意度问卷同口径同期结果确实上行、且没有价格或产品质量方面的负面变化时，这条数据才构成有力支持。",
+          "判断削弱条件：若口径变更、样本构成变化、或存在其他同时发生的不利因素，它至多支持“响应变快了”，支持不了“一定会回升”。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "correlation-as-causation",
+            "why": "把内部指标的改善直接当成客户感受变化的原因，跳过了两者之间的对应关系检验。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "“一定会回升”是确定性表述，一条指标变化最多支持“可能改善”。"
+          },
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "没有说明响应时长如何转化为满意度，就把两个不同层面的指标连在了一起。"
+          }
+        ],
+        "takeaway": "看到“A 指标变好了，所以 B 一定会变好”，先把中间那条“A 是 B 的可靠代理”写出来再检查。"
+      },
+      "reviewTags": [
+        "结论识别",
+        "隐含前提",
+        "指标代理",
+        "简答题"
+      ],
+      "provenance": "原创题，场景取自互联网运营周报，范文与要点关键词一一对应以便自动判分。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-arg-006",
+      "version": 1,
+      "category": "argument-analysis",
+      "knowledgePoints": [
+        "conclusion-identification",
+        "implicit-premise",
+        "evidence-relevance",
+        "subgoal-split"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 85,
+      "format": "ordering",
+      "stem": "你要完整分析一段四到五句的中文论证。按最合理的先后顺序排列下列步骤。",
+      "items": [
+        {
+          "key": "s1",
+          "text": "找出候选结论：哪一句是其他句子要支撑的那个主张"
+        },
+        {
+          "key": "s2",
+          "text": "先把明显属于背景的句子放到一边，例如时间、地点、材料外观、机构介绍"
+        },
+        {
+          "key": "s3",
+          "text": "把支持结论的句子列成前提清单，检查它们的指向是否与结论一致"
+        },
+        {
+          "key": "s4",
+          "text": "为推理补出未说出的隐含前提，并逐条判断它是否成立"
+        },
+        {
+          "key": "s5",
+          "text": "最后评估结论强度：现有前提支持到“可能”还是“一定”"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "s1",
+          "s2",
+          "s3",
+          "s4",
+          "s5"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "论证分析要按依赖顺序推进：先定结论，才有前提与背景的分工；补齐隐含前提之后，才能谈结论能被支持到什么强度。",
+        "steps": [
+          "第一步定结论，是因为“某句是前提还是背景”只有在结论确定后才有意义；先做这一步可避免后面的分类反复改动。",
+          "第二步剔除背景句，把与结论指向无关的材料先隔离出去，减少干扰项。",
+          "第三步整理前提清单并核对指向：前提必须让结论更可能成立，方向相反的句子是削弱项而不是前提。",
+          "第四步补隐含前提，因为多数现实论证都有跳跃；用取反检验判断补出的假设是否必需。",
+          "第五步才评价强度，把“推理有效”与“前提为真”分开，最后给出结论的可信范围。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "premise-misidentification",
+            "why": "先挑句子再找结论，很容易把带数字的背景句误认成前提，导致整张清单错位。"
+          },
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过补隐含前提就直接评价结论，等于在没有检查桥梁的情况下判定桥是稳的。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "强度评估放在补前提之前，容易把仅被弱证据支持的说法读成确定结论。"
+          }
+        ],
+        "takeaway": "拆论证的顺序是：结论 → 剔除背景 → 列前提 → 补隐含前提 → 评强度。"
+      },
+      "reviewTags": [
+        "论证结构",
+        "步骤顺序",
+        "拆解"
+      ],
+      "provenance": "原创题，用于把论证分析的一般流程排成可复用的步骤。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-arg-007",
+      "version": 1,
+      "category": "argument-analysis",
+      "knowledgePoints": [
+        "conclusion-identification",
+        "implicit-premise",
+        "evidence-relevance",
+        "sample-size"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 175,
+      "format": "open-response",
+      "stem": "一篇网络文章写道：“我们调查了 200 位家长，其中 87% 认为孩子的作业太多。可见全国小学生的作业量都超出了标准。要减负，只要把作业总量砍掉一半就够了。”请分三步写下你的分析：这段话里有几个层次的结论，分别是什么；每个结论依赖哪些没有说出的前提；三条材料（200 位家长的样本、87% 这个比例、“砍掉一半”这一对策）各自能把结论支持到什么程度。",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "只是复述",
+            "criteria": "把文章的话重新说一遍，没有区分结论、前提与证据三件事。"
+          },
+          {
+            "score": 1,
+            "label": "找出一个结论",
+            "criteria": "能指出其中某一句是结论，但说不清另外两句在论证里扮演什么角色。"
+          },
+          {
+            "score": 2,
+            "label": "分层并补前提",
+            "criteria": "能分出描述性结论与对策性结论两层，并为其中一层补出未说出的前提。"
+          },
+          {
+            "score": 3,
+            "label": "评估支持强度",
+            "criteria": "进一步说明 200 位家长的样本怎样限制结论范围，以及“砍掉一半”还需要哪些证据。"
+          },
+          {
+            "score": 4,
+            "label": "给出可区分检验",
+            "criteria": "还能提出一个能让“作业确实超量”与“家长主观感受偏强”给出不同预测的观察方式。"
+          }
+        ],
+        "guidance": "先把三句话分别标成结论、前提或背景；再逐层补出隐含前提，并用取反检验它们是否必需；最后写下每条结论最多能被支持到什么范围与强度。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "这段话有两个结论层：一是“全国小学生作业量都超出标准”，二是“把作业总量砍一半就够”。前者把家长主观判断换成了客观超标，后者还多加了一条对策性假设。",
+        "steps": [
+          "分层：87% 是调查结果（证据），“都超出标准”是描述性结论，“砍掉一半就够了”是对策性结论，三者地位不同。",
+          "补第一层的隐含前提：家长“认为太多”与作业量“超出标准”是同一件事，且这 200 位家长能代表全国。",
+          "指出概念替换：主观感受与客观标准是两个不同的量；要走到“超出标准”，需要作业时长、完成率、睡眠等可核对口径。",
+          "评估样本：200 位家长数量不大，抽样渠道与地区、学段分布未知，最多支持“这部分家长中多数觉得多”，推不到“全国都超”。",
+          "评估第二层：即使作业量确已超标，“砍一半就够”还假设作业量是负担的唯一来源、且不考虑教学质量与个体差异，需要额外证据支撑。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "hasty-generalization",
+            "why": "由 200 位家长的样本直接推广到全国小学生，样本量与代表性都不足。"
+          },
+          {
+            "errorType": "equivocation",
+            "why": "把“家长认为太多”与“超出标准”当成同一个说法，用主观判断替换客观口径。"
+          },
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "从“负担重”直接跳到“砍一半就够”，没有说明负担的来源构成与对策的副作用。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "“都”和“就够了”都是全称与唯一解表述，超出了三条材料能支撑的范围。"
+          }
+        ],
+        "takeaway": "分析多句论证时，先按“证据—描述性结论—对策性结论”分层，再逐层检查各自的前提。"
+      },
+      "reviewTags": [
+        "论证分层",
+        "隐含前提",
+        "样本代表性",
+        "开放题"
+      ],
+      "provenance": "原创题，场景取自网络调查类文章，量表按常见回答层级设计，供自评与可选的模型反馈使用。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-arg-008",
+      "version": 1,
+      "category": "argument-analysis",
+      "knowledgePoints": [
+        "evidence-relevance",
+        "confounder",
+        "correlation-scenarios"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 70,
+      "format": "single-choice",
+      "stem": "论证：“学校把体育课从每周 2 节增加到 4 节之后，学生的肥胖率下降了 3 个百分点。因此，增加体育课能降低学生肥胖率。”为了检验这个论证，下列哪一条新信息最相关？",
+      "options": [
+        {
+          "key": "A",
+          "text": "同一时期，该校是否还同步调整了营养餐、课间活动或作息时间"
+        },
+        {
+          "key": "B",
+          "text": "学生和家长对这项调整表示满意的比例有多高",
+          "errorType": "premise-misidentification",
+          "reason": "把态度评价当成对因果检验的支持"
+        },
+        {
+          "key": "C",
+          "text": "该校前年校服采购支出的变化情况"
+        },
+        {
+          "key": "D",
+          "text": "本市媒体今年报道其他学校体育课的次数",
+          "errorType": "missing-reasoning-step",
+          "reason": "报道数量与本校肥胖率变化之间缺少可比数据这一环"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "原论证把“增加体育课”与“肥胖率下降”的先后共变直接当成因果。要检验它，最相关的信息是能提供替代解释的其他同期变化。",
+        "steps": [
+          "写出论证结构：干预（体育课 2 节变 4 节）在前，结果（肥胖率降 3 个百分点）在后，结论是前者导致后者。",
+          "列出竞争性解释：同期营养餐调整、作息变化、测量口径变化、年级构成变化，都可能同样产生这个下降。",
+          "据此判断相关性：能排除或确认这些竞争性解释的信息最相关，因此 A 直接改变结论的可信度。",
+          "检查 B：满意度与“肥胖率为什么下降”没有指向关系，它评价的是政策接受度而不是机制。",
+          "检查 C 与 D：校服支出与媒体报道量都不改变该校肥胖率变化的可能原因，属于无关背景；其中 D 连可比的对照数据都没有提供。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "premise-misidentification",
+            "why": "把“大家支持这项调整”当成因果证据，混淆了接受度与效果来源这两类不同的问题。"
+          },
+          {
+            "option": "D",
+            "errorType": "missing-reasoning-step",
+            "why": "想用外部信息核对，但媒体报道量既不是同类指标也不与本校数据可比，中间缺了可比对照这一环。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "原论证的核心风险就在这里：先后共变可能有共同原因，必须靠同期其他变化来排除。"
+          }
+        ],
+        "takeaway": "判断一条证据是否相关，就问它能否改变“还有没有别的解释”；能改变原因的才相关。"
+      },
+      "reviewTags": [
+        "证据相关性",
+        "混淆因素",
+        "因果检验"
+      ],
+      "provenance": "原创题，场景取自校园体育安排调整，学校与数据均为虚构，不指向任何真实机构。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    }
+  ]
+}

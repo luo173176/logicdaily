@@ -1,0 +1,595 @@
+{
+  "schemaVersion": 1,
+  "category": "conditional-reasoning",
+  "exercises": [
+    {
+      "id": "ex-cond-001",
+      "version": 1,
+      "category": "conditional-reasoning",
+      "knowledgePoints": [
+        "modus-tollens",
+        "affirming-consequent"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 60,
+      "format": "single-choice",
+      "stem": "车间规定：如果一批零件通过终检，那么它会贴上绿色标签。现在发现 B 批次零件没有贴绿色标签。关于 B 批次，下列哪项结论是可靠的？",
+      "options": [
+        {
+          "key": "A",
+          "text": "B 批次没有通过终检"
+        },
+        {
+          "key": "B",
+          "text": "B 批次通过了终检，但标签漏贴了",
+          "errorType": "denying-antecedent",
+          "reason": "用可能例外来否定规则本身"
+        },
+        {
+          "key": "C",
+          "text": "无法判断 B 批次是否通过终检"
+        },
+        {
+          "key": "D",
+          "text": "B 批次贴了其他颜色标签"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [
+        {
+          "keys": [
+            "C"
+          ],
+          "note": "如果允许怀疑规定本身可能被违反（例如标签漏贴），那么只能得出“按规则应判定未通过”，此解释同样合理。"
+        }
+      ],
+      "explanation": {
+        "summary": "把规定写成“若通过终检则贴绿标”。已知没有贴绿标，即否定了后件，可有效否定前件，得出没有通过终检。",
+        "steps": [
+          "符号化：P＝通过终检，Q＝贴绿色标签，规则为 若 P 则 Q。",
+          "已知事实是 非 Q（没有贴绿色标签）。",
+          "应用否定后件式（modus tollens）：若 P 则 Q；非 Q；所以非 P。",
+          "检查例外：只有在“规则可能不被执行”这一额外前提下，才需要保留无法判断的立场。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "denying-antecedent",
+            "why": "把“可能存在的例外”当成否定推理规则的理由，方向弄反了。"
+          },
+          {
+            "option": "D",
+            "errorType": "missing-reasoning-step",
+            "why": "题目没有给出任何关于其他颜色标签的信息，结论跳出了前提。"
+          }
+        ],
+        "takeaway": "否定后件可以否定前件；要得出可靠结论，先确认规则本身是否被假定严格执行。"
+      },
+      "reviewTags": [
+        "否定后件式",
+        "条件推理"
+      ],
+      "provenance": "原创题，场景取自制造质检流程，用于训练否定后件式。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cond-002",
+      "version": 1,
+      "category": "conditional-reasoning",
+      "knowledgePoints": [
+        "affirming-consequent",
+        "modus-ponens"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 50,
+      "format": "single-choice",
+      "stem": "“如果这款产品降价，销量就会上升。”已知销量确实上升了。以下哪个判断最准确？",
+      "options": [
+        {
+          "key": "A",
+          "text": "这款产品降价了",
+          "errorType": "affirming-consequent",
+          "reason": "由后件成立反推前件成立"
+        },
+        {
+          "key": "B",
+          "text": "这款产品没有降价"
+        },
+        {
+          "key": "C",
+          "text": "仅凭这两条信息，无法确定是否降价"
+        },
+        {
+          "key": "D",
+          "text": "降价是销量上升的唯一原因",
+          "errorType": "correlation-as-causation",
+          "reason": "把一条充分条件当成唯一原因"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "C"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“若降价则上升”只说明降价足以带来上升，并没有说上升只能来自降价。看到上升就断言降价，是肯定后件。",
+        "steps": [
+          "符号化：P＝降价，Q＝销量上升，规则为 若 P 则 Q。",
+          "已知 Q 成立。",
+          "肯定后件无效：Q 可能由广告、季节性需求、竞品缺货等造成。",
+          "同样不能否定前件，因此 A 与 B 都不成立，只能保留不确定。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "affirming-consequent",
+            "why": "把充分条件误当成必要条件，认为结果出现就意味着原因出现。"
+          },
+          {
+            "option": "D",
+            "errorType": "correlation-as-causation",
+            "why": "在没有排除其他原因时，把单一条件说成唯一原因。"
+          }
+        ],
+        "takeaway": "看到“如果……就……”，先问：这个条件是充分的还是必要的？"
+      },
+      "reviewTags": [
+        "肯定后件",
+        "条件推理",
+        "事实与推测"
+      ],
+      "provenance": "原创题，用于区分肯定前件与肯定后件两种推理。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cond-003",
+      "version": 1,
+      "category": "conditional-reasoning",
+      "knowledgePoints": [
+        "modus-ponens",
+        "modus-tollens",
+        "affirming-consequent",
+        "denying-antecedent"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 90,
+      "format": "multi-choice",
+      "stem": "已知规则：“只要申请资料齐全，系统就会自动受理。”下面哪些推理在形式上是有效的？（选出所有有效推理）",
+      "options": [
+        {
+          "key": "A",
+          "text": "资料齐全，所以系统自动受理了"
+        },
+        {
+          "key": "B",
+          "text": "系统没有自动受理，所以资料不齐全"
+        },
+        {
+          "key": "C",
+          "text": "系统自动受理了，所以资料齐全",
+          "errorType": "affirming-consequent",
+          "reason": "肯定后件推出前件"
+        },
+        {
+          "key": "D",
+          "text": "资料不齐全，所以系统不会自动受理",
+          "errorType": "denying-antecedent",
+          "reason": "否定前件推出否定后件"
+        },
+        {
+          "key": "E",
+          "text": "资料不齐全，所以无法判断系统是否受理"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A",
+          "B",
+          "E"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“只要 P 就 Q”给出的是充分条件。有效形式只有肯定前件与否定后件；前件不成立时结论保持开放。",
+        "steps": [
+          "把规则写成 若 P（资料齐全）则 Q（自动受理），并确认 P 只是 Q 的充分条件。",
+          "A 是肯定前件式：P 成立则 Q 成立，有效。",
+          "B 是否定后件式：非 Q 则非 P，有效（与原命题等价的逆否命题）。",
+          "C 肯定后件推前件，无效，因为可能有其他原因触发受理。",
+          "D 否定前件推否定后件，无效；E 因此保留了正确的不确定性。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "C",
+            "errorType": "affirming-consequent",
+            "why": "把结果出现当成原因必然出现。"
+          },
+          {
+            "option": "D",
+            "errorType": "denying-antecedent",
+            "why": "把“没资料就不受理”当成规则，但规则并没有这么说。"
+          }
+        ],
+        "takeaway": "四种形式里只有“肯定前件”和“否定后件”可靠，另外两种要看条件类型。"
+      },
+      "reviewTags": [
+        "条件推理",
+        "有效式",
+        "易错"
+      ],
+      "provenance": "原创题，覆盖条件推理四种常见形式。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cond-004",
+      "version": 1,
+      "category": "conditional-reasoning",
+      "knowledgePoints": [
+        "necessary-condition",
+        "only-if"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 45,
+      "format": "true-false",
+      "stem": "“只有年满 18 岁，才能参加这次投票。”这句话与“如果能参加这次投票，那么年满 18 岁”表达的是同一个条件关系。",
+      "answer": {
+        "value": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“只有 P 才 Q”把 P 说成 Q 的必要条件，等价于“若 Q 则 P”。两者真值条件一致。",
+        "steps": [
+          "识别句式：“只有 P 才 Q”中 P 是必要条件。",
+          "必要条件的标准翻译是 若 Q 则 P。",
+          "代入：P＝年满 18 岁，Q＝能参加投票，得到 若能参加投票则年满 18 岁。",
+          "对比两句，确认为同一条件关系。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "premise-misidentification",
+            "why": "把“只有”后面的内容误认成充分条件，方向就反了。"
+          }
+        ],
+        "takeaway": "“只要”带充分条件，“只有”带必要条件。"
+      },
+      "reviewTags": [
+        "必要条件",
+        "句式翻译",
+        "条件推理"
+      ],
+      "provenance": "原创题，针对“只有……才……”的翻译常见混淆点。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cond-005",
+      "version": 1,
+      "category": "conditional-reasoning",
+      "knowledgePoints": [
+        "implicit-premise",
+        "affirming-consequent"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 120,
+      "format": "short-answer",
+      "stem": "经理说：“上次上线新版本后投诉量上升了，所以新版本导致了投诉上升，必须先回滚。”请用两三句话指出这个推理中最需要先补充的信息。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "指出隐含前提",
+            "keywords": [
+              "隐含前提",
+              "前提"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "给出另一种解释",
+            "keywords": [
+              "另一种",
+              "也可能是",
+              "其他解释"
+            ],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "提出可核对的数据",
+            "keywords": [
+              "对照",
+              "同期",
+              "数据"
+            ],
+            "weight": 2,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "这段话的隐含前提是：投诉量上升期间没有其他同时发生的变化。也可能是同期客服响应变慢或用户量增长造成的，这属于另一种解释。要区分它们，应调取上线前后同期的对照组数据，按渠道和时间段分别对照。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "该推理把“先后发生”当成“因果”，其成立依赖“没有其他同时变化”这一未说明前提。",
+        "steps": [
+          "把论证改写为：新版上线（P）之后投诉上升（Q），所以 P 导致 Q。",
+          "补出隐含前提：期间不存在其他能导致 Q 的变化。",
+          "列出替代解释：客服响应、用户规模、季节性、口径变化。",
+          "说明什么数据能区分这些解释：同期对照、分段统计、渠道拆分。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "correlation-as-causation",
+            "why": "仅凭时间先后与共变就断定因果方向。"
+          },
+          {
+            "errorType": "insufficient-evidence",
+            "why": "没有对照组数据就选择不可逆的回滚动作。"
+          }
+        ],
+        "takeaway": "遇到“之后所以因为”，先找它没说出口的前提。"
+      },
+      "reviewTags": [
+        "隐含前提",
+        "条件推理",
+        "因果"
+      ],
+      "provenance": "原创题，场景来自互联网团队复盘会议。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cond-006",
+      "version": 1,
+      "category": "conditional-reasoning",
+      "knowledgePoints": [
+        "falsification",
+        "dependency-order"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 80,
+      "format": "ordering",
+      "stem": "你要检验“如果温度低于 0℃，这段水管就会爆裂”这一说法。按最合理的先后顺序排列下列步骤。",
+      "items": [
+        {
+          "key": "s1",
+          "text": "明确结论里“温度低于 0℃”和“爆裂”各自的判定标准"
+        },
+        {
+          "key": "s2",
+          "text": "列出除低温外还可能造成爆裂的因素"
+        },
+        {
+          "key": "s3",
+          "text": "设计能控制这些因素、只改变温度的对比实验"
+        },
+        {
+          "key": "s4",
+          "text": "记录结果并检查是否出现“低于 0℃ 但未爆裂”的情形"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "s1",
+          "s2",
+          "s3",
+          "s4"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "检验条件命题的正确顺序是：定义术语 → 枚举干扰因素 → 控制变量对比 → 用反例检验。",
+        "steps": [
+          "先固定测量口径，否则后面对比没有共同标准。",
+          "再列出可能的其他原因，才知道要控制什么。",
+          "然后设计一次只改变一个因素的对比。",
+          "最后专门寻找能推翻结论的情形，而不是只找支持它的例子。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过干扰因素直接做实验，结论无法排除其他原因。"
+          },
+          {
+            "errorType": "ignoring-counterexample",
+            "why": "只记录支持结论的样本，不看反例。"
+          }
+        ],
+        "takeaway": "检验一个“如果……就……”，关键在于能否构造出反例。"
+      },
+      "reviewTags": [
+        "可检验性",
+        "步骤顺序",
+        "条件推理"
+      ],
+      "provenance": "原创题，用于训练把条件命题转成可检验设计。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cond-007",
+      "version": 1,
+      "category": "conditional-reasoning",
+      "knowledgePoints": [
+        "sufficient-condition",
+        "necessary-condition"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 150,
+      "format": "open-response",
+      "stem": "一位博主写道：“坚持每天读书一小时的人都不会焦虑。”请写出你对这句话的评价：它把什么当成了什么条件？你打算怎样看待这个结论？",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "接受说法",
+            "criteria": "认为读书与焦虑的关系已被说清，不需要进一步证据。"
+          },
+          {
+            "score": 1,
+            "label": "仅表怀疑",
+            "criteria": "觉得这句话夸张，但说不出问题出在哪里。"
+          },
+          {
+            "score": 2,
+            "label": "指出条件类型混淆",
+            "criteria": "能说明它把读书当作不焦虑的充分条件，而证据至多支持相关。"
+          },
+          {
+            "score": 3,
+            "label": "给出替代解释",
+            "criteria": "进一步指出可能是生活规律的人既读书又更少焦虑，属于共同原因。"
+          },
+          {
+            "score": 4,
+            "label": "设计区分方式",
+            "criteria": "还能说明用什么观察或数据能把上述几种解释区分开，并标出自己的不确定处。"
+          }
+        ],
+        "guidance": "先判断句式把哪个条件当成了哪个条件，再补出至少一个同样成立的解释，最后说明需要什么证据。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "全称句式“坚持读书的人都不焦虑”把读书说成不焦虑的充分条件，同时隐含排除了所有反例，证据强度很弱。",
+        "steps": [
+          "把句子改写为 若坚持读书一小时则不会焦虑，识别其充分条件结构。",
+          "注意它是一个全称断言，一个稳定反例即可削弱。",
+          "列出替代解释：规律生活、社会经济地位、可支配时间可能是共同原因。",
+          "说明可区分证据：控制生活方式后的对照，或纵向追踪同一人前后变化。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "conclusion-overreach",
+            "why": "由部分人的经验推出“都不会”这样的全称结论。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "把共现关系说成单向因果。"
+          }
+        ],
+        "takeaway": "评估一句话时，先把它拆成“若 P 则 Q”，再问证据够不够。"
+      },
+      "reviewTags": [
+        "条件推理",
+        "开放题",
+        "论证分析"
+      ],
+      "provenance": "原创题，量表依据常见回答层级设计，供自评与可选的模型反馈使用。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cond-008",
+      "version": 1,
+      "category": "conditional-reasoning",
+      "knowledgePoints": [
+        "denying-antecedent",
+        "exhaustive-cases"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 70,
+      "format": "single-choice",
+      "stem": "培训部门承诺：“参加完这门课，学员的项目交付准时率会提高。”小马没有参加这门课，但他的准时率今年提高了。对这个结果，下列哪种说法最合适？",
+      "options": [
+        {
+          "key": "A",
+          "text": "承诺被证伪了，因为没上课也提高了",
+          "errorType": "denying-antecedent",
+          "reason": "由否定前件的结果推出规则不成立"
+        },
+        {
+          "key": "B",
+          "text": "承诺没有被这个案例证伪，它只说了上课的效果"
+        },
+        {
+          "key": "C",
+          "text": "小马如果上课，准时率一定会更高"
+        },
+        {
+          "key": "D",
+          "text": "说明这门课对任何人都没有用",
+          "errorType": "hasty-generalization",
+          "reason": "由单个个例推出全称结论"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“若上课则提高”并没有对没上课的人作出任何承诺，因此小马的情况既不能证实也不能证伪它。",
+        "steps": [
+          "符号化：P＝上课，Q＝准时率提高，规则为 若 P 则 Q。",
+          "已知 非 P 且 Q，这种情况不在规则覆盖范围内。",
+          "要证伪该规则，需要找到 P 且非 Q 的案例。",
+          "因此合适的说法是“本次没有提供判定信息”，而不是宣布承诺失败。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "denying-antecedent",
+            "why": "误以为没上课就不该提高，从而把规则理解反了。"
+          },
+          {
+            "option": "D",
+            "errorType": "hasty-generalization",
+            "why": "用一个未参与者的表现推广到所有人。"
+          },
+          {
+            "option": "C",
+            "errorType": "conclusion-overreach",
+            "why": "在没有对照的情况下断言确定性的因果效果。"
+          }
+        ],
+        "takeaway": "检验一个条件承诺，要去找“前件成立但后件不成立”的例子。"
+      },
+      "reviewTags": [
+        "否定前件",
+        "证伪",
+        "条件推理"
+      ],
+      "provenance": "原创题，结合培训效果场景训练证伪意识。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    }
+  ]
+}

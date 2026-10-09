@@ -1,0 +1,16 @@
+# 统一换行符，避免 Windows 上的克隆产生整文件 diff
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.jpg binary
+
+*.ts text eol=lf
+*.tsx text eol=lf
+*.mjs text eol=lf
+*.mts text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.sql text eol=lf
+*.yml text eol=lf

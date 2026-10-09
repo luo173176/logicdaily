@@ -1,0 +1,497 @@
+{
+  "schemaVersion": 1,
+  "category": "necessary-sufficient-conditions",
+  "exercises": [
+    {
+      "id": "ex-nsc-001",
+      "version": 1,
+      "category": "necessary-sufficient-conditions",
+      "knowledgePoints": ["necessary-condition", "sufficient-condition", "only-if"],
+      "difficulty": 2,
+      "estimatedSeconds": 50,
+      "format": "single-choice",
+      "context": "产品需求评审会，讨论版本发布卡点。",
+      "stem": "评审会上负责人说：“只有把支付模块的漏洞全部修完，这个版本才允许发布。”已知这个版本已经发布了。以下哪项一定正确？",
+      "options": [
+        {
+          "key": "A",
+          "text": "支付模块的漏洞已经全部修完"
+        },
+        {
+          "key": "B",
+          "text": "只要支付模块的漏洞全部修完，这个版本就一定可以发布",
+          "errorType": "premise-misidentification",
+          "reason": "把“只有”引导的必要条件当成充分条件"
+        },
+        {
+          "key": "C",
+          "text": "如果这个版本没有发布，说明漏洞一定没修完",
+          "errorType": "denying-antecedent",
+          "reason": "否定前件就推出否定后件"
+        },
+        {
+          "key": "D",
+          "text": "仅凭这两句话无法判断漏洞是否修完"
+        }
+      ],
+      "answer": { "keys": ["A"] },
+      "alternatives": [
+        {
+          "keys": ["D"],
+          "note": "如果允许怀疑这条规则本身可能被违反（例如带病强发），那么严格说只能得到“按规定应当已全部修完”，此时保留无法判断同样讲得通。"
+        }
+      ],
+      "explanation": {
+        "summary": "“只有 P 才 Q”把 P 说成 Q 的必要条件，等价于“若 Q 则 P”。已知版本已发布，即肯定后件，可推出漏洞已全部修完。",
+        "steps": [
+          "识别句式：“只有……才……”中，“只有”后面的内容是必要条件。",
+          "符号化：P＝漏洞全部修完，Q＝版本允许发布，规则译为 若 Q 则 P。",
+          "已知事实是 Q（版本已经发布），用肯定前件式对“若 Q 则 P”作推理，得到 P。",
+          "检查方向：B 把 P 当成足以发布的条件，C 对“若 Q 则 P”作了否定前件的推理，两者都不在规则承诺范围内。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "premise-misidentification",
+            "why": "规则只说没修完就不能发布，没说修完就必须发布，还可能卡在别的条件上。"
+          },
+          {
+            "option": "C",
+            "errorType": "denying-antecedent",
+            "why": "由“没发布”推“没修完”不成立，版本可能因其他原因推迟发布。"
+          }
+        ],
+        "takeaway": "读到“只有……才……”，先写成“若结果则条件”，再决定能推出什么。"
+      },
+      "reviewTags": ["必要条件", "句式翻译", "合规卡点"],
+      "provenance": "原创题，场景取自互联网产品版本发布评审，用于训练“只有……才……”的翻译。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-nsc-002",
+      "version": 1,
+      "category": "necessary-sufficient-conditions",
+      "knowledgePoints": ["sufficient-condition", "necessary-condition"],
+      "difficulty": 3,
+      "estimatedSeconds": 65,
+      "format": "single-choice",
+      "context": "招聘流程条件辨析。",
+      "stem": "招聘启事写：“只要通过两轮技术面试，就会收到录用意向书。”已知小王没有收到录用意向书。以下哪项结论可靠？",
+      "options": [
+        {
+          "key": "A",
+          "text": "小王至少有一轮技术面试没有通过"
+        },
+        {
+          "key": "B",
+          "text": "小王两轮技术面试都没有通过",
+          "errorType": "conclusion-overreach",
+          "reason": "把“并非两轮都通过”加强成“两轮都没通过”"
+        },
+        {
+          "key": "C",
+          "text": "如果一个人没通过两轮面试，他就不会收到意向书",
+          "errorType": "denying-antecedent",
+          "reason": "否定前件推出否定后件"
+        },
+        {
+          "key": "D",
+          "text": "凡是收到意向书的人都通过了两轮面试",
+          "errorType": "affirming-consequent",
+          "reason": "由结果反推唯一途径"
+        }
+      ],
+      "answer": { "keys": ["A"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“只要 P 就 Q”给出充分条件。已知没有 Q，用逆否可得不 P，即“并非两轮都通过”，等价于至少一轮没过，但不能细化到具体哪一轮。",
+        "steps": [
+          "符号化：P＝两轮技术面试都通过，Q＝收到录用意向书，规则为 若 P 则 Q。",
+          "已知 非 Q，套用否定后件式（等价于逆否命题）得到 非 P。",
+          "把 非 P 译回自然语言：“并非两轮都通过”＝至少有一轮没通过，这是 A。",
+          "B 把“至少一轮”加强为“两轮都”，D 从 Q 反推 P，C 从 非P 推 非Q，三者都超出了规则给出的信息。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "conclusion-overreach",
+            "why": "否定合取只需要其中一项不成立，不需要两项都不成立。"
+          },
+          {
+            "option": "C",
+            "errorType": "denying-antecedent",
+            "why": "启事没有说意向书只能靠两轮面试获得，可能存在别的通道。"
+          },
+          {
+            "option": "D",
+            "errorType": "affirming-consequent",
+            "why": "把充分条件当成必要条件，认为收到就一定走过这条通道。"
+          }
+        ],
+        "takeaway": "“只要”给的是够用条件，否定它只能否定到“至少一处不满足”。"
+      },
+      "reviewTags": ["充分条件", "逆否", "招聘条件"],
+      "provenance": "原创题，场景为招聘启事条件句，用于区分充分条件与必要条件。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-nsc-003",
+      "version": 1,
+      "category": "necessary-sufficient-conditions",
+      "knowledgePoints": ["necessary-condition", "only-if", "sufficient-condition"],
+      "difficulty": 4,
+      "estimatedSeconds": 90,
+      "format": "single-choice",
+      "context": "个人信息合规条款理解。",
+      "stem": "合规条款写：“除非取得用户单独同意，否则平台不得向第三方提供该用户的个人信息。”据此，下列哪一项是该条款允许的？",
+      "options": [
+        {
+          "key": "A",
+          "text": "取得某用户单独同意后，把该用户的收货地址提供给合作快递"
+        },
+        {
+          "key": "B",
+          "text": "用户在注册页勾选了打包在服务协议里的共享条款，平台据此提供其行踪轨迹",
+          "errorType": "equivocation",
+          "reason": "把“勾选打包协议”与条款要求的“单独同意”混为一谈"
+        },
+        {
+          "key": "C",
+          "text": "这条意味着：只要取得单独同意，平台就必须向第三方提供个人信息",
+          "errorType": "affirming-consequent",
+          "reason": "把必要条件反读成充分条件"
+        },
+        {
+          "key": "D",
+          "text": "用户没有明确反对，就等于取得了单独同意，可以提供",
+          "errorType": "premise-misidentification",
+          "reason": "用“未反对”替换条款规定的前提"
+        }
+      ],
+      "answer": { "keys": ["A"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“除非 P 否则不 Q”等于“若 Q 则 P”，P（单独同意）是 Q（对外提供）的必要条件。条件满足后禁止令解除，因此 A 合规。",
+        "steps": [
+          "句式转换：“除非 P 否则不 Q”＝“如果不 P 那么不 Q”＝逆否后“若 Q 则 P”。",
+          "代入：P＝取得单独同意，Q＝向第三方提供个人信息。",
+          "A 中 P 已成立且提供了信息，条款设定的禁止条件不再适用，属于允许范围。",
+          "B 偷换了“单独同意”的含义；C 把必要条件当成充分条件；D 用沉默替换同意，都改变了条款真正要求的前提。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "equivocation",
+            "why": "条款写的是单独同意，打包勾选不满足这一特定含义，前后用词不同一。"
+          },
+          {
+            "option": "C",
+            "errorType": "affirming-consequent",
+            "why": "条款只禁止“未经同意就提供”，没有规定“同意后就必须提供”。"
+          },
+          {
+            "option": "D",
+            "errorType": "premise-misidentification",
+            "why": "把“没有反对”误认成条款要求的那个前提条件。"
+          }
+        ],
+        "takeaway": "看到“除非……否则不……”，先改写为“若要做成这件事，必须先满足什么”。"
+      },
+      "reviewTags": ["除非否则", "必要条件", "合规条款"],
+      "provenance": "原创题，场景取自个人信息保护条款，针对“除非……否则不……”的翻译易错点。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-nsc-004",
+      "version": 1,
+      "category": "necessary-sufficient-conditions",
+      "knowledgePoints": ["necessary-condition", "only-if", "contrapositive"],
+      "difficulty": 3,
+      "estimatedSeconds": 95,
+      "format": "multi-choice",
+      "context": "员工合规制度与签署权限。",
+      "stem": "制度规定：“只有完成年度合规培训，员工才能签署客户合同。”设 P＝完成培训，Q＝能签署合同。下列哪些判断与这条制度一致？（选出所有一致的判断）",
+      "options": [
+        {
+          "key": "A",
+          "text": "如果某员工签署了客户合同，那么他完成了年度合规培训"
+        },
+        {
+          "key": "B",
+          "text": "如果某员工没有完成年度合规培训，那么他不能签署客户合同"
+        },
+        {
+          "key": "C",
+          "text": "如果某员工完成了年度合规培训，那么他能签署客户合同",
+          "errorType": "affirming-consequent",
+          "reason": "把必要条件当成充分条件，由条件成立反推可以签署"
+        },
+        {
+          "key": "D",
+          "text": "如果某员工不能签署客户合同，那么他没有完成培训",
+          "errorType": "denying-antecedent",
+          "reason": "否定前件推出否定后件"
+        },
+        {
+          "key": "E",
+          "text": "完成年度合规培训是签署客户合同不可缺少的条件"
+        }
+      ],
+      "answer": { "keys": ["A", "B", "E"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“只有 P 才 Q”译为 若 Q 则 P。它同时等价于 若非 P 则非 Q，也等价于把 P 称作 Q 的必要条件；反过来从 P 推 Q 或从非 Q 推非 P 都不成立。",
+        "steps": [
+          "把制度写成标准形式：若 Q（能签署合同）则 P（完成培训）。",
+          "A 就是这条原命题本身，直接一致。",
+          "B 是它的逆否命题：若非 P 则非 Q，与原命题逻辑等价，因此一致。",
+          "E 是“P 是 Q 的必要条件”的自然语言复述，与制度同一含义。",
+          "C 从 P 推 Q，相当于在“若 Q 则 P”上肯定后件；D 从非 Q 推非 P，相当于否定前件。合同签署还可能受授权、职级等其他条件影响，两者都不被制度保证。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "C",
+            "errorType": "affirming-consequent",
+            "why": "完成培训只是不可缺少的条件之一，不是签好合同的全部条件。"
+          },
+          {
+            "option": "D",
+            "errorType": "denying-antecedent",
+            "why": "不能签署合同的原因很多，未必是没完成培训。"
+          }
+        ],
+        "takeaway": "判断条件方向时，用“没它行不行”测必要，用“有它够不够”测充分。"
+      },
+      "reviewTags": ["必要条件", "逆否等价", "多选"],
+      "provenance": "原创题，场景为企业合规培训签署权限，训练同一条件关系的多种自然语言表达。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-nsc-005",
+      "version": 1,
+      "category": "necessary-sufficient-conditions",
+      "knowledgePoints": ["necessary-condition", "sufficient-condition", "only-if"],
+      "difficulty": 3,
+      "estimatedSeconds": 50,
+      "format": "true-false",
+      "context": "研发排期会议上的口头约定。",
+      "stem": "“必须先把需求文档评审通过，开发才可以排期。”这句话与“只要需求文档评审通过，开发就可以排期”表达的是同一个条件关系。",
+      "answer": { "value": false },
+      "alternatives": [],
+      "explanation": {
+        "summary": "前一句把“评审通过”说成“可以排期”的必要条件，后一句把它说成充分条件，两者方向相反，不是同一条件关系。",
+        "steps": [
+          "第一句改写：若可以排期，则需求文档已评审通过（P 是 Q 的必要条件）。",
+          "第二句改写：若需求文档已评审通过，则可以排期（P 是 Q 的充分条件）。",
+          "构造情形：文档评审通过但资源不足无法排期。这与第一句相容，却与第二句冲突。",
+          "存在这样的分歧情形，说明两句不等价，故判断为错。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "premise-misidentification",
+            "why": "把“必须”引导的必要条件读成充分条件，推理方向整个反了。"
+          },
+          {
+            "errorType": "affirming-consequent",
+            "why": "把“若可排期则已评审”与“若已评审则可排期”这对互逆命题视为等价。"
+          }
+        ],
+        "takeaway": "“必须”“只有”指没它不行；“只要”指有它足够，两者不可互换。"
+      },
+      "reviewTags": ["必要条件", "充分条件", "句式辨析"],
+      "provenance": "原创题，针对研发排期口头约定中的条件方向混淆。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-nsc-006",
+      "version": 1,
+      "category": "necessary-sufficient-conditions",
+      "knowledgePoints": ["necessary-condition", "rebuttal-target", "implicit-premise"],
+      "difficulty": 4,
+      "estimatedSeconds": 120,
+      "format": "short-answer",
+      "context": "上线流程争议。",
+      "stem": "法务说：“只有通过安全测评，产品才能上线。”产品经理回应：“竞品从来没做过测评也照样上线，所以这条要求没必要。”请用两三句话说明：这条规则里“通过安全测评”是什么条件，产品经理的举例是否构成对这条规则的有效反驳。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "判定条件类型",
+            "keywords": ["必要条件"],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "指出反驳落点错位",
+            "keywords": ["反驳落点", "本公司"],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "说明什么才算真正推翻",
+            "keywords": ["反例", "并非必要"],
+            "weight": 2,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.7,
+        "partialRatio": 0.45,
+        "modelAnswer": "在这条规则里，通过安全测评是产品上线的必要条件，也就是没通过就不能上线，而不是通过了就一定该上线。产品经理举的竞品例子说的是其他公司的做法，它既没有否定本公司的这条规定，也没有论证这个条件本身并非必要，属于反驳落点错位。要真正推翻这条规定，需要构造反例，例如公司严格执行了测评却仍频繁发生上线事故，或者拿出测评与上线质量无关的证据。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "回答要分两步：先把“只有……才……”译成必要条件，再检查对方的例子打在原主张的哪一处——别家公司的做法不能否定本公司规定。",
+        "steps": [
+          "符号化：P＝通过安全测评，Q＝产品上线，规则为 若 Q 则 P，即 P 是 Q 的必要条件。",
+          "明确必要条件被推翻的方式：出现“Q 成立但 P 不成立”的情形，即本公司未测评却合规上线。",
+          "分析对方的证据对象：竞品属于其他公司，落在本公司这条规定的适用范围之外。",
+          "补充评价：即便承认竞品做法有效，也只涉及“这条要求是否值得”，而不涉及“这条规定是否被违反”。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "premise-misidentification",
+            "why": "把必要条件当成充分条件，就会误以为测评完就该无条件上线。"
+          },
+          {
+            "errorType": "ignoring-counterexample",
+            "why": "用别家公司的事例替换本公司范围内的反例，等于回避了真正需要检验的情形。"
+          }
+        ],
+        "takeaway": "反驳一条规定前，先确认你的例子是否落在这条规定所管辖的范围之内。"
+      },
+      "reviewTags": ["必要条件", "反驳落点", "简答题"],
+      "provenance": "原创题，场景来自上线流程争论，训练条件类型判定与反驳对象核对。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-nsc-007",
+      "version": 1,
+      "category": "necessary-sufficient-conditions",
+      "knowledgePoints": ["necessary-condition", "sufficient-condition", "falsification"],
+      "difficulty": 3,
+      "estimatedSeconds": 85,
+      "format": "ordering",
+      "context": "验收一条需求表述。",
+      "stem": "需求文档写：“必须支持离线模式，才能进入商用版本。”你要判断这句话提出的是必要条件还是充分条件，并检查候选版本是否满足。请按最合理的先后顺序排列以下步骤。",
+      "items": [
+        {
+          "key": "s1",
+          "text": "把句子改写为“若进入商用版本，则支持离线模式”，标出前件与后件"
+        },
+        {
+          "key": "s2",
+          "text": "用“没它行不行”和“有它够不够”两个测试判定它属于哪类条件"
+        },
+        {
+          "key": "s3",
+          "text": "列出候选版本清单，确认哪些版本已经或计划进入商用"
+        },
+        {
+          "key": "s4",
+          "text": "在已商用版本中查找“不支持离线模式”的情形，作为检验结果"
+        }
+      ],
+      "answer": { "keys": ["s1", "s2", "s3", "s4"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "合理顺序是：先把自然语言译成标准条件式，再判定条件类型，然后确定要核查的样本范围，最后在该范围内找违反结论的情形。",
+        "steps": [
+          "不先改写就判定条件类型，容易把“必须”前后的内容位置弄错，所以 s1 必须在最前。",
+          "条件类型决定检验方向：必要条件的违反形式是“结论成立但条件不成立”，即已商用却不支持离线。",
+          "没有版本清单就无从核查，因此 s3 必须在具体检查之前完成。",
+          "s4 之所以只查已商用版本，是因为“支持离线但未商用”这类情形并不违反原要求，查了也不构成证据。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过改写直接查清单，判定标准不稳定，结果无法复核。"
+          },
+          {
+            "errorType": "denying-antecedent",
+            "why": "去检查“没商用的版本是否支持离线”，检验方向与原命题无关。"
+          }
+        ],
+        "takeaway": "先定形式，再定检验方向，最后才找样本。"
+      },
+      "reviewTags": ["必要条件", "检验步骤", "排序"],
+      "provenance": "原创题，场景为产品需求验收，训练把“必须”句式转成可检验步骤。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-nsc-008",
+      "version": 1,
+      "category": "necessary-sufficient-conditions",
+      "knowledgePoints": ["sufficient-condition", "necessary-condition", "conclusion-identification"],
+      "difficulty": 5,
+      "estimatedSeconds": 150,
+      "format": "open-response",
+      "context": "日常争论中的条件混用。",
+      "stem": "同事在群里说：“考试及格的同学都复习了。小明复习了，所以他一定及格。”请评价这个论证：原句把什么说成了什么条件？要使小明的结论站得住，需要把原句改成哪个条件关系？",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "直接接受",
+            "criteria": "认为复习过就应当能及格，论证没有明显问题。"
+          },
+          {
+            "score": 1,
+            "label": "仅表怀疑",
+            "criteria": "觉得推理有点别扭，但说不出哪一步不成立。"
+          },
+          {
+            "score": 2,
+            "label": "识别条件类型",
+            "criteria": "能指出原句是“若及格则复习过”，复习只是及格的必要条件。"
+          },
+          {
+            "score": 3,
+            "label": "说明推理失效原因",
+            "criteria": "能说明由“复习了”推不出“及格”，属于肯定后件式的无效逆推。"
+          },
+          {
+            "score": 4,
+            "label": "给出可成立的改写与检验",
+            "criteria": "能把原句改写为“只要复习就及格”并指出该改写如何被反例检验，同时补充需要的事实依据。"
+          }
+        ],
+        "guidance": "先把“都”字句翻译成条件式，判定复习是哪种条件；再检查从小明的事实能推出什么；最后说明要怎样改写原句才让结论有效，以及改写后需要什么样的证据支持。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“及格的同学都复习了”等于“若及格则复习过”，复习是必要条件；由复习反推及格是无效逆推。要结论成立，必须把复习升级为充分条件，而那是更强的主张。",
+        "steps": [
+          "翻译原句：P＝及格，Q＝复习过，句子为 若 P 则 Q。",
+          "已知小明 Q 成立，由 若 P 则 Q 与 Q 推不出 P，这是肯定后件。",
+          "说明改写代价：把原句改成“只要复习就及格”（若 Q 则 P）后推理才有效，但这一改写需要一个及格且未复习的反例就能推翻，证据要求更高。",
+          "补充可检验做法：查看复习与及格的实际分布，或直接向同学询问复习但没及格的人是否存在。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "affirming-consequent",
+            "why": "看到结果出现就断定条件出现，忽略了复习也可能与及格无关的其他情形。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "在只有一句话作证据时，就给出“一定及格”这种确定性结论。"
+          }
+        ],
+        "takeaway": "遇到“……的都……”先翻译成“若属于前者则具有后者”，再决定能不能反着推。"
+      },
+      "reviewTags": ["充分条件", "必要条件", "开放题", "论证改写"],
+      "provenance": "原创题，量表按回答深度分层，用于自评与可选的模型反馈。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    }
+  ]
+}

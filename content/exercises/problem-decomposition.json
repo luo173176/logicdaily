@@ -1,0 +1,677 @@
+{
+  "schemaVersion": 1,
+  "category": "problem-decomposition",
+  "exercises": [
+    {
+      "id": "ex-dec-001",
+      "version": 1,
+      "category": "problem-decomposition",
+      "knowledgePoints": [
+        "subgoal-split",
+        "dependency-order"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 90,
+      "format": "single-choice",
+      "stem": "运营群里说：移动端注册转化率这周突然掉得很厉害，得赶紧查。面对这个还没查过的问题，下面哪一项最适合作为第一个动作？",
+      "options": [
+        {
+          "key": "A",
+          "text": "先确认“注册转化率”的统计口径和取数管道有没有变化，也就是分子、分母、时间窗和数据是否完整"
+        },
+        {
+          "key": "B",
+          "text": "立刻回滚本周上线的注册页改版，先把数字拉回来再说",
+          "errorType": "insufficient-evidence",
+          "reason": "在没有任何定位证据时就选择代价较高的动作"
+        },
+        {
+          "key": "C",
+          "text": "在群里发起投票，让每个人写下自己觉得最可能的原因，按票数处理",
+          "errorType": "appeal-to-majority",
+          "reason": "用多少人相信代替了证据是否支持"
+        },
+        {
+          "key": "D",
+          "text": "默认是注册表单太长把人吓退了，先精简字段再观察两天",
+          "errorType": "premise-misidentification",
+          "reason": "把尚未验证的猜测当成问题真正的前提"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "拆解“指标突然下降”这类问题，第一个子目标必须是确认这个数字本身可信，因为后面所有分支都建立在它之上。",
+        "steps": [
+          "先把模糊的抱怨改写成可回答的问题：哪一个环节、哪一段用户、从什么时候开始下降。",
+          "回答它的最早前提是数据可信：埋点未改动、分母定义未改动、日志没有缺天，否则“下降”可能只是口径变了。",
+          "口径确认后才有意义做拆分：按设备、渠道、新老用户、页面步骤分别看下降集中在哪一片。",
+          "回滚、加字段、发优惠券都是干预动作，属于最后一步，跳过前面步骤会让动作没有指向。",
+          "群投票收集的是猜测而不是证据，票数不能替代任何一个子目标的验证结果。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "insufficient-evidence",
+            "why": "还没有把下降定位到某个环节，就用不可逆的发布动作去赌一个未验证的原因。"
+          },
+          {
+            "option": "C",
+            "errorType": "appeal-to-majority",
+            "why": "把多人共同的直觉当作判断依据，绕过了每个子目标各自需要的证据。"
+          },
+          {
+            "option": "D",
+            "errorType": "premise-misidentification",
+            "why": "把“表单太长”这个假设当成问题前提，后续观察会被这个预设带偏。"
+          }
+        ],
+        "takeaway": "拆问题的第一步是确认“这个问题是不是真的存在”，其次才是“它由什么造成”。"
+      },
+      "reviewTags": [
+        "问题拆解",
+        "步骤依赖顺序",
+        "指标排查"
+      ],
+      "provenance": "原创题，场景取自互联网运营排查指标的常见流程，用于训练先核对口径再拆分支。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-dec-002",
+      "version": 1,
+      "category": "problem-decomposition",
+      "knowledgePoints": [
+        "dependency-order",
+        "subgoal-split"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 130,
+      "format": "ordering",
+      "stem": "某电商站点移动端下单转化率连续三天从 4.1% 降到 2.6%。团队要把“查清原因”拆成可以依次执行的五个子目标。请按步骤之间的依赖先后排序。",
+      "items": [
+        {
+          "key": "s1",
+          "text": "核对指标口径与取数链路：埋点、分母定义、统计时间窗、日志完整性是否在这一周被改动过"
+        },
+        {
+          "key": "s2",
+          "text": "在口径可信的前提下，把下降按设备、渠道、新老用户、下单各环节拆分，定位下降集中在哪一片"
+        },
+        {
+          "key": "s3",
+          "text": "把定位到的那片用户与时间段，同发版记录、活动上下线、投放变更、外部事件逐条对齐时间"
+        },
+        {
+          "key": "s4",
+          "text": "针对对齐后最可疑的那一个变更，做只改变该因素的对比：小流量回滚或保留对照组"
+        },
+        {
+          "key": "s5",
+          "text": "用第 4 步的结果写出结论与影响范围，再决定是紧急修复、长期优化还是继续观察"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "s1",
+          "s2",
+          "s3",
+          "s4",
+          "s5"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "这条顺序的依赖关系是：数据可信是一切比较的前提，定位是时间对齐的前提，时间对齐是单因素验证的前提，验证是行动决策的前提。",
+        "steps": [
+          "第 1 步必须在最前：如果口径或管道变了，第 2 步拆出来的“下降”可能只是统计假象。",
+          "第 2 步在第 1 步之后：只有确认指标真实下滑，拆分才有意义；拆分把一个大问题缩成一片可处理的范围。",
+          "第 3 步在第 2 步之后：变更清单很长，只有把范围缩小到某类用户某个时段，才能判断哪条变更与它时间重合。",
+          "第 4 步在第 3 步之后：时间重合只给出嫌疑，不能排除共同原因，必须一次只改变一个因素才能定因。",
+          "第 5 步在最后：修复方式的取舍取决于已确认的原因和影响面，先动手会让结论失去可检验性。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过口径核对直接拆分，等于在没有共同标准的情况下比较数据。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "只做第 3 步的时间对齐就下结论，把同时发生当成了因果。"
+          }
+        ],
+        "takeaway": "排子目标顺序时，先问“这一步的结论会不会被下一步推翻”，被推翻的那一步就要往前放。"
+      },
+      "reviewTags": [
+        "问题拆解",
+        "依赖顺序",
+        "指标下滑排查"
+      ],
+      "provenance": "原创题，围绕电商转化率下降的排查流程设计，五个步骤互不重叠。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-dec-003",
+      "version": 1,
+      "category": "problem-decomposition",
+      "knowledgePoints": [
+        "subgoal-split",
+        "dependency-order"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 120,
+      "format": "short-answer",
+      "stem": "周报显示客服平均响应时间比上月更快，但团队普遍感觉最近更忙更累，有人据此主张“直接给客服加人”。请用三到四句话写出你会怎么拆解这个矛盾，并说明每一步为什么必须排在另一步之前。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "先核对两边的口径与来源",
+            "keywords": [
+              "口径",
+              "数据来源"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "把“忙”拆成可测量的子指标",
+            "keywords": [
+              "子指标",
+              "拆成"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "列出至少两个能同时解释两边的假设",
+            "keywords": [
+              "两个",
+              "假设"
+            ],
+            "weight": 2,
+            "required": false
+          },
+          {
+            "id": "c4",
+            "label": "安排一个能区分假设的最小观察",
+            "keywords": [
+              "区分",
+              "观察"
+            ],
+            "weight": 2,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "先核对口径：响应时间怎么计算、数据来源是哪张表、有没有把排队时长排除在外，团队感受则用具体记录还原，两类证据要分开保存。这一步必须最先做，否则两边可能根本不在同一把尺子上。再把“忙”拆成可测的子指标，例如排队量、单次会话轮次、加班时长、被打断次数。接着列出至少两个能同时解释两边的假设：简单问题被更快结单而复杂问题堆积，或者总人手不变但咨询集中到了少数时段。最后安排一个能区分这些假设的最小观察，比如按问题复杂度分层抽查一周，看耗时上升出现在哪一层。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "数据与感受冲突时，先拆的是“两边各自在测什么”，而不是“该加多少人”，否则会把口径差异误当成结论。",
+        "steps": [
+          "把冲突写成三个子目标：口径是否一致、感受对应哪些可测指标、什么证据能区分不同解释。",
+          "口径核对排在第一位，因为后两个子目标都以“两边比较成立”为前提。",
+          "把感受翻译成子指标，才能判断它究竟指向工作总量、难度结构还是时段分布。",
+          "至少构造两个同样成立的假设，避免只验证一个猜测。",
+          "最后设计分层观察：分层是关键，它让不同假设给出不同的预测，从而能被区分开。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "premise-misidentification",
+            "why": "把“团队觉得累”直接当作“人手不足”的证据，忽略了它可能由难度结构造成。"
+          },
+          {
+            "errorType": "insufficient-evidence",
+            "why": "在没有分层数据的情况下选择长期且难以撤销的加人决定。"
+          }
+        ],
+        "takeaway": "两组证据打架时，先查它们是不是在同一把尺子上量的。"
+      },
+      "reviewTags": [
+        "问题拆解",
+        "事实与感受",
+        "口径核对"
+      ],
+      "provenance": "原创题，场景取自客服团队周报与团队感受冲突的复盘，要点与范文逐一对应。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-dec-004",
+      "version": 1,
+      "category": "problem-decomposition",
+      "knowledgePoints": [
+        "subgoal-split",
+        "variable-control"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 160,
+      "format": "ordering",
+      "stem": "团队想做一个“自动整理会议纪要”的新功能，但资源有限，两周后就要决定是否投入全量开发。你要设计上线前的最小验证。请按依赖先后排列下列六个步骤。",
+      "items": [
+        {
+          "key": "t1",
+          "text": "写下唯一的目标行为：用户愿意把生成的纪要保存下来或转发给同事"
+        },
+        {
+          "key": "t2",
+          "text": "给这个目标行为定出可核对的判定口径与成功门槛数值，并写明低于多少就放弃"
+        },
+        {
+          "key": "t3",
+          "text": "在门槛已确定的前提下，挑出成本最低但仍能触发该行为的验证形态，例如人工代做或静态原型"
+        },
+        {
+          "key": "t4",
+          "text": "确定要控制的变量：只改变有无该功能这一点，入口位置、受邀人群与使用时段保持一致"
+        },
+        {
+          "key": "t5",
+          "text": "把第 4 步的对照方式落成具体安排：样本量、观察时长与提前写好的终止条件"
+        },
+        {
+          "key": "t6",
+          "text": "汇总数据并回到第 2 步的门槛，判定是投入全量、调整形态还是放弃"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "t1",
+          "t2",
+          "t3",
+          "t4",
+          "t5",
+          "t6"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "最小验证的顺序由“先定义再测量、先控制再执行、先设终止条件再收集数据”三条依赖决定。",
+        "steps": [
+          "第 1 步在最前：没有明确的目标行为，后面所有指标都可能换成另一个说法。",
+          "第 2 步依赖第 1 步：门槛要挂在这个行为上，否则成功与失败没有分界。",
+          "第 3 步依赖第 2 步：先有门槛才能判断某种粗糙形态是否仍能触发同一行为，人工代做就是这类低成本形态。",
+          "第 4 步依赖第 3 步：形态定了才知道要固定哪些条件，才能做到一次只改变一个因素。",
+          "第 5 步依赖第 4 步：样本与时长来自对照设计；终止条件必须预先写下，避免事后按结果找理由。",
+          "第 6 步依赖第 2 与第 5 步：判定标准与数据都齐了才谈得上去做取舍。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过判定口径直接做原型，结果出来后无法说清算不算成功。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "在没有固定人群与时段的情况下，把一小群人的正反馈推广为可以全量投入。"
+          }
+        ],
+        "takeaway": "先写成功门槛和终止条件，再开始收集数据；顺序反了，数据会替你说出你想要的话。"
+      },
+      "reviewTags": [
+        "问题拆解",
+        "最小验证",
+        "变量控制"
+      ],
+      "provenance": "原创题，面向新功能上线前的低成本验证设计，六个步骤各占一个依赖环节。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-dec-005",
+      "version": 1,
+      "category": "problem-decomposition",
+      "knowledgePoints": [
+        "subgoal-split",
+        "dependency-order"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 110,
+      "format": "single-choice",
+      "stem": "负责人说：“我们 App 留存太差了，你想办法提一下。”下面四种回应，哪种把这个问题拆解得最合理？",
+      "options": [
+        {
+          "key": "A",
+          "text": "把它改写成几个可分别回答的子问题：哪些用户的留存差、差在哪个时间点、差到什么程度、此前做过哪些尝试及结果"
+        },
+        {
+          "key": "B",
+          "text": "先列一批常见的提留存手段（签到、推送、新手引导），然后逐个试一试看哪个有效",
+          "errorType": "missing-reasoning-step",
+          "reason": "跳过定位环节，直接进入手段清单"
+        },
+        {
+          "key": "C",
+          "text": "先问清负责人心里的目标数字，然后把达到这个数字当作唯一要回答的问题",
+          "errorType": "premise-misidentification",
+          "reason": "把对方的模糊表述当成问题的全部前提"
+        },
+        {
+          "key": "D",
+          "text": "留存差说明产品定位有问题，先重新讨论定位，其他都不用查",
+          "errorType": "conclusion-overreach",
+          "reason": "在没有分群数据时把原因锁定到最宏观的一层"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“留存太差”是一句评价而不是一个问题，拆解的作用是把它换成有明确判定标准的一组子问题。",
+        "steps": [
+          "先补齐“差”的可核对含义：与谁比、比哪段用户、比哪个时间窗。",
+          "按用户与时间分层，才能发现是整体下滑还是某一环节塌陷。",
+          "回看已有尝试，可以排除重复劳动并缩小候选原因范围。",
+          "以上三步都为“该改哪里”提供指向；直接进入手段清单会让每个方案都无法判断该不该采纳。",
+          "目标数字是判断标准之一，但不能替代定位过程，只盯数字容易用错手段达成它。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "missing-reasoning-step",
+            "why": "在没有定位到流失环节的情况下逐个试手段，缺少把结果归因的中间环节。"
+          },
+          {
+            "option": "C",
+            "errorType": "premise-misidentification",
+            "why": "把别人给出的数字当成问题本身，漏掉了需要被回答的那一部分。"
+          },
+          {
+            "option": "D",
+            "errorType": "conclusion-overreach",
+            "why": "由一个笼统的负面评价直接跳到最宏观的因果结论。"
+          }
+        ],
+        "takeaway": "遇到形容词式的问题（太差、太慢、太高），第一步是把它翻译成带比较对象的数字。"
+      },
+      "reviewTags": [
+        "问题拆解",
+        "子目标拆解",
+        "留存"
+      ],
+      "provenance": "原创题，针对工作中常见的“形容词式需求”如何拆成可验证子问题。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-dec-006",
+      "version": 1,
+      "category": "problem-decomposition",
+      "knowledgePoints": [
+        "subgoal-split",
+        "variable-control"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 110,
+      "format": "multi-choice",
+      "stem": "你把“两家商场门店客流下降”这件事拆成了若干子问题。按照“子问题之间要有依赖顺序、每个子问题要能独立判定”的要求，下列哪些做法是合格的？（选出所有合格做法）",
+      "options": [
+        {
+          "key": "A",
+          "text": "先确认两家门店的客流计数方式与统计区间相同，再分别拆成进店量、试穿量、成交率三层"
+        },
+        {
+          "key": "B",
+          "text": "把所有可能的原因一次列成清单，然后不分先后同时开始逐一验证，每条都花同样的力气",
+          "errorType": "missing-reasoning-step",
+          "reason": "缺少按可排除可能多少来安排先后的这一步"
+        },
+        {
+          "key": "C",
+          "text": "每拆出一层就补一句“这一步用什么观察结果判定真假”，判定不了的往下再拆一层"
+        },
+        {
+          "key": "D",
+          "text": "同一层的子问题保持互不重叠，且合起来能覆盖上一层那个问题"
+        },
+        {
+          "key": "E",
+          "text": "先挑自己最有把握的那条分支验证，其他分支等这条得出结论后再看",
+          "errorType": "ignoring-counterexample",
+          "reason": "只检验支持自己猜测的分支，不主动找能推翻它的分支"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A",
+          "C",
+          "D"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "合格的拆解要求两件事：每层子问题能被独立判定，层与层之间有明确先后；B 与 E 恰好破坏了这两点。",
+        "steps": [
+          "A 对：两家门店若要比较，计数口径相同是最前面的前提，否则分层结果没有可比性。",
+          "C 对：给每层配判定标准，才能确认这个子问题真的可独立回答，而不是一个更大的疑问。",
+          "D 对：同层互斥且穷尽，才不会出现两处重复验证或一片空白没被覆盖。",
+          "B 错：不分先后的均匀投入，放弃了“先做能排除最多可能的步骤”这一顺序原则。",
+          "E 错：优先验证自己有把握的分支，等于系统性地不去找反例。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "missing-reasoning-step",
+            "why": "缺少为子问题排序这一环，导致资源平均铺开、排除速度慢。"
+          },
+          {
+            "option": "E",
+            "errorType": "ignoring-counterexample",
+            "why": "只收集支持既定猜测的结果，可能推翻它的分支被排到最后甚至不做。"
+          }
+        ],
+        "takeaway": "拆完每一层都问两句：这一步怎么判定？判定不了是不是说明我拆得还不够细？"
+      },
+      "reviewTags": [
+        "问题拆解",
+        "子问题判定",
+        "穷尽互斥"
+      ],
+      "provenance": "原创题，用零售门店客流场景考查拆解合格性的两条判据。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-dec-007",
+      "version": 1,
+      "category": "problem-decomposition",
+      "knowledgePoints": [
+        "dependency-order",
+        "variable-control",
+        "subgoal-split"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 170,
+      "format": "short-answer",
+      "stem": "一家公司同一周收到三个信号：投放获客成本上升、客服工单量上升、复购率下降。老板要求本周内定出主要原因。请用四五句话写出你的拆解方式、为什么按这个顺序做，以及哪一步最容易被跳过。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "先分别定义三个信号的口径",
+            "keywords": [
+              "口径",
+              "定义"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "检查三者是否由同一个原因同时驱动",
+            "keywords": [
+              "同一个",
+              "共同原因"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "按能排除多少可能来排序步骤",
+            "keywords": [
+              "排序",
+              "排除"
+            ],
+            "weight": 2,
+            "required": false
+          },
+          {
+            "id": "c4",
+            "label": "点出最易跳过的一步是控制变量",
+            "keywords": [
+              "控制变量",
+              "跳过"
+            ],
+            "weight": 2,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "第一步把三个信号各自的口径定义清楚：获客成本按哪个渠道算、工单按哪一类分、复购用哪个时间窗，口径不一致时三者无法比较。第二步检查三者是否由同一个原因同时驱动，例如一次调价可以推高工单又压低复购，那样三条线索其实只需验证一件事。第三步按“哪一步能排除最多可能”来排序：先做一两个小时就能整片排除的核对，把耗时最多的实验放在后面。第四步是整套流程里最容易被跳过的一步，也就是控制变量：不把渠道、人群和时间固定住，后续实验的结果仍然无法归因。最后为每一步写明判定标准、负责人和截止时间，按顺序同步结论。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "多个信号同时出现时，最有价值的拆解是判断它们是否共享同一个原因，这一步能一次性缩小候选范围。",
+        "steps": [
+          "把三个笼统信号各写成一句可判定的陈述，明确比较基准与时间窗。",
+          "先找共同原因，是因为一个假设若成立可以覆盖三条线索，比三条独立排查便宜得多。",
+          "在共同原因排查之后，再按排除效率给剩余分支排序：先做信息量最大的核对。",
+          "控制变量是归因的前提；缺少它，即便某个分支被验证，也无法排除同时发生的变化。",
+          "一周的时限要求为每一步设截止时间与放弃条件，避免在一条分支上耗尽时间。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "correlation-as-causation",
+            "why": "三条线索同周出现就认定它们互相导致，没有做共同原因检查。"
+          },
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过控制变量直接做实验，结论仍会被同期其他变化解释掉。"
+          }
+        ],
+        "takeaway": "同时有几个异常时，先问它们是不是同一件事的三个侧面，再决定分别排查什么。"
+      },
+      "reviewTags": [
+        "问题拆解",
+        "共同原因",
+        "控制变量"
+      ],
+      "provenance": "原创题，用多信号同时恶化的经营场景训练拆解顺序与变量控制意识。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-dec-008",
+      "version": 1,
+      "category": "problem-decomposition",
+      "knowledgePoints": [
+        "subgoal-split",
+        "dependency-order",
+        "variable-control"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 180,
+      "format": "open-response",
+      "stem": "你负责的一个工具类小程序，“新用户首日完成关键动作的比例”最近两周明显下降。请在下方写出你的拆解方案：分成哪几个子问题、按什么顺序处理、每个子问题用什么证据判定，以及你需要控制哪些变量。",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "没有拆解",
+            "criteria": "把下降当成一个整体问题，只给出一个笼统猜测或直接建议改界面，没有子问题。"
+          },
+          {
+            "score": 1,
+            "label": "按对象分片",
+            "criteria": "把用户或页面分成若干片来查看，但没有说明这些片之间谁先谁后，也没有判定标准。"
+          },
+          {
+            "score": 2,
+            "label": "给出依赖顺序",
+            "criteria": "明确写出先做哪一步，并说明它为什么必须在另一步之前，例如先确认口径再分渠道对比。"
+          },
+          {
+            "score": 3,
+            "label": "为每个子问题配证据",
+            "criteria": "每个子问题都写清用什么观察结果判定真假，并提到需要核对埋点、统计窗等数据前提。"
+          },
+          {
+            "score": 4,
+            "label": "补上变量控制与放弃条件",
+            "criteria": "进一步说明要固定哪些条件、一次只改变一个因素，并预先写明看到什么结果就放弃当前假设。"
+          }
+        ],
+        "guidance": "建议按“子问题清单 → 顺序与依赖理由 → 每个子问题的判定证据 → 需要控制的变量与放弃条件”四段来写，200 字以内即可。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "这道题考查的不是找到真因，而是能否把一个模糊的下滑现象拆成有先后、有判据、可控变量的子问题。",
+        "steps": [
+          "先界定问题：哪个指标、与哪个基准比、下降幅度是否超出正常波动。",
+          "第一层拆分按来源（投放与自然量）与设备版本分层，第二层按首日流程的各环节拆分。",
+          "顺序依赖：口径核对先于分片对比，分片对比先于变更对齐，对齐先于单因素验证。",
+          "每个子问题配一个判据，例如某一层的降幅是否显著大于其他层，避免只凭印象。",
+          "变量控制包括固定人群、时段与入口，一次只改变一个因素；同时预先写下放弃条件。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "hasty-generalization",
+            "why": "只看两三个用户的抱怨截图就宣布找到了原因。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "由两周的下滑直接推出改版失败这类范围更大的结论。"
+          }
+        ],
+        "takeaway": "拆解是否合格，取决于每个子问题是否有一句“看到什么就算它成立或不成立”。"
+      },
+      "reviewTags": [
+        "问题拆解",
+        "开放题",
+        "变量控制",
+        "依赖顺序"
+      ],
+      "provenance": "原创题，量表按常见的四种回答层级递进设计，供自评与可选的模型反馈使用。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    }
+  ]
+}

@@ -1,0 +1,639 @@
+{
+  "schemaVersion": 1,
+  "category": "truth-teller-puzzles",
+  "exercises": [
+    {
+      "id": "ex-tru-001",
+      "version": 1,
+      "category": "truth-teller-puzzles",
+      "knowledgePoints": [
+        "truth-table",
+        "validity-vs-truth"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 80,
+      "format": "single-choice",
+      "context": "行政确认：拿钥匙的人就在当时在场的三人之中，且三人各说了一句。",
+      "stem": "办公室备用钥匙不见了。在场三人的说法：老周：“不是我拿的。”小李：“是老陈拿的。”老陈：“小李在说谎。”已知三人中只有一个人说了真话。谁拿了钥匙？",
+      "options": [
+        {
+          "key": "A",
+          "text": "是老周拿的，说真话的人是老陈"
+        },
+        {
+          "key": "B",
+          "text": "是老陈拿的，说真话的人是小李",
+          "errorType": "missing-reasoning-step",
+          "reason": "漏掉小李与老陈之间必有一真一假"
+        },
+        {
+          "key": "C",
+          "text": "是小李拿的，两人说真话一人说假话",
+          "errorType": "premise-misidentification",
+          "reason": "没有检查该组合下真话人数是否为 1"
+        },
+        {
+          "key": "D",
+          "text": "条件不足，无法确定是谁拿的",
+          "errorType": "insufficient-evidence",
+          "reason": "把可以逐一排除的情形当成了无法排除"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "小李和老陈的话互相矛盾，必有一真一假；唯一的一句真话就在这两人之间，所以老周说假话，即钥匙是他拿的。",
+        "steps": [
+          "注意到小李说“是老陈拿的”，老陈说“小李在说谎”，两句话不能同真也不能同假。",
+          "既然三人中只有一句真话，而这一句已经在小李与老陈之中，老周那句必定为假。",
+          "老周说“不是我拿的”为假，因此拿钥匙的是老周。",
+          "回代检验：老周拿的场合，老周假、小李假（不是老陈）、老陈真，真话数正好为 1。",
+          "再检验另两种可能：老陈拿则老周与小李同真（2 句真话）；小李拿则老周与老陈同真（2 句真话），都与条件冲突。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "missing-reasoning-step",
+            "why": "直接采信小李的话的内容，跳过了矛盾对与真话人数限制这两步。"
+          },
+          {
+            "option": "C",
+            "errorType": "premise-misidentification",
+            "why": "该组合下会出现两句真话，与“只有一人说真话”的限制不符。"
+          },
+          {
+            "option": "D",
+            "errorType": "insufficient-evidence",
+            "why": "三种可能里有两种被条件直接排除，结论是可确定的。"
+          }
+        ],
+        "takeaway": "先找互相矛盾的那两句，把真话名额锁定在它们内部，剩下的话真假立刻可判。"
+      },
+      "reviewTags": [
+        "真假话",
+        "矛盾对",
+        "职场核实"
+      ],
+      "provenance": "原创题，场景取自办公室物品失踪后的内部核实，用于训练矛盾句定位法。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-tru-002",
+      "version": 1,
+      "category": "truth-teller-puzzles",
+      "knowledgePoints": [
+        "truth-table",
+        "self-reference"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 100,
+      "format": "single-choice",
+      "context": "采购会上两家供应商各说一句，每句话要么为真要么为假，没有第三种情况。",
+      "stem": "供应商甲说：“我和乙说的都是真话。”供应商乙说：“甲在说假话。”据此可以推出什么？",
+      "options": [
+        {
+          "key": "A",
+          "text": "甲说真话，乙说假话",
+          "errorType": "missing-reasoning-step",
+          "reason": "代入后乙的话会变成真，未做这一步检验"
+        },
+        {
+          "key": "B",
+          "text": "甲说假话，乙说真话"
+        },
+        {
+          "key": "C",
+          "text": "两人说的都是假话",
+          "errorType": "premise-misidentification",
+          "reason": "忽略了此时乙那句“甲在说假话”本身成了真话"
+        },
+        {
+          "key": "D",
+          "text": "无法判断谁说真话谁说假话",
+          "errorType": "insufficient-evidence",
+          "reason": "四种赋值都能逐一检查，其实只剩一种成立"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "假设甲为真就要求乙也为真，可乙的内容恰好否认甲，矛盾；所以甲必假，于是乙的内容成立，乙为真，代回后一切自洽。",
+        "steps": [
+          "列出四种赋值：(真,真)、(真,假)、(假,真)、(假,假)。",
+          "(真,真)：甲的内容成立，但乙说“甲在说假话”此时为假，与乙为真冲突，排除。",
+          "(真,假)：甲的内容要求乙也说真话，与乙为假冲突，排除。",
+          "(假,假)：乙说“甲在说假话”此时恰好符合事实，应为真，与乙为假冲突，排除。",
+          "(假,真)：乙的内容与甲为假一致；甲那句“两人皆真”因甲自己为假而落空，与其为假一致，唯一成立。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "missing-reasoning-step",
+            "why": "只检查了甲那句话，忘了同时检查乙那句话在该假设下的真假。"
+          },
+          {
+            "option": "C",
+            "errorType": "premise-misidentification",
+            "why": "“甲在说假话”在甲确实说假话时本身就是真话，不能一并算成假。"
+          },
+          {
+            "option": "D",
+            "errorType": "insufficient-evidence",
+            "why": "赋值空间只有四种且都能穷尽检验，不构成无法判断。"
+          }
+        ],
+        "takeaway": "遇到互相评价对方的话，把真假四种组合逐一代回去，比凭直觉快也更可靠。"
+      },
+      "reviewTags": [
+        "真假话",
+        "假设法",
+        "商务沟通"
+      ],
+      "provenance": "原创题，场景取自采购会上两家供应商的互相指认，用于训练赋值穷尽法。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-tru-003",
+      "version": 1,
+      "category": "truth-teller-puzzles",
+      "knowledgePoints": [
+        "self-reference",
+        "truth-table"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "format": "true-false",
+      "stem": "一张卡片正面写着“背面的话是真的”，背面写着“正面的话是假的”。请判断：这两句话可以同时为真。",
+      "answer": {
+        "value": false
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "若正面为真则背面为真，而背面说正面为假，直接冲突；所以两者不能同真，该说法不成立。",
+        "steps": [
+          "设正面为真：正面断言背面是真的，于是背面也为真。",
+          "背面断言正面的话是假的，这与“正面为真”矛盾，假设失败。",
+          "再设正面为假：那么“背面是真的”这一断言不成立，背面应为假；可背面说“正面是假的”恰好符合事实，又该为真，仍然矛盾。",
+          "这是一个无法稳定赋值的自指结构，其中“同真”这种情形首先被排除。",
+          "因此“可以同时为真”的说法判为否。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "circular-reasoning",
+            "why": "用正面证明背面为真，再用背面证明正面为真，等于把待证的结论放进前提。"
+          },
+          {
+            "errorType": "equivocation",
+            "why": "把“这句话为真”与“这句话所描述的内容成立”混成了同一件事。"
+          }
+        ],
+        "takeaway": "处理自指的说法，先只假设一种赋值并推到矛盾，不要同时接受两边。"
+      },
+      "reviewTags": [
+        "自指",
+        "真假话",
+        "赋值检验"
+      ],
+      "provenance": "原创题，场景取自益智卡片游戏，针对自指句的赋值冲突。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-tru-004",
+      "version": 1,
+      "category": "truth-teller-puzzles",
+      "knowledgePoints": [
+        "truth-table",
+        "exhaustive-cases"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 145,
+      "format": "single-choice",
+      "context": "名单已定，只知道甲、乙、丙三人里恰好有两人入选，三人各说了一句。",
+      "stem": "评优名单上有甲、乙、丙中的恰好两人。三句话：甲：“名单上有我。”乙：“名单上没有丙。”丙：“名单上没有甲，而且名单上有我。”已知三句话中恰好两句为真。谁在名单上？",
+      "options": [
+        {
+          "key": "A",
+          "text": "名单上是甲和乙，丙说的是假话"
+        },
+        {
+          "key": "B",
+          "text": "名单上是甲和丙",
+          "errorType": "missing-reasoning-step",
+          "reason": "没有把“恰好两句为真”拿去逐个组合检验"
+        },
+        {
+          "key": "C",
+          "text": "名单上是乙和丙",
+          "errorType": "premise-misidentification",
+          "reason": "误以为丙的两半可以只算一句真话"
+        },
+        {
+          "key": "D",
+          "text": "三种两两组合都满足条件，无法确定",
+          "errorType": "ignoring-counterexample",
+          "reason": "两种组合已被真话人数限制排除"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "三种入选组合都要代入“恰好两句为真”这一限制：只有“甲和乙”给出两句真话，另两种都只剩一句。",
+        "steps": [
+          "把三句话写成条件：甲＝名单含甲；乙＝名单不含丙；丙＝名单不含甲 且 名单含丙。",
+          "组合一（甲、乙入选）：甲真，乙真（丙不在名单），丙的前半句“没有甲”为假故整句为假，真话数 2，符合。",
+          "组合二（甲、丙入选）：甲真，乙假（丙在名单），丙因“没有甲”为假而整句假，真话数 1，不符合。",
+          "组合三（乙、丙入选）：甲假，乙假（丙在名单），丙“没有甲且有我”为真，真话数 1，不符合。",
+          "唯一存活的是组合一，所以名单上是甲和乙，说假话的是丙。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "missing-reasoning-step",
+            "why": "该组合下只有甲一句真话，与题目要求的两句差一步就被放过了。"
+          },
+          {
+            "option": "C",
+            "errorType": "premise-misidentification",
+            "why": "丙那句是“而且”连接的合取，一半为假整句就为假。"
+          },
+          {
+            "option": "D",
+            "errorType": "ignoring-counterexample",
+            "why": "两种组合已被真话人数限制排除，不能算作同样可接受。"
+          }
+        ],
+        "takeaway": "没有明显矛盾句时，就按题目给的“恰好几句为真”把所有可能穷举一遍。"
+      },
+      "reviewTags": [
+        "真假话",
+        "穷尽情形",
+        "职场评优"
+      ],
+      "provenance": "原创题，场景取自公司年终评优名单的传闻，用于训练列表穷举法。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-tru-005",
+      "version": 1,
+      "category": "truth-teller-puzzles",
+      "knowledgePoints": [
+        "truth-table",
+        "validity-vs-truth"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 120,
+      "format": "multi-choice",
+      "context": "技术负责人确认：补丁是三人中的一人偷偷发的，说假话的人正是发补丁的人，另外两人说的都是真话。",
+      "stem": "线上出现一版没人认领的补丁。三句话：小冯：“不是我发的。”小杜：“不是我发的。”小高：“小冯说的是真话。”下面哪些判断必然为真？（选出所有必然为真的）",
+      "options": [
+        {
+          "key": "A",
+          "text": "偷偷发补丁的是小杜"
+        },
+        {
+          "key": "B",
+          "text": "小杜说的是一句假话"
+        },
+        {
+          "key": "C",
+          "text": "小冯说的是真话"
+        },
+        {
+          "key": "D",
+          "text": "小高说的是假话",
+          "errorType": "missing-reasoning-step",
+          "reason": "没检查小高这句话在每种假设下是否自洽"
+        },
+        {
+          "key": "E",
+          "text": "条件不足，无法确定是谁发的补丁",
+          "errorType": "insufficient-evidence",
+          "reason": "三种假设逐个排除后其实只剩一个"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "约束是“发布者说假话、其余两人说真话”。假设发布者是小冯或小高都会让规则自相矛盾，只有小杜发布时三句话真假正好匹配。",
+        "steps": [
+          "假设小冯发的：他必须说假话，可他说“不是我发的”确实是假话，符合；那么小高也必须说真话，而小高说“小冯说的是真话”为假，矛盾。",
+          "假设小高发的：小冯与小杜都说真话，小冯“不是我发的”为真，于是小高那句“小冯说的是真话”也成了真话，与发布者必须说假话冲突。",
+          "假设小杜发的：小冯真、小杜假、小高肯定小冯故也为真，恰好只有发布者一人说假话，完全一致。",
+          "所以必然为真的是：发补丁的是小杜（A）、小杜说假话（B）、小冯说真话（C）。",
+          "D 与检验结果相反；E 低估了“发布者说假话”这条规则的排除力。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "D",
+            "errorType": "missing-reasoning-step",
+            "why": "把小高的话当成孤立断言，没接到“非发布者都说真话”的规则上。"
+          },
+          {
+            "option": "E",
+            "errorType": "insufficient-evidence",
+            "why": "三种可能里两种直接产生矛盾，剩下的一种是唯一解。"
+          }
+        ],
+        "takeaway": "带有“身份决定真假”的规则时，把每种身份假设代入，看有没有违背规则的那一句。"
+      },
+      "reviewTags": [
+        "真假话",
+        "身份约束",
+        "工作协作"
+      ],
+      "provenance": "原创题，场景取自研发团队追查一次未登记的线上发布，用于训练身份与真假绑定的推理。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-tru-006",
+      "version": 1,
+      "category": "truth-teller-puzzles",
+      "knowledgePoints": [
+        "truth-table",
+        "exhaustive-cases"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 115,
+      "format": "short-answer",
+      "stem": "校招内推名额只剩一个，最终一定给了甲、乙、丙中的一人。三句话：甲：“我没拿到名额。”乙：“丙没拿到名额。”丙：“我拿到了名额。”已知三句话中恰好一句为真。请写出：哪两句话构成矛盾？名额最终给了谁？为什么？（两三句话）",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "指出乙与丙互相矛盾",
+            "keywords": [
+              "矛盾",
+              "必有一真一假"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "用真话名额锁定甲为假",
+            "keywords": [
+              "一句真话",
+              "落在"
+            ],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "给出最终归属",
+            "keywords": [
+              "给了甲",
+              "甲拿到"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c4",
+            "label": "回代检验其余组合",
+            "keywords": [
+              "检验",
+              "两句真话"
+            ],
+            "weight": 1,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "乙说“丙没拿到”与丙说“我拿到了”构成矛盾，两句必有一真一假。既然三句话里恰好一句真话，这句真话就落在乙和丙之间，所以甲那句必定为假，“我没拿到”为假就推出名额给了甲。检验：名额给甲时甲假、乙真、丙假，正好一句真话；若给乙则甲乙同真，若给丙则甲丙同真，都出现两句真话。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "乙与丙是一对矛盾句，真话名额被它们占满，甲必假，从而名额属于甲；再回代三种归属即可确认唯一。",
+        "steps": [
+          "识别矛盾：乙断言丙没拿到，丙断言自己拿到，两者不能同真也不能同假。",
+          "用上限制：三句里恰好一句为真，这一真必在乙丙之中，因此甲为假。",
+          "由甲为假得事实：甲说“我没拿到”是假的，即名额给了甲。",
+          "回代检验：给甲时真话数为 1，符合；给乙时为 2，给丙时为 2，均不符合。",
+          "结论唯一：名额给了甲，说真话的是乙。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "premise-misidentification",
+            "why": "把甲的话当成真话起点，就会误推到乙或丙身上。"
+          },
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "看出矛盾却没接上“恰好一句为真”的限制，结论仍落在原地。"
+          }
+        ],
+        "takeaway": "先定位矛盾句，再用真话名额判定其余句子的真假，最后一定回代检验。"
+      },
+      "reviewTags": [
+        "真假话",
+        "矛盾对",
+        "升学求职"
+      ],
+      "provenance": "原创题，场景取自校招内推名额的传闻，用于训练把矛盾句与数量限制结合写出完整推理。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-tru-007",
+      "version": 1,
+      "category": "truth-teller-puzzles",
+      "knowledgePoints": [
+        "dependency-order",
+        "truth-table"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 95,
+      "format": "ordering",
+      "stem": "部门要查清共享文档是夜里被谁改动的，四个人各说了一句，已知恰好一人说了真话。按最合理的先后顺序排列下列步骤。",
+      "items": [
+        {
+          "key": "s1",
+          "text": "把四句话逐条抄下来，写清每句断言的事实是什么"
+        },
+        {
+          "key": "s2",
+          "text": "找出其中互相矛盾的两句话，确定它们必有一真一假"
+        },
+        {
+          "key": "s3",
+          "text": "用“恰好一人说真话”的限制推出其余两句话都为假"
+        },
+        {
+          "key": "s4",
+          "text": "由为假的句子反推事实，缩小到唯一的改动者"
+        },
+        {
+          "key": "s5",
+          "text": "把结论代回四句话逐条验证，确认恰好只剩一句为真"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "s1",
+          "s2",
+          "s3",
+          "s4",
+          "s5"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "解真假话问题的稳定顺序是：先把陈述形式化，再定位矛盾句，然后用真话人数限制推剩余真假，最后回代验证。",
+        "steps": [
+          "不逐条抄下来，就会把说话人和内容混在一起，后面无法判断谁和谁矛盾。",
+          "矛盾句给出一真一假的必然配对，是信息量最大的一环，必须优先做。",
+          "真话人数限制只有接在矛盾对之后才能立刻定死其余句子的真假。",
+          "由已知为假的句子反推事实，是唯一能把真假转成事件归属的一步。",
+          "回代验证用来发现自己推理中的漏项，也用来确认答案唯一，所以放在最后。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过矛盾定位直接猜事实，往往在两种可能之间来回摇摆。"
+          },
+          {
+            "errorType": "premise-misidentification",
+            "why": "把“恰好一人说真话”记成“恰好一人说假话”，全部真假关系就反了。"
+          }
+        ],
+        "takeaway": "先形式化、再找矛盾、后用数量限制，最后一定回代检验。"
+      },
+      "reviewTags": [
+        "真假话",
+        "步骤顺序",
+        "工作核实"
+      ],
+      "provenance": "原创题，场景取自团队追查共享文档的夜间改动记录，用于整理固定的解题顺序。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-tru-008",
+      "version": 1,
+      "category": "truth-teller-puzzles",
+      "knowledgePoints": [
+        "truth-table",
+        "conclusion-identification",
+        "implicit-premise"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 165,
+      "format": "open-response",
+      "stem": "同事群里争论：老李先说“我从来不加班”，第二天夜里他又在群里发“今天加班到十点”。小张据此断定：“他这两句里必有一句是假话，所以老李以后说的话都不能信。”请评价小张的推理：哪一步是站得住的，哪一步跳了？换成你，会怎么下结论？",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "接受整体判断",
+            "criteria": "认为老李说话不算数，以后他的任何话都不必当真。"
+          },
+          {
+            "score": 1,
+            "label": "只觉语气过重",
+            "criteria": "感觉最后一句说得太狠，但说不出问题出在哪一步。"
+          },
+          {
+            "score": 2,
+            "label": "分清两步结论",
+            "criteria": "能指出“两句必有一假”是真的逻辑结论，而“以后都不能信”是另一步推断。"
+          },
+          {
+            "score": 3,
+            "label": "补出隐含前提",
+            "criteria": "进一步写出后一步依赖的未说明前提，例如“一个人说过一次假话，之后说的每句话都为假”。"
+          },
+          {
+            "score": 4,
+            "label": "给出可操作的结论",
+            "criteria": "还能按事情的可逆性与代价分层：关键信息另行核实，日常信息可参考，并留出他改口的可能。"
+          }
+        ],
+        "guidance": "先把两步结论拆开，分别问它们靠什么成立；再检查后一步需要的前提是否可靠，最后给出一个分层的处理方式。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“从来不加班”与“今天加班到十点”不能同真，所以至少一句为假，这是有效的演绎；但由一次失信推出他以后所有话都不可信，跨了范围也跨了强度。",
+        "steps": [
+          "把两句对照：前者是全称时间断言，后者承认一次加班，两者不可同真，因此“至少一句为假”成立。",
+          "小张的第二步是从“这组话里有假”跳到“他之后的每句话都为假”，中间需要一条关于人格与概率的隐含前提。",
+          "这条隐含前提本身经不起检验：说过一次假话的人，其余陈述为真的比例并不会归零。",
+          "更稳的结论按代价分层：涉及排班、承诺等不可逆事项要另找凭据，日常闲聊仍可参考他的说法。",
+          "同时保留可修正空间：如果老李解释了口径（例如“从来”指本月），第一句也可能重新变得可信。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "conclusion-overreach",
+            "why": "由一次自相矛盾推出以后所有话都不可信，结论远超证据范围。"
+          },
+          {
+            "errorType": "ad-hominem",
+            "why": "用对老李这个人的评价替代了对每句话证据的评估。"
+          },
+          {
+            "errorType": "false-dilemma",
+            "why": "把处理办法压成“全信”或“全不信”两种，忽略了按代价分层的做法。"
+          }
+        ],
+        "takeaway": "从“某句话是假的”到“这个人不能信”之间，需要一条关于概率的额外前提，先把它写出来再判断。"
+      },
+      "reviewTags": [
+        "真假话",
+        "开放题",
+        "同事沟通",
+        "论证评估"
+      ],
+      "provenance": "原创题，场景取自同事群里的日常争论，量表按从整体接受到分层处理的常见回答层级设计。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    }
+  ]
+}

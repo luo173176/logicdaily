@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+build
+coverage
+test-results
+playwright-report
+package-lock.json
+next-env.d.ts
+# 由 scripts/export-sql-seed.mjs 生成，重排会破坏「与内容包一致」的可比对性
+supabase/migrations/0003_seed_exercises.sql
+# 二进制与截图
+docs/images
+public/icons

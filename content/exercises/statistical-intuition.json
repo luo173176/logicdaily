@@ -1,0 +1,632 @@
+{
+  "schemaVersion": 1,
+  "category": "statistical-intuition",
+  "exercises": [
+    {
+      "id": "ex-sta-001",
+      "version": 1,
+      "category": "statistical-intuition",
+      "knowledgePoints": [
+        "base-rate",
+        "conditional-probability"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 120,
+      "format": "single-choice",
+      "stem": "某体检项目面向普通人群筛查一种患病率为 1% 的疾病。该方法对真正患病者的检出率为 99%，对未患病者也有 5% 会误报阳性。随机筛出一名结果阳性的人，他真正患病的概率大约是多少？请按 10,000 人计算，结果保留一位小数。",
+      "options": [
+        {
+          "key": "A",
+          "text": "约 99%，因为方法对患病者的检出率就是 99%",
+          "errorType": "base-rate-neglect",
+          "reason": "把检出患病者的概率倒过来当成患病者的比例"
+        },
+        {
+          "key": "B",
+          "text": "约 16.7%，也就是差不多六分之一"
+        },
+        {
+          "key": "C",
+          "text": "约 50%，因为结果只有阳性和阴性两种可能",
+          "errorType": "false-dilemma",
+          "reason": "把两种结果当成等概率的两选一"
+        },
+        {
+          "key": "D",
+          "text": "约 95%，因为误报率只有 5%，剩下都是准确的",
+          "errorType": "premise-misidentification",
+          "reason": "把未患病者中被误报的比例当成阳性者中被误报的比例"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "1% 的基础概率让未患病者基数极大，5% 的误报在这里产生的假阳性人数远超真阳性，所以阳性者中真正患病的只约六分之一。",
+        "steps": [
+          "按 10,000 人拆开：患病者 10,000×1% = 100 人，未患病者 9,900 人。",
+          "算真阳性：100×99% = 99 人。",
+          "算假阳性：9,900×5% = 495 人。",
+          "阳性总数：99 + 495 = 594 人，其中真正患病 99 人。",
+          "求条件概率：99 ÷ 594 = 0.16667，保留一位小数为 16.7%，恰为六分之一。",
+          "对照直觉：把 99% 当成阳性者患病概率，方向就反了，它说的是患病者中有多少被测出。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "base-rate-neglect",
+            "why": "99% 是患病者中被检出的比例，忽略 1% 患病率就把它换成了阳性者患病的比例。"
+          },
+          {
+            "option": "C",
+            "errorType": "false-dilemma",
+            "why": "阳性和阴性是两类结果，但两类的人数并不相等，检出率与误报率也不同。"
+          },
+          {
+            "option": "D",
+            "errorType": "premise-misidentification",
+            "why": "5% 的分母是 9,900 名未患病者而不是全部阳性者，直接把 100%−5% 当成准确率用错了前提。"
+          }
+        ],
+        "takeaway": "看到阳性别急，先算“真阳性有几人、假阳性有几人”，基础概率决定分母。"
+      },
+      "reviewTags": [
+        "基础概率",
+        "条件概率",
+        "筛查检测"
+      ],
+      "provenance": "原创题，参数为编写者设定（患病率 1%、检出率 99%、误报率 5%），结论 16.7% 由 99÷594 直接算得。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-sta-002",
+      "version": 1,
+      "category": "statistical-intuition",
+      "knowledgePoints": [
+        "sample-size"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 55,
+      "format": "single-choice",
+      "stem": "两家咖啡店的真实好评率都约为 80%。甲店当月只收到 8 条评价，乙店收到 800 条评价。只从评价条数看，下列判断最可靠的是哪一项？",
+      "options": [
+        {
+          "key": "A",
+          "text": "甲店更容易出现极端比例，比如当月 8 条全是好评，或者显示的好评率不足六成"
+        },
+        {
+          "key": "B",
+          "text": "乙店更容易出现极端比例，因为 800 条评价里出现异常情况的次数更多",
+          "errorType": "premise-misidentification",
+          "reason": "把评价总数多当成更容易出现极端比例的理由"
+        },
+        {
+          "key": "C",
+          "text": "两店出现 100% 全好评的可能性相同，因为它们的真实好评率都是 80%",
+          "errorType": "equivocation",
+          "reason": "把平均水平相同偷换成波动幅度相同"
+        },
+        {
+          "key": "D",
+          "text": "只要把甲店的评价条数补到 80 条，就能保证它的月度好评率正好显示为 80%",
+          "errorType": "conclusion-overreach",
+          "reason": "把样本量变大当成结果必然等于真实比例"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "比例本身的波动幅度随样本量增大而收窄，8 条评价时随机性很大，800 条评价时结果通常紧贴 80%。",
+        "steps": [
+          "先算甲店全好评：0.8 的 8 次方 = 0.16777216，即约 16.8% 的月份会显示 100%。",
+          "再算乙店全好评：0.8 的 800 次方约为 10 的负 77.5 次方，实际上不可能发生。",
+          "看低值一端：甲店 8 条中最多 4 条好评（即显示不足六成）的概率约 5.6%，而乙店 800 条要掉到 60% 相当于偏离均值约 14 个标准差，几乎为零。",
+          "由此得到一般规律：样本越小，观测比例围绕真实值的散布越大。",
+          "顺带纠正 D：增大条数只是让波动变小，不等于结果一定恰好等于真实比例。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "premise-misidentification",
+            "why": "决定极端比例出现概率的是条数占比带来的波动幅度，不是异常情况的绝对发生次数。"
+          },
+          {
+            "option": "C",
+            "errorType": "equivocation",
+            "why": "期望水平相同只说明长期平均，不说明单次观测的分散程度相同。"
+          },
+          {
+            "option": "D",
+            "errorType": "conclusion-overreach",
+            "why": "样本量提高只收窄波动，任何有限样本都可能出现偏离。"
+          }
+        ],
+        "takeaway": "小样本的漂亮数字先打折：条数越少，越可能只是运气。"
+      },
+      "reviewTags": [
+        "样本量",
+        "极端比例",
+        "消费评价"
+      ],
+      "provenance": "原创题，两个比例数值由编写者按二项分布独立算得（0.8 的 8 次方约 16.8%，8 条中不超 4 条的概率约 5.6%）。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-sta-003",
+      "version": 1,
+      "category": "statistical-intuition",
+      "knowledgePoints": [
+        "average-vs-distribution"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 75,
+      "format": "single-choice",
+      "stem": "某外卖店铺某天 10 笔订单的配送分钟数为：10、12、14、16、18、18、20、22、26、124。页面只显示“本店平均配送 28 分钟”。关于这个平均数，下列哪项最准确？",
+      "options": [
+        {
+          "key": "A",
+          "text": "平均 28 分钟说明大部分订单都在 28 分钟上下浮动",
+          "errorType": "equivocation",
+          "reason": "把平均数当成典型订单的取值"
+        },
+        {
+          "key": "B",
+          "text": "10 笔里有 9 笔不超过 26 分钟，平均数主要被那笔 124 分钟的订单抬高"
+        },
+        {
+          "key": "C",
+          "text": "中位数 18 分钟与平均数 28 分钟不一致，说明这张表一定统计错了",
+          "errorType": "missing-reasoning-step",
+          "reason": "忽略偏态分布下两数本就可能不同就断言有错"
+        },
+        {
+          "key": "D",
+          "text": "124 分钟那一单必定是录入错误，删掉它之后重新平均才是正确做法",
+          "errorType": "insufficient-evidence",
+          "reason": "没有任何证据就把极端观测判定为错误数据"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "这 10 个数之和为 280，平均 28 分钟；中位数是第 5、6 个数的平均即 18 分钟。一笔 124 分钟的订单占当日总时长约 44%，把一个不典型的极端值写进了平均数。",
+        "steps": [
+          "核对总量：10+12+14+16+18+18+20+22+26+124 = 280，平均 280÷10 = 28 分钟。",
+          "核对中位数：排序后第 5 与第 6 个数都是 18，中位数 18 分钟，与平均数相差 10 分钟。",
+          "看分布形态：9 笔不超过 26 分钟，只有 1 笔 124 分钟，该笔占总时长 124÷280 ≈ 44%。",
+          "检查 D 的诱惑：若把 124 剔除，其余 9 笔平均为 156÷9 ≈ 17.3 分钟，接近中位数，但剔除本身需要证据（例如是否重复记录），不能默认极端值就是错。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "equivocation",
+            "why": "平均数受极端值拉动，此处没有一笔订单落在 28 分钟附近。"
+          },
+          {
+            "option": "C",
+            "errorType": "missing-reasoning-step",
+            "why": "右偏分布中平均数高于中位数是正常现象，两数不等本身不构成错误证据。"
+          },
+          {
+            "option": "D",
+            "errorType": "insufficient-evidence",
+            "why": "题目没有提供该单为异常记录的任何线索，直接判定为录入错误缺乏依据。"
+          }
+        ],
+        "takeaway": "只给平均数时，追问中位数和有没有极端值，往往比平均值更有代表性。"
+      },
+      "reviewTags": [
+        "平均数",
+        "中位数",
+        "分布形态"
+      ],
+      "provenance": "原创题，10 个数据由编写者构造为满足均值 28、中位数 18 的一组右偏数据，各项计算已在解析中列出。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-sta-004",
+      "version": 1,
+      "category": "statistical-intuition",
+      "knowledgePoints": [
+        "survivorship-bias",
+        "average-vs-distribution"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 110,
+      "format": "multi-choice",
+      "stem": "某理财平台展示页写着：“平台上存续的 12 只基金过去三年平均年化收益 9.2%。”另据公开资料，同期该平台共发行过 20 只同类基金，其中 8 只因业绩长期垫底被清盘合并，清盘基金的收益未出现在展示名单中。关于这条宣传，下列哪些说法是站得住的？（选出所有正确的）",
+      "options": [
+        {
+          "key": "A",
+          "text": "9.2% 这个平均数只覆盖存续的 12 只，被清盘的 8 只在统计之前就已经被排除"
+        },
+        {
+          "key": "B",
+          "text": "把 9.2% 当成“在这平台买这类基金三年的平均收益”，会高估真实结果"
+        },
+        {
+          "key": "C",
+          "text": "凭题中这些数字就能算出全部 20 只基金真实的平均年化收益",
+          "errorType": "missing-reasoning-step",
+          "reason": "缺少被清盘 8 只基金的收益率，无法补齐总平均"
+        },
+        {
+          "key": "D",
+          "text": "只要把展示名单从 12 只扩到 20 只，这个平均数就一定不再有偏",
+          "errorType": "conclusion-overreach",
+          "reason": "把扩大名单当成消除系统性筛选的充分条件"
+        },
+        {
+          "key": "E",
+          "text": "让 20 只变成 12 只的规则是“业绩差就清盘”，这条筛选规则本身就是偏差来源"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A",
+          "B",
+          "E"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "幸存者偏差的关键不在样本数少，而在于进入样本的规则与结果相关：业绩越差越容易被剔除，剩下的自然偏高。",
+        "steps": [
+          "先核对数量：发行 20 只，清盘 8 只，存续 20−8 = 12 只，展示名单只有 12 只。",
+          "看清筛选规则与结果的关系：清盘的依据正是业绩垫底，因此被剔除的样本系统性地偏低。",
+          "区分两件事：平均数本身算得没错，错在把它当作全体投资者的期望收益。",
+          "说明 C 缺什么：不知道 8 只清盘基金各自的三年收益，20 只的总平均无法求出。",
+          "说明 D 的问题：把名单补全只是补数据，若仍用“存续期间”这类口径来平均，筛选偏差依然存在；更稳妥的做法是按投资者实际买入时点逐笔计算，并同时展示清盘情况。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "C",
+            "errorType": "missing-reasoning-step",
+            "why": "总平均需要全部 20 只的收益数据，题中只给了 12 只的均值。"
+          },
+          {
+            "option": "D",
+            "errorType": "conclusion-overreach",
+            "why": "扩名单是必要条件而非充分条件，口径与筛选规则仍需一并修正。"
+          }
+        ],
+        "takeaway": "看到“存续产品的平均成绩”，先问被删掉的那部分去哪了。"
+      },
+      "reviewTags": [
+        "幸存者偏差",
+        "平均数",
+        "公司报表"
+      ],
+      "provenance": "原创题，基金只数由编写者设定为 20、8、12 的自洽关系，用于训练识别按结果筛选样本的宣传话术。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-sta-005",
+      "version": 1,
+      "category": "statistical-intuition",
+      "knowledgePoints": [
+        "sample-size",
+        "confounder"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 60,
+      "format": "true-false",
+      "stem": "甲医院一年完成某类手术 1,200 台，术后并发症率 2%；乙医院同期只做 40 台，并发症率 5%。仅凭这两个数字，就能判定甲医院在这类手术上更安全。",
+      "answer": {
+        "value": false
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "乙医院 40 台的 5% 只对应 2 例并发症，这种小样本的比例本身波动很大；两院收治的病情风险构成也可能不同，因此不能仅凭这两个数字定论。",
+        "steps": [
+          "把百分比还原成例数：甲医院 1,200×2% = 24 例，乙医院 40×5% = 2 例。",
+          "评估小样本的波动：如果乙医院的真实并发症率也是 2%，40 台中期望只有 0.8 例，而出现不少于 2 例的概率按二项分布估算约 19%，接近五分之一，并不罕见。",
+          "指出分母之外还有一层：两家医院接诊的重症比例、年龄构成、合并症情况可能不同，这些会同时推高并发症率与手术难度。",
+          "说明需要什么才可比：按病情严重程度分层比较，并给出区间而不是只看两个点估计。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "base-rate-neglect",
+            "why": "只看两个比率的大小，不看各自的分母规模与由此带来的波动。"
+          },
+          {
+            "errorType": "hasty-generalization",
+            "why": "由 40 台这一小批手术的结果推广到该院整体水平。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "把并发症率差异直接归因于医院技术水平，忽略了病情构成这个混淆变量。"
+          }
+        ],
+        "takeaway": "比较两个百分比之前，先把它们背后的例数和分母差异摆出来。"
+      },
+      "reviewTags": [
+        "样本量",
+        "比率与例数",
+        "混淆变量"
+      ],
+      "provenance": "原创题，例数与概率由编写者核算（1,200×2%=24 例、40×5%=2 例，真实率 2% 时 40 台不少于 2 例的概率约 19%）。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-sta-006",
+      "version": 1,
+      "category": "statistical-intuition",
+      "knowledgePoints": [
+        "survivorship-bias",
+        "average-vs-distribution",
+        "sample-size"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 160,
+      "format": "short-answer",
+      "stem": "一款 App 首月收到 2,000 条评价，平均分 3.4 星。第二个月商店改成只有注册满 7 天且有消费记录的用户才能评价，评价数降到 120 条，平均分升到 4.6 星。运营会上有人说：“改版让用户体验提升了 1.2 星。”请用两三句话指出这个说法的问题。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "指出两个平均数的人群口径不同",
+            "keywords": [
+              "口径",
+              "人群"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "指出平均数掩盖了分布",
+            "keywords": [
+              "分布",
+              "平均数"
+            ],
+            "weight": 2,
+            "required": false
+          },
+          {
+            "id": "c3",
+            "label": "提出同口径分组对照",
+            "keywords": [
+              "对照",
+              "自我选择"
+            ],
+            "weight": 2,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "3.4 星与 4.6 星来自不同人群，不能直接相减成体验提升了 1.2 星。第一，评价者口径变了：改版后只有注册满七天且有消费记录的人能写评价，这批人本来就更容易满意，120 条与 2000 条统计的不是同一群用户，愿意评价本身也是一种自我选择。第二，平均数掩盖了分布：应当看各星级的人数，确认差评是消失还是仅仅被挡在门外。第三，要判断改版的影响，需要在改版前后用同一口径、同一人群分组对照，再看分布差异，才能把 1.2 星中属于体验改善的部分与属于谁在评价的部分分开。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "改版同时改变了谁能评价，等于换了统计人群；1.2 星的差距里混着筛选效应，不能整块算作体验提升。",
+        "steps": [
+          "先算量级变化：评价数从 2,000 条降到 120 条，只剩 120÷2,000 = 6% 的规模。",
+          "指出分母换了：新规则筛掉注册用户与无消费记录者，这两类人通常体验较差，因此 4.6 星的条件人群与 3.4 星不同。",
+          "指出平均数的局限：3.4 与 4.6 都是单一集中趋势，看不到一星占比是否被截断；分布形态才反映体验构成。",
+          "给出可比做法：把改版前后都限定为“注册满 7 天且有消费记录”的人群重新计算平均分，并分别报告各星级的占比。",
+          "补充一个可核对的数字：若 120 条平均分 4.6，则总星数约为 120×4.6 = 552，与 2,000×3.4 = 6,800 相比，星数总量下降主要来自评价人数减少。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "base-rate-neglect",
+            "why": "忽略能评价的人群在总体中只占一小部分，直接把两次的平均分对齐比较。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "把“改版之后分数升高”写成“改版使体验升高”，跳过了筛选效应这一替代解释。"
+          },
+          {
+            "errorType": "equivocation",
+            "why": "把“平均分变化”与“用户体验变化”当成同一件事，1.2 星这个数字的含义在两处并不相同。"
+          }
+        ],
+        "takeaway": "规则改动前后对比任何平均值，都要先确认统计的是同一群人。"
+      },
+      "reviewTags": [
+        "幸存者偏差",
+        "口径变化",
+        "消费评价"
+      ],
+      "provenance": "原创题，场景取自应用商店评价规则改版，120÷2,000=6% 与星数总量估算均由编写者核算。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-sta-007",
+      "version": 1,
+      "category": "statistical-intuition",
+      "knowledgePoints": [
+        "average-vs-distribution",
+        "survivorship-bias",
+        "sample-size"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 100,
+      "format": "ordering",
+      "stem": "某招聘页面写着“本岗位在职人员平均月薪 15,000 元”，数据来自平台上 300 条在职者自报薪资。你要判断这个数字能否代表一份普通工作的收入。请按最合理的先后顺序排列核查步骤。",
+      "items": [
+        {
+          "key": "w1",
+          "text": "确认“平均月薪”的口径：是否含奖金与补贴、是税前还是税后、按多少人计算"
+        },
+        {
+          "key": "w2",
+          "text": "查清这 300 条自报数据的来源：谁愿意报、谁没有报，在职者与离职者是否被排除"
+        },
+        {
+          "key": "w3",
+          "text": "索取分布而不止平均数：看 25%、50%、75% 分位数以及薪资的最高与最低值"
+        },
+        {
+          "key": "w4",
+          "text": "与独立来源对照：查同城市同岗位公开发布的薪资中位数区间"
+        },
+        {
+          "key": "w5",
+          "text": "给出暂时结论：说明 15,000 元这个数最多能支持到哪一步，还有哪些不确定"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "w1",
+          "w2",
+          "w3",
+          "w4",
+          "w5"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "核查顺序要按依赖关系来：先固定定义，再弄清样本是谁，再看分布形态，然后与外部独立数据比较，最后才收敛结论。",
+        "steps": [
+          "口径不固定时，含不含奖金的两个平均数无法比较，所以第一步必须是定义核对。",
+          "自报薪资存在双重筛选：愿意填的人与仍在岗的人都不代表全体，这一步决定后面所有解释。",
+          "平均数会被少数高薪拉高，因此需要分位数与中位数才能判断 15,000 元是不是典型收入。",
+          "独立来源的作用是提供不受同一筛选机制影响的对照，缺了它只能就数据论数据。",
+          "最后一步把结论强度写清楚，并保留仍未解决的不确定项。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过样本来源直接进入计算，会让精确的分位数建立在有偏的 300 条自报数据上。"
+          },
+          {
+            "errorType": "base-rate-neglect",
+            "why": "不查总体中在职者与离职者的构成，就难以判断样本代表性，容易把局部人群当整体。"
+          }
+        ],
+        "takeaway": "核查一个宣传用的平均数：先问口径，再问谁被统计进去，最后问分布长什么样。"
+      },
+      "reviewTags": [
+        "平均数与分布",
+        "幸存者偏差",
+        "招聘数据"
+      ],
+      "provenance": "原创题，场景取自招聘页面的薪资宣传，用于训练把统计口径核查排成有依赖顺序的步骤。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-sta-008",
+      "version": 1,
+      "category": "statistical-intuition",
+      "knowledgePoints": [
+        "base-rate",
+        "survivorship-bias",
+        "conditional-probability"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 180,
+      "format": "open-response",
+      "stem": "一家求职训练营宣传：“报名的 50 名学员中，45 人在三个月内拿到录用通知，成功率 90%；而同专业应届毕业生平均落实率只有 40%。”请评价这段宣传：90% 与 40% 这两个数字能比吗？你还想知道哪些信息？",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "接受宣传",
+            "criteria": "认为 90% 与 40% 的差距已经证明训练营有效。"
+          },
+          {
+            "score": 1,
+            "label": "仅表怀疑",
+            "criteria": "感觉宣传夸大，但说不出比较中的具体问题在哪。"
+          },
+          {
+            "score": 2,
+            "label": "指出分母与定义不同",
+            "criteria": "能说明 50 名学员是自我选择的群体，两个 40% 与 90% 统计的不是同一件事。"
+          },
+          {
+            "score": 3,
+            "label": "补出关键的口径缺口",
+            "criteria": "进一步追问三个月内未坚持完成、中途退出或未被计入统计的人有多少。"
+          },
+          {
+            "score": 4,
+            "label": "给出可比的验证方案",
+            "criteria": "还能提出按报名时背景分层、以同类人群同期落实率为基线的可比方案，并写明自己的不确定处。"
+          }
+        ],
+        "guidance": "先分别说清 90% 与 40% 的分子与分母，再列出退出者去了哪里，最后设计一个能同口径比较的方案并标注剩余不确定。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "45÷50 = 90% 与全体毕业生 40% 的落实率是两个不同群体的条件概率；再加上报名筛选与中途退出，三处口径都不一致。",
+        "steps": [
+          "核对算出的部分：45÷50 = 0.9，即 90%，其中未拿到通知的是 5 人，50−45 = 5。",
+          "比较两个分母：90% 的分母是主动报名训练营的人，40% 的分母是同专业全体毕业生，前者经过求职意愿与经济条件的双重筛选。",
+          "检查时间条件：一个是“报名后三个月内”，一个是毕业季平均落实率，两个条件概率的时间窗口不同。",
+          "追查看不见的样本：是否有报名后退费、缺席或未完成的人被排除在 50 人之外，这是典型的幸存者偏差位置。",
+          "给出可比方案：把学员按学历背景、实习经历、目标城市分层，与同层毕业生在相同时间窗内的落实率比较，并同时报告总报名人数与最终计入统计的人数。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "base-rate-neglect",
+            "why": "用 90% 的亮眼比例压过 40% 的总体基线，却忽略两个比例的群体基础并不相同。"
+          },
+          {
+            "errorType": "hasty-generalization",
+            "why": "由 50 人的样本推广到该方法对任何毕业生都有效。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "从落实率差异直接跳到“训练营造成了这份提高”，省略了自选择与退出者的处理。"
+          }
+        ],
+        "takeaway": "两个百分比比较前，先把各自的分子、分母和时间窗口写在纸上。"
+      },
+      "reviewTags": [
+        "基础概率",
+        "条件概率",
+        "教育产品宣传",
+        "开放题"
+      ],
+      "provenance": "原创题，场景取自求职训练营的宣传话术，45÷50=90% 与 50−45=5 由编写者核对，量表按回答层级设计供自评使用。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    }
+  ]
+}

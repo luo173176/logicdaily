@@ -1,0 +1,629 @@
+{
+  "schemaVersion": 1,
+  "category": "causal-reasoning",
+  "exercises": [
+    {
+      "id": "ex-cau-001",
+      "version": 1,
+      "category": "causal-reasoning",
+      "knowledgePoints": [
+        "common-cause",
+        "causal-mechanism"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 55,
+      "format": "single-choice",
+      "stem": "某健康栏目引用一项调查：连续一年每天喝酸奶的成年人每年平均报告感冒 1.2 次，不喝酸奶的成年人平均 2.4 次。栏目据此写道“喝酸奶能预防感冒”。下列哪项最准确地指出了这个推论的问题？",
+      "options": [
+        {
+          "key": "A",
+          "text": "两组人本来就是习惯不同的群体，喝酸奶的人可能同时保持着其他更利于减少感冒的习惯，调查没有排除这些差别"
+        },
+        {
+          "key": "B",
+          "text": "1.2 次确实比 2.4 次少，所以结论只是话说得短了些，推理方向没有问题",
+          "errorType": "correlation-as-causation",
+          "reason": "把两组数字之间的差异直接当成因果效应"
+        },
+        {
+          "key": "C",
+          "text": "只要再核对一次喝酸奶者的感冒次数是不是真的 1.2 次，就足以证明栏目的结论",
+          "errorType": "missing-reasoning-step",
+          "reason": "确认数字准确并不能补上从差异到因果的中间环节"
+        },
+        {
+          "key": "D",
+          "text": "方向肯定被写反了：是不容易感冒的人才愿意每天喝酸奶",
+          "errorType": "conclusion-overreach",
+          "reason": "在没有证据的情况下断言因果方向必然相反"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "调查只给出两组人的结果差异，并没有给出把差异归到酸奶身上的机制，也没有排除“生活习惯更好”这一共同原因。",
+        "steps": [
+          "先记录事实：喝酸奶组平均 1.2 次，不喝组平均 2.4 次，两组差异存在。",
+          "把可能的解释列全：酸奶真的起作用；两组人在饮食、运动、就医、洗手等习惯上本就不同；样本自我选择造成的差别。",
+          "指出共同原因的作用：健康习惯同时影响是否喝酸奶和是否感冒，于是两组差异可以在酸奶无效的情况下出现。",
+          "说明需要什么才能定因果：能说明酸奶如何改变免疫指标的机制证据，或者随机分配喝与不喝的对照实验。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "correlation-as-causation",
+            "why": "两组均值之差只说明差异存在，不说明差异的原因，直接把差异当效应是混淆相关与因果。"
+          },
+          {
+            "option": "C",
+            "errorType": "missing-reasoning-step",
+            "why": "核实 1.2 次只是把前提坐实，从“少感冒”到“因为酸奶”中间还缺排除共同原因这一步。"
+          },
+          {
+            "option": "D",
+            "errorType": "conclusion-overreach",
+            "why": "因果倒置只是一种可能，题目没有给出任何证据支持把它当成确定方向。"
+          }
+        ],
+        "takeaway": "看到“A 组比 B 组结果更好”，先问两组人除了 A 之外还有哪里不一样。"
+      },
+      "reviewTags": [
+        "共同原因",
+        "因果机制",
+        "健康新闻"
+      ],
+      "provenance": "原创题，场景取自健康类调查报道的常见表述，用于训练识别共同原因造成的组间差异。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cau-002",
+      "version": 1,
+      "category": "causal-reasoning",
+      "knowledgePoints": [
+        "confounder",
+        "causal-mechanism"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 70,
+      "format": "single-choice",
+      "stem": "一家学习机厂商宣传：报名暑期班的 200 名学生数学平均提高 12 分，其中 150 人在同期另外请了家教。要让“是学习机让学生提高了 12 分”这个说法站得住，最需要补充下列哪一项？",
+      "options": [
+        {
+          "key": "A",
+          "text": "一组基础相当、同期既没请家教也没用学习机的学生的同阶段成绩变化"
+        },
+        {
+          "key": "B",
+          "text": "150 人另请家教说明干预强度已经足够，不需要再设对照",
+          "errorType": "premise-misidentification",
+          "reason": "把干预强度当成可以省掉对照的理由"
+        },
+        {
+          "key": "C",
+          "text": "把 12 分说成家教与学习机共同作用的结果，宣传就完整了",
+          "errorType": "missing-reasoning-step",
+          "reason": "没有任何拆分依据就把效果在两个因素之间分配"
+        },
+        {
+          "key": "D",
+          "text": "平均提高 12 分，说明这 200 名学生每人至少提高了 12 分",
+          "errorType": "equivocation",
+          "reason": "把平均数偷换成了对每一个个体的断言"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "150 人同时请家教，使家教成为与学习机共存的混淆变量；不引入可比的对照组，就无法判断这 12 分该归给谁。",
+        "steps": [
+          "写出观察：200 人平均提高 12 分，其中 75% 同期另请家教。",
+          "识别混淆变量：家教与学习机同时施加在多数人身上，两者的效果在数据里混在一起。",
+          "确定缺什么：需要同基础、同阶段、既无家教也无学习机的对照变化量，才能把 12 分中的自然进步与真实增益分开。",
+          "排除错误做法：把 12 分随意分成两份没有依据；把平均数读成人人提高 12 分则偷换了概念。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "premise-misidentification",
+            "why": "样本规模与干预强度都不解决归因问题，真正缺的是可比对照。"
+          },
+          {
+            "option": "C",
+            "errorType": "missing-reasoning-step",
+            "why": "在没有对照的情况下，任何把效果在两因素之间分配的说法都是凭空补的一步。"
+          },
+          {
+            "option": "D",
+            "errorType": "equivocation",
+            "why": "平均数描述整体水平，个别人可能提高很多、有人反而下降。"
+          }
+        ],
+        "takeaway": "两种干预同时施加时，先找只施加一种或都不施加的可比人群，再谈功劳归谁。"
+      },
+      "reviewTags": [
+        "混淆变量",
+        "教育产品宣传",
+        "对照"
+      ],
+      "provenance": "原创题，场景取自学习硬件的广告话术，用于训练识别同时施加的混淆变量。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cau-003",
+      "version": 1,
+      "category": "causal-reasoning",
+      "knowledgePoints": [
+        "confounder",
+        "common-cause",
+        "causal-mechanism"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 110,
+      "format": "multi-choice",
+      "stem": "某公司 3 月上线付费会员制，4 月会员用户复购率为 46%，非会员为 28%。同一时期，公司把满减优惠券只发放给会员。关于“会员制提高了复购率”，下列哪些说法是站得住的？（选出所有正确的）",
+      "options": [
+        {
+          "key": "A",
+          "text": "46% 与 28% 的差距可能来自只有会员能领优惠券，而不是会员身份本身"
+        },
+        {
+          "key": "B",
+          "text": "上线会员制在前、复购率升高在后，因此会员制一定提高了复购率",
+          "errorType": "correlation-as-causation",
+          "reason": "由时间先后与共变直接断定因果"
+        },
+        {
+          "key": "C",
+          "text": "要判断会员制本身的作用，应比较领券条件相同的会员与非会员"
+        },
+        {
+          "key": "D",
+          "text": "把 4 月会员的 46% 与 3 月全体用户的复购率相减，就能算出会员制造出的增量",
+          "errorType": "missing-reasoning-step",
+          "reason": "跨人群跨时间的两个数直接相减缺少可比性这一环"
+        },
+        {
+          "key": "E",
+          "text": "这两个数字至少说明：在 4 月的记录里，会员与非会员的复购表现不同，至于原因还需另查"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A",
+          "C",
+          "E"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "优惠券只发给会员，是一个与“是否会员”完全同向的混淆变量；描述性差距可以承认，因果结论必须先处理它。",
+        "steps": [
+          "记下三个事实：3 月上线会员制；4 月会员 46%、非会员 28%；优惠券只给会员。",
+          "把优惠券看成同时改变的因素：它既能提高复购，又与会员身份重合，所以 18 个百分点的差距无法直接归给会员制。",
+          "确定可比较的做法：把领券条件对齐（都领过或都没领），再比较会员与非会员。",
+          "分清描述与因果：A、C、E 都停在“差距存在但原因待查”或“怎样才可比”，B、D 则直接给出了没有依据的因果量。",
+          "指出 D 的另一处问题：3 月全体用户的复购率混合了后来成为会员的人，跨月跨人群相减不等于增量。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "correlation-as-causation",
+            "why": "先后与共变是必要观察，但存在优惠券这一同期变化时不能直接说“一定”。"
+          },
+          {
+            "option": "D",
+            "errorType": "missing-reasoning-step",
+            "why": "两个不可比的百分比相减之前，还需要人群对齐与时间对齐这两步。"
+          }
+        ],
+        "takeaway": "一项福利只给某类人时，这类人与其他类的差别就不再只属于那个标签。"
+      },
+      "reviewTags": [
+        "混淆变量",
+        "公司报表",
+        "描述与因果"
+      ],
+      "provenance": "原创题，场景来自电商会员制复盘数据，用于训练区分描述性差距与因果增量。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cau-004",
+      "version": 1,
+      "category": "causal-reasoning",
+      "knowledgePoints": [
+        "confounder",
+        "common-cause"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "format": "true-false",
+      "stem": "A 市去年 9 月起在中心城区推行“工作日早晚高峰地铁延长 5 分钟”，当年 12 月公交准点率从 71% 升到 79%。已知同期该市在同一批路段新建了公交专用道，而公交专用道本身就能明显提升公交准点率。据此，“地铁延时政策带来了公交准点率上升”这一说法被削弱了。",
+      "answer": {
+        "value": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "同期出现了另一个已知能提高准点率的原因，替代解释变强，原因果说法的可靠性因此下降，这就是被削弱。",
+        "steps": [
+          "确认原论证结构：政策在 9 月实施，指标在 12 月上升，于是归因于政策。",
+          "补入新信息：同一批路段新建了公交专用道，且专用道对口指标有直接作用。",
+          "比较两条路径：专用道直接改变公交行驶条件，地铁延时与公交准点率之间还需要额外环节。",
+          "加上时间因素：9 月到 12 月跨越季节变化，本身就是竞争性解释。",
+          "得出结论：新增同期原因使原说法更不可靠，因此“被削弱”为真；要说清各自贡献需要分路段对照。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "correlation-as-causation",
+            "why": "只按“政策在前、指标在后”的时间顺序归因，会认为补充信息不影响结论。"
+          },
+          {
+            "errorType": "insufficient-evidence",
+            "why": "在已存在另一个已知原因的情况下仍坚持唯一归因，证据不足以排除替代解释。"
+          }
+        ],
+        "takeaway": "评估政策效果时，同一时间同一地点发生的其他变化同样要计入解释。"
+      },
+      "reviewTags": [
+        "城市政策",
+        "替代解释",
+        "混淆变量"
+      ],
+      "provenance": "原创题，场景取自城市交通政策的成效宣传，用于训练识别同期竞争性原因。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cau-005",
+      "version": 1,
+      "category": "causal-reasoning",
+      "knowledgePoints": [
+        "causal-mechanism",
+        "confounder",
+        "common-cause"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 130,
+      "format": "short-answer",
+      "stem": "一款记忆枕的电商页面显示：8,000 条评价中有 72% 提到“颈椎酸痛减轻”。厂家宣称这证明枕头通过改善睡姿缓解了颈椎疼痛。请用两三句话说明这个论证里最缺的是什么。",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "缺少机制链条的证据",
+            "keywords": [
+              "机制",
+              "中间指标"
+            ],
+            "weight": 3,
+            "required": false
+          },
+          {
+            "id": "c2",
+            "label": "缺少对照与自发缓解的考虑",
+            "keywords": [
+              "对照",
+              "自然缓解"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "指出评价人群存在自我选择",
+            "keywords": [
+              "自我选择",
+              "写评价"
+            ],
+            "weight": 2,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "这条宣传缺了三环。第一，缺少机制证据：要说清枕头如何改变睡姿、睡姿改变又如何减轻酸痛，需要能记录姿势的中间指标，而不是只引用评价文本。第二，缺少对照：颈椎酸痛本身会随时间自然缓解，也可能因同期热敷、运动或就医而减轻，没有对照组就分不清这些解释。第三，评价人群存在自我选择：会去写评价的多是感觉有效的人，72% 只是评价文本里的比例，不是所有使用者的缓解率。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "72% 是“愿意写评价的人”中的比例，不是使用者的缓解率；宣称中的机制链条也从未被测量。",
+        "steps": [
+          "先算清分母：8,000 条中有 72% 提到酸痛减轻，即约 5,760 条评价文本，而购买者总数与未写评价者数量都不知道。",
+          "补出机制要求：宣称里含有“枕头改变睡姿”和“睡姿改变减轻酸痛”两个环节，需要姿势测量与疼痛评分两处独立证据。",
+          "列出替代解释：酸痛的自然缓解、同期其他护理、期望效应（买了贵枕头的人更愿意报告好转）。",
+          "说明怎样区分：随机分组或至少与同期未换枕头的人群比较，并记录使用前后的疼痛评分变化幅度。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "base-rate-neglect",
+            "why": "只看提到缓解的评价比例，不看购买者中有多少根本没写评价、酸痛本身多久会自行缓解。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "把“用了枕头”与“酸痛减轻”同时出现直接写成枕头导致减轻。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "从评价文本跳到“通过改善睡姿缓解疼痛”这样带机制的确定结论。"
+          }
+        ],
+        "takeaway": "评价类数据先问两件事：分母是谁，以及宣称的中间环节有没有被测量。"
+      },
+      "reviewTags": [
+        "消费评价",
+        "因果机制",
+        "自我选择"
+      ],
+      "provenance": "原创题，场景取自电商商品页的评价话术，用于训练拆解带机制的因果宣称。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cau-006",
+      "version": 1,
+      "category": "causal-reasoning",
+      "knowledgePoints": [
+        "causal-mechanism",
+        "confounder",
+        "common-cause"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 90,
+      "format": "ordering",
+      "stem": "运营会上有人说：“改版首页那天之后，下单转化率从 2.1% 涨到 2.8%，就是改版带来的。”你要检验这个因果判断。请按最合理的先后顺序排列下列步骤。",
+      "items": [
+        {
+          "key": "t1",
+          "text": "确认 2.1% 与 2.8% 的分子分母定义和统计时间段是否一致"
+        },
+        {
+          "key": "t2",
+          "text": "查清改版生效的具体日期，并画出逐日转化率曲线"
+        },
+        {
+          "key": "t3",
+          "text": "列出同期可能同时改变转化率的其他因素，例如投放渠道、价格、促销活动、竞品状况"
+        },
+        {
+          "key": "t4",
+          "text": "设计可比对照，例如把未看到新首页的流量单独分桶，或按渠道分别比较改版前后"
+        },
+        {
+          "key": "t5",
+          "text": "比较各解释给出的不同预测，写出暂时结论并标注仍不确定的部分"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "t1",
+          "t2",
+          "t3",
+          "t4",
+          "t5"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "检验一个归因结论的顺序是：先统一口径，再看时间线，再枚举竞争原因，再构造对照，最后按预测差异定结论。",
+        "steps": [
+          "口径不一致时两个百分比没有可比性，所以定义核对必须放在第一步。",
+          "逐日曲线能显示上升是从改版当天开始、还是改版前早已开始，这一步先于任何归因。",
+          "只有列出同期的其他变化，才知道对照要控制什么。",
+          "对照设计的目的是让改版这个因素能与其他因素分开变化，一次只改变它。",
+          "最后用“不同解释预测不同结果”来收敛结论，并保留不确定部分。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过口径与时间线直接做对照，等于在没有确认差异真实存在之前就去找原因。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "把“改版之后上升”这一步直接当成结论，就会省略后面的对照设计。"
+          }
+        ],
+        "takeaway": "归因前先完成三步：数字可比、时间对齐、竞争原因列全。"
+      },
+      "reviewTags": [
+        "因果归因",
+        "步骤顺序",
+        "公司报表"
+      ],
+      "provenance": "原创题，场景来自互联网运营复盘会，用于训练把因果检验拆成有依赖顺序的步骤。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cau-007",
+      "version": 1,
+      "category": "causal-reasoning",
+      "knowledgePoints": [
+        "reverse-causation",
+        "common-cause",
+        "confounder"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 180,
+      "format": "open-response",
+      "stem": "一则新闻写道：“一项大型调查发现，有喝无糖饮料习惯的人体重指数平均高出 8%，可见无糖饮料让人发胖。”请评价这个说法：你能想到哪几种同样能说明这 8% 差异的因果解释？你更倾向哪一种，需要什么证据来区分？",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "直接接受",
+            "criteria": "认为新闻的因果结论成立，不需要再补充任何信息。"
+          },
+          {
+            "score": 1,
+            "label": "只表示怀疑",
+            "criteria": "觉得这个说法太武断，但说不出问题具体出在哪一步。"
+          },
+          {
+            "score": 2,
+            "label": "给出至少两种解释",
+            "criteria": "能写出因果倒置、共同原因（如整体饮食或体重管理需求）等至少两种相容解释。"
+          },
+          {
+            "score": 3,
+            "label": "指出指标口径问题",
+            "criteria": "还能说明体重指数高出 8% 是相对差还是绝对差、分组依据是否可靠，并把口径疑点写清楚。"
+          },
+          {
+            "score": 4,
+            "label": "设计出可区分的证据",
+            "criteria": "进一步提出能区分上述解释的观察或实验，并交代自己最倾向哪种解释及其理由。"
+          }
+        ],
+        "guidance": "先按“同一条数据可有多种因果方向”列出至少两种解释，再检查 8% 这个指标怎么算出来的，最后写出一个能让不同解释给出不同预测的证据。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "同一体重差异至少容纳四种因果结构：饮料致胖、体重高者更依赖无糖饮料、两者被生活习惯共同推动、以及分组与口径造成的假差异。",
+        "steps": [
+          "写出观察事实：喝无糖饮料习惯者与不喝者的体重指数平均相差 8%。",
+          "解释一（正向因果）：无糖饮料影响食欲或代谢，从而推高体重。",
+          "解释二（因果倒置）：已经在控制体重的人更倾向换成无糖饮料，是体重状态改变了饮料选择。",
+          "解释三（共同原因）：整体饮食模式、含糖饮料总摄入量替换、体力活动水平同时决定两者。",
+          "解释四（口径与分组）：体重指数的相对差 8% 未说明绝对值，习惯分组靠自我报告，可能把偶尔饮用者归入习惯组。",
+          "给出区分办法：随机分配饮用者的干预试验；或纵向追踪，比较体重变化在前还是饮料更换在前；或控制总体饮食质量后再看组间差异是否仍在。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "correlation-as-causation",
+            "why": "把两组间的一次性差异直接读成饮料的效果。"
+          },
+          {
+            "errorType": "false-dilemma",
+            "why": "只在“饮料让人发胖”和“完全无关”之间二选一，忽略了共同原因与口径问题。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "由横断面调查跳到“可见”这种确定因果表述，超出了证据能支持的范围。"
+          }
+        ],
+        "takeaway": "同一组相关数据可以容纳多个因果方向，列出方向比急于选一个更重要。"
+      },
+      "reviewTags": [
+        "因果倒置",
+        "共同原因",
+        "健康新闻",
+        "开放题"
+      ],
+      "provenance": "原创题，场景取自营养流行病学的媒体报道，量表按回答层级设计，供自评与可选的模型反馈使用。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-cau-008",
+      "version": 1,
+      "category": "causal-reasoning",
+      "knowledgePoints": [
+        "reverse-causation",
+        "causal-mechanism"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 75,
+      "format": "single-choice",
+      "stem": "一家医院统计发现，手术中输入血量越多的病人，术后 30 天内死亡的比例越高。有人据此建议：“为降低死亡率，应当限制手术输血。”关于这个建议，下列哪项评价最准确？",
+      "options": [
+        {
+          "key": "A",
+          "text": "病情更重、出血更多的病人才需要更多输血，观察到的正相关很可能把因果方向弄反了"
+        },
+        {
+          "key": "B",
+          "text": "相关方向很明确，因此该建议应当直接采纳",
+          "errorType": "correlation-as-causation",
+          "reason": "把统计关联强度当成干预效果的依据"
+        },
+        {
+          "key": "C",
+          "text": "只要把输血量减少一半，术后死亡率就会下降一半",
+          "errorType": "conclusion-overreach",
+          "reason": "把观察到的关联当作可线性外推的剂量效应"
+        },
+        {
+          "key": "D",
+          "text": "问题出在样本量不够大，只要统计更多病人，这个建议就会成立",
+          "errorType": "premise-misidentification",
+          "reason": "把归因方向的问题误认成样本规模的问题"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "输血是随病情严重程度分配的，不是随机施加的；因此“输血多者死亡率高”更可能是病情决定了两个变量。",
+        "steps": [
+          "写出观察：输血量越高，术后 30 天死亡比例越高，这是一个正向关联。",
+          "追问谁决定输血量：出血量大、手术复杂、病情重的病人才被输入更多血。",
+          "识别因果结构：病情同时导致“多输血”和“高死亡风险”，输血与死亡之间只是被共同原因连起来。",
+          "评估干预含义：按观察关联去减少输血，等于把重症病人的必要处置也削减，风险反而上升；要判断输血的效果，需要在病情程度相同的病人内部比较。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "correlation-as-causation",
+            "why": "关联的方向与强度都不能说明移除原因变量后结果会怎样变化。"
+          },
+          {
+            "option": "C",
+            "errorType": "conclusion-overreach",
+            "why": "观察数据里的关联不是剂量效应曲线，减半外推没有任何依据。"
+          },
+          {
+            "option": "D",
+            "errorType": "premise-misidentification",
+            "why": "扩大样本能缩小估计误差，却不会改变“病情同时决定两者”这一结构性问题。"
+          }
+        ],
+        "takeaway": "要评估“减少 X 会不会让 Y 变好”，先问是谁在决定 X。"
+      },
+      "reviewTags": [
+        "因果倒置",
+        "共同原因",
+        "医疗数据"
+      ],
+      "provenance": "原创题，场景取自医院手术质量统计的解读争议，用于训练区分治疗关联与治疗效果。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    }
+  ]
+}

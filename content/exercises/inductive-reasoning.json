@@ -1,0 +1,657 @@
+{
+  "schemaVersion": 1,
+  "category": "inductive-reasoning",
+  "exercises": [
+    {
+      "id": "ex-ind-001",
+      "version": 1,
+      "category": "inductive-reasoning",
+      "knowledgePoints": [
+        "inductive-strength",
+        "sample-size"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 50,
+      "format": "single-choice",
+      "stem": "小赵在同一家网店一次买了两只同一批次的充电头，两周内两只都坏了，于是下结论：“这家店卖的充电头全都质量不合格。”下列哪项评价最准确？",
+      "options": [
+        {
+          "key": "A",
+          "text": "两只都坏，足以支持“全都不合格”这个结论",
+          "errorType": "hasty-generalization",
+          "reason": "把两个个案直接当成全店结论的证据"
+        },
+        {
+          "key": "B",
+          "text": "样本只有两只、又来自同一批次，既不多样也不独立，至多说明这一批可能有问题"
+        },
+        {
+          "key": "C",
+          "text": "两只都坏，说明这家店充电头的不合格率就是 100%",
+          "errorType": "conclusion-overreach",
+          "reason": "把两件的比例说成全店的比例"
+        },
+        {
+          "key": "D",
+          "text": "可以确定问题出在小赵自己的使用方式上",
+          "errorType": "insufficient-evidence",
+          "reason": "没有任何使用环节的信息就锁定了原因"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "同一批次的两只产品在工艺和来料上高度相关，不能当两个独立样本；“全都”是覆盖全店的全称结论，证据宽度远不够。",
+        "steps": [
+          "先确认结论范围：“这家店卖的充电头全都不合格”是关于全部库存的全称判断。",
+          "再确认样本：数量 2，且来自同一批次，二者共享同一生产工艺，失败原因很可能相同。",
+          "共享原因意味着这两个观察近似于一次观察，样本的多样性接近于零。",
+          "因此合理的归纳止步于“这一批可能有问题，值得向店铺和厂家核对该批次的整体反馈”。",
+          "A 与 C 都把范围从一批扩到全店；D 引入的前提（使用方式）在题目里根本没有信息。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "hasty-generalization",
+            "why": "两件坏样本数量小、又不具代表性，却直接支撑了全称结论。"
+          },
+          {
+            "option": "C",
+            "errorType": "conclusion-overreach",
+            "why": "2/2 只是这一只小样本里的比例，不能当成全店不合格率。"
+          },
+          {
+            "option": "D",
+            "errorType": "insufficient-evidence",
+            "why": "题目没给出任何使用场景信息，锁定用户原因是凭猜测。"
+          }
+        ],
+        "takeaway": "评估归纳结论时，先看它说了多大范围，再看样本是否覆盖了这个范围。"
+      },
+      "reviewTags": [
+        "归纳强度",
+        "样本代表性",
+        "消费决策"
+      ],
+      "provenance": "原创题，场景取自网购数码配件后的差评经历，用于训练评估个案归纳的证据宽度。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ind-002",
+      "version": 1,
+      "category": "inductive-reasoning",
+      "knowledgePoints": [
+        "inductive-strength",
+        "sample-size"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 75,
+      "format": "single-choice",
+      "context": "学生会做了一份关于图书馆开放时间的问卷。",
+      "stem": "学生会随机抽取 50 名大一新生询问“是否赞成延长图书馆开放时间”，48 人赞成，于是宣布“全校学生都需要延长开放时间”。下列哪项信息最能削弱这一推断？",
+      "options": [
+        {
+          "key": "A",
+          "text": "被抽中的 50 人里有 48 人表示赞成",
+          "errorType": "insufficient-evidence",
+          "reason": "样本量大但覆盖不到高年级，仍不足以支撑全校结论"
+        },
+        {
+          "key": "B",
+          "text": "大三、大四学生多数在校外实习，白天几乎不在学校"
+        },
+        {
+          "key": "C",
+          "text": "延长开放时间需要增加夜间安保和照明预算"
+        },
+        {
+          "key": "D",
+          "text": "抽样是随机进行的，所以这个样本一定代表全校",
+          "errorType": "conclusion-overreach",
+          "reason": "随机只能保证对被抽的那个人群有代表性"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "推断的问题不在人数而在覆盖范围：抽样框只包含大一新生，任何说明高年级与大一需求不同的信息都会直接削弱它。",
+        "steps": [
+          "找出结论的范围：全校学生；找出样本的范围：只有大一新生。",
+          "两者之间缺的前提是“大一新生与高年级学生对开放时间的需求相同”。",
+          "B 直接攻击这条前提：高年级多数在校外实习，几乎用不到夜间开放。",
+          "A 只是重复原有证据；C 谈的是成本，与“需要的人有多少”无关；D 误把随机当成覆盖全校。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "insufficient-evidence",
+            "why": "48/50 支持的是大一本群体的意见，对全校推断并不构成削弱，也不构成充分支持。"
+          },
+          {
+            "option": "D",
+            "errorType": "conclusion-overreach",
+            "why": "随机抽样只在抽样框内保证代表性，抽样框本身缺了高年级就无法外推。"
+          }
+        ],
+        "takeaway": "看到“调查结果显示大家……”，先比对结论范围与抽样范围是不是同一个。"
+      },
+      "reviewTags": [
+        "抽样代表性",
+        "归纳强度",
+        "校园场景"
+      ],
+      "provenance": "原创题，场景取自高校学生会的问卷公告，用于训练识别抽样框与结论范围不一致。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ind-003",
+      "version": 1,
+      "category": "inductive-reasoning",
+      "knowledgePoints": [
+        "analogical-reasoning",
+        "inductive-strength"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 45,
+      "format": "true-false",
+      "stem": "两家门店属于同一家连锁咖啡品牌、使用相同的豆子和供应链。有人说：“由此可以必然推出这两家门店的美式咖啡口味相同。”请判断这个说法是否正确。",
+      "answer": {
+        "value": false
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "相同品牌和供应链只是相关的相似点，类比至多提高某种可能，推不出“必然”；出杯还受设备校准、水质、店员和存放时间影响。",
+        "steps": [
+          "识别推理类型：由两家店在若干属性上相同，推出在另一个属性上也相同，属于类比推理。",
+          "类比强度取决于相似点与目标属性的相关程度，豆子与供应链确实相关，因此“口味接近”是有力的推测。",
+          "但磨粉刻度、萃取水温、水质硬度和出品间隔这些差异会明显改变口味，前提并未排除它们。",
+          "“必然推出”要求任何情况下都不可能出现例外，而这里显然能设想到口味不同的情形，所以该说法不成立。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "conclusion-overreach",
+            "why": "把类比给出的或然性说成了必然性。"
+          },
+          {
+            "errorType": "equivocation",
+            "why": "把“同品牌、同供应链”悄悄换成了“所有出品条件都相同”。"
+          }
+        ],
+        "takeaway": "类比只能回答“有多可能”，回答不了“是不是必然”。"
+      },
+      "reviewTags": [
+        "类比推理",
+        "必然与或然",
+        "消费场景"
+      ],
+      "provenance": "原创题，场景取自连锁咖啡门店的消费体验，针对类比结论被说成必然的常见错误。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ind-004",
+      "version": 1,
+      "category": "inductive-reasoning",
+      "knowledgePoints": [
+        "inductive-strength",
+        "variable-control",
+        "confounder"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 115,
+      "format": "multi-choice",
+      "context": "投放渠道、素材版本和站内页面这一段时间内都可能调整。",
+      "stem": "运营同事看到“换上新广告素材后，点击到注册的转化率在三天内从 4% 升到 6%”，就下结论：“是新素材带来了注册提升。”下列哪些做法能提高这个归纳结论的可靠性？（选出所有正确的）",
+      "options": [
+        {
+          "key": "A",
+          "text": "同期保留一组流量继续投放旧素材做对照，比较两组注册率"
+        },
+        {
+          "key": "B",
+          "text": "把观察窗口从三天延长到四周，看两组差异是否稳定存在"
+        },
+        {
+          "key": "C",
+          "text": "逐项核对同期是否有促销、节假日或渠道投放结构变化并予以排除"
+        },
+        {
+          "key": "D",
+          "text": "只呈现转化率最高的那一天数据，让结论看起来更明确",
+          "errorType": "ignoring-counterexample",
+          "reason": "只挑支持结论的样本，回避其余天数的表现"
+        },
+        {
+          "key": "E",
+          "text": "把结论改写成“用新素材必然提高注册率”，这样表述更清楚",
+          "errorType": "conclusion-overreach",
+          "reason": "把或然的归纳结论升级成必然规律"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "原结论是“时间上的共变所以是因果”，要加强它就要提供对照、扩大观察、并排除同期其他变化，而不是筛选数据或加强措辞。",
+        "steps": [
+          "把结论写成因果假设：素材更换（P）导致注册率上升（Q）。",
+          "A 提供同期对照：如果只有新素材那组上升，排除了大盘同步上行的解释。",
+          "B 延长窗口：三天差异可能是波动，四周稳定差异会显著提高归纳强度。",
+          "C 排除混淆因素：促销、节假日、渠道结构都可能同时改变点击人群构成。",
+          "D 减少而不是增加证据量，属于选择性报告；E 只改变措辞强度，不改变证据，两者都不影响结论的可靠性。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "D",
+            "errorType": "ignoring-counterexample",
+            "why": "隐藏其余天数等于回避可能推翻结论的观察。"
+          },
+          {
+            "option": "E",
+            "errorType": "conclusion-overreach",
+            "why": "措辞变强并不会让证据变多，结论的风险反而更大。"
+          }
+        ],
+        "takeaway": "想让一个归纳更可信，就增加能区分不同解释的观察，而不是修饰结论的语气。"
+      },
+      "reviewTags": [
+        "归纳强度",
+        "对照实验",
+        "工作协作"
+      ],
+      "provenance": "原创题，场景取自互联网运营例会的效果讨论，用于训练加强或削弱归纳结论的具体做法。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ind-005",
+      "version": 1,
+      "category": "inductive-reasoning",
+      "knowledgePoints": [
+        "inductive-strength",
+        "base-rate",
+        "spurious-correlation"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 140,
+      "format": "short-answer",
+      "stem": "一则新闻写道：“本市去年查处网络诈骗案件 120 起，比前年的 80 起增加五成，可见治安正在急剧恶化。”请用两三句话说明：要让这个归纳结论站住，还需要哪些信息？",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "指出统计口径可能变化",
+            "keywords": [
+              "口径",
+              "统计标准"
+            ],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "指出基数与总量的作用",
+            "keywords": [
+              "基数",
+              "总量"
+            ],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "给出另一种解释",
+            "keywords": [
+              "也可能是",
+              "另一种解释"
+            ],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c4",
+            "label": "提出可核对的数据",
+            "keywords": [
+              "报案量",
+              "破案率"
+            ],
+            "weight": 1,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.8,
+        "partialRatio": 0.5,
+        "modelAnswer": "先要确认统计口径有没有变：如果去年新增了线上报案通道或调整了诈骗的认定标准，查处数上升也可能只是记录更全。前年基数只有 80 起，增加 40 起看起来是五成，放在全市案件总量里未必算急剧恶化。也可能是破案率提高带来查处数上升，而实际发生的案件没有增加。要判断治安走势，应对照同期的报案量、立案数和受害人数。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“查处数增加”到“治安恶化”之间隔着口径、基数和方向三层问题：查处数同时受案件数量与执法力度影响，不能直接当治安水位。",
+        "steps": [
+          "把论证拆开：前年 80 起、去年 120 起（前提）→ 案件实际增多（隐含前提）→ 治安恶化（结论）。",
+          "第一处需要补的信息是口径：报案通道、认定标准、统计范围任一项变化都会改变数字。",
+          "第二处是基数与占比：40 起的绝对增量在五成比例下显得很大，但相对案件总量可能微不足道。",
+          "第三处是解释方向：破案率上升会让查处数增加而案件数减少，这与“恶化”给出完全相反的图景。",
+          "因此需要同期的报案量、立案数、受害人数作为对照数据，才能把几种解释区分开。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "insufficient-evidence",
+            "why": "只用一个指标的变化就推出整体状况的趋势。"
+          },
+          {
+            "errorType": "base-rate-neglect",
+            "why": "只看到百分比涨幅，忽略了两年基数都很小这一事实。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "把查处数与治安状况之间的相关直接当成单向因果。"
+          }
+        ],
+        "takeaway": "读到“数字涨了所以变坏了”，先查口径、基数，再问有没有反向解释。"
+      },
+      "reviewTags": [
+        "统计口径",
+        "新闻阅读",
+        "归纳评估"
+      ],
+      "provenance": "原创题，场景取自本地新闻对社会治安数据的报道，用于训练对统计类归纳结论补充所需信息。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ind-006",
+      "version": 1,
+      "category": "inductive-reasoning",
+      "knowledgePoints": [
+        "inductive-strength",
+        "dependency-order",
+        "common-cause"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 100,
+      "format": "ordering",
+      "stem": "妈妈说：“小区里几位每天散步的老人都很硬朗，可见散步能让人长寿。”你想认真检验这个说法。按最合理的先后顺序排列下列步骤。",
+      "items": [
+        {
+          "key": "s1",
+          "text": "写清“每天散步”和“硬朗、长寿”分别怎么测量，避免各说各话"
+        },
+        {
+          "key": "s2",
+          "text": "把观察对象从这几位邻居扩展到不同年龄、职业和居住条件的人群"
+        },
+        {
+          "key": "s3",
+          "text": "列出除散步外还可能同时影响寿命的因素，如饮食、慢性病、就医条件"
+        },
+        {
+          "key": "s4",
+          "text": "在尽量对齐这些因素的条件下，比较散步组与不散步组的差别"
+        },
+        {
+          "key": "s5",
+          "text": "专门寻找反例：长期散步但早逝、几乎不散步却高寿的人"
+        },
+        {
+          "key": "s6",
+          "text": "给出带不确定性说明的结论，写清样本量和混杂因素还限制了什么"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "s1",
+          "s2",
+          "s3",
+          "s4",
+          "s5",
+          "s6"
+        ]
+      },
+      "alternatives": [
+        {
+          "keys": [
+            "s1",
+            "s3",
+            "s2",
+            "s4",
+            "s5",
+            "s6"
+          ],
+          "note": "先列举混杂因素再扩大样本也说得通：知道要控制什么，扩展样本时就能顺带收集这些信息，只是可能多跑一趟。"
+        }
+      ],
+      "explanation": {
+        "summary": "检验一个生活经验式的归纳，顺序是：定义术语 → 扩大并多样化样本 → 枚举共同原因 → 控制后比较 → 主动找反例 → 带着不确定性下结论。",
+        "steps": [
+          "口径不固定，后面所有比较都没有共同标准，因此定义先行。",
+          "几位邻居的样本既不多样也不随机，扩展人群是提高归纳强度的第一步。",
+          "散步的人往往饮食规律、就医更方便，这些是典型的共同原因，必须先列出来。",
+          "列清楚之后才能在可比条件下分组，否则比较的是生活方式而不是散步。",
+          "反例检查放在结论之前，因为一个稳定的反例就能削弱“散步使人长寿”。",
+          "最后把结论写成有范围的判断，而不是把相关性说成确定的因果。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "ignoring-counterexample",
+            "why": "只收集支持说法的例子，不去找相反情形。"
+          },
+          {
+            "errorType": "correlation-as-causation",
+            "why": "跳过共同原因清单，直接宣布散步导致长寿。"
+          }
+        ],
+        "takeaway": "检验生活经验式的结论，先定口径再扩样本，最后专门去找反例。"
+      },
+      "reviewTags": [
+        "步骤顺序",
+        "归纳检验",
+        "家庭沟通"
+      ],
+      "provenance": "原创题，场景取自家人之间关于锻炼与长寿的日常争论，用于训练设计可执行的检验顺序。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ind-007",
+      "version": 1,
+      "category": "inductive-reasoning",
+      "knowledgePoints": [
+        "survivorship-bias",
+        "inductive-strength",
+        "correlation-scenarios"
+      ],
+      "difficulty": 4,
+      "estimatedSeconds": 110,
+      "format": "single-choice",
+      "stem": "一篇帖子写道：“我采访了 20 位创业成功的人，其中 15 位都辍过学，可见辍学是创业成功的重要原因。”下列哪项评价最准确？",
+      "options": [
+        {
+          "key": "A",
+          "text": "20 位成功者的样本量已经足够大，结论可信",
+          "errorType": "insufficient-evidence",
+          "reason": "只谈样本数量，忽略样本是怎么被挑出来的"
+        },
+        {
+          "key": "B",
+          "text": "采访对象全部从成功者里挑选，缺少同样辍学却没成功的人，样本存在系统性缺失"
+        },
+        {
+          "key": "C",
+          "text": "辍学与成功在这些人身上同时出现，说明辍学带来了成功",
+          "errorType": "correlation-as-causation",
+          "reason": "由共现直接跳到因果方向"
+        },
+        {
+          "key": "D",
+          "text": "只要再采访 20 位成功者核实一遍，就能确认这个结论",
+          "errorType": "ignoring-counterexample",
+          "reason": "重复同一种有偏抽样，仍然没有纳入失败者"
+        }
+      ],
+      "answer": {
+        "keys": [
+          "B"
+        ]
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "要判断辍学是否有助于成功，需要比较“辍学的人里有多少成功”；只采访成功者，等于把失败的那一半样本整体丢掉了。",
+        "steps": [
+          "先看结论要比较什么：辍学者与不辍学者的成功比例，或成功者与失败者的辍学比例。",
+          "帖子的样本只覆盖“已成功”这一格，辍学后创业失败的人根本进不了采访名单。",
+          "缺失的正是能推翻结论的那一类反例，因此扩大成功者样本也不会改变偏差。",
+          "另外，辍学可能与年龄、家庭支持、行业相关，即使差异真实也不等于它造成了成功。",
+          "所以最准确的评价是 B；A、D 把偏差样本当作证据，C 把共现当因果。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "A",
+            "errorType": "insufficient-evidence",
+            "why": "数量再多也补不上抽样方向造成的缺口。"
+          },
+          {
+            "option": "C",
+            "errorType": "correlation-as-causation",
+            "why": "共现至少还有四种解释，这里直接选定了一个方向。"
+          },
+          {
+            "option": "D",
+            "errorType": "ignoring-counterexample",
+            "why": "重复同一种有偏抽样只会加深偏差，不能代替缺失的失败者样本。"
+          },
+          {
+            "errorType": "appeal-to-majority",
+            "why": "拿“受访者里多数人都辍过学”当作辍学值得效仿的理由，人数多并不改变样本有偏。"
+          }
+        ],
+        "takeaway": "下归纳结论前，先问一句：看不见的那部分样本到哪里去了？"
+      },
+      "reviewTags": [
+        "幸存者偏差",
+        "样本缺失",
+        "阅读新闻"
+      ],
+      "provenance": "原创题，场景取自社交平台上的创业经验访谈帖，用于训练识别系统性样本缺失。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    },
+    {
+      "id": "ex-ind-008",
+      "version": 1,
+      "category": "inductive-reasoning",
+      "knowledgePoints": [
+        "inductive-strength",
+        "conclusion-identification",
+        "falsification"
+      ],
+      "difficulty": 5,
+      "estimatedSeconds": 175,
+      "format": "open-response",
+      "stem": "备考两周后你写下：“我做的 8 套历年真题里，错题几乎都集中在函数章节，所以这次考试我函数部分一定会失分。”请评价这段归纳：哪一部分站得住、哪一部分说过头了？你打算据此做什么、不做什么？",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "全盘接受或全盘否定",
+            "criteria": "要么立刻认定函数必然失分，要么认为这种统计毫无意义，不做任何后续安排。"
+          },
+          {
+            "score": 1,
+            "label": "只说样本太少",
+            "criteria": "指出 8 套题太少，但说不出这组数据究竟支持到什么程度。"
+          },
+          {
+            "score": 2,
+            "label": "分清结论强弱",
+            "criteria": "能说明“错题集中在函数”是可核对的事实，而“一定失分”把或然说成了必然。"
+          },
+          {
+            "score": 3,
+            "label": "补上遗漏的解释",
+            "criteria": "进一步提出别的可能：函数章节占比本身更高，或其他章节已经复习过、错不出更多。"
+          },
+          {
+            "score": 4,
+            "label": "设计可区分做法",
+            "criteria": "还能说出怎样验证，比如按章节统计错题率与题目占比、再做一套未做过的题，并写下时间投入的安排。"
+          }
+        ],
+        "guidance": "先分开事实与推测，再补出至少一个同样能解释现状的原因，最后给出一个能区分不同解释的验证动作。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "这段归纳的前半部分是可核对的观察，后半部分把它推成必然预测；而错题分布同时受各章题目占比和复习进度影响，需要按占比重新比较。",
+        "steps": [
+          "分离事实与结论：8 套题的错题分布是可点数的观察，“一定会失分”是关于未来单次考试的必然判断。",
+          "评估强度：8 套题不算小，但都是同一人自选题目，题量分配并不随机。",
+          "补充解释：如果函数章节在每套卷子里占比最高，错题集中是正常结果；也可能其他章节刚复习过。",
+          "构造可区分的数据：按章节统计“错题数／该章题数”得到失分率，而不是只数错题条数。",
+          "据此安排行动：把时间投给失分率最高且分值占比高的章节，而不是笼统地认定函数会失分。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "conclusion-overreach",
+            "why": "从“历史上集中在函数”跳到“这次一定失分”，跨越了或然到必然。"
+          },
+          {
+            "errorType": "base-rate-neglect",
+            "why": "只看错题条数，忽略了各章节在试卷中的题目占比。"
+          },
+          {
+            "errorType": "hasty-generalization",
+            "why": "用有限的自选练习推断一次正式考试的结果。"
+          }
+        ],
+        "takeaway": "把自己的错题统计当证据前，先把它换算成“每章的失分率”，再决定复习投向哪里。"
+      },
+      "reviewTags": [
+        "归纳评估",
+        "学习备考",
+        "开放题"
+      ],
+      "provenance": "原创题，场景取自考生刷真题后的自我总结，量表按从接受说法到设计验证的常见回答层级设计。",
+      "status": "validated",
+      "grading": {
+        "partialCredit": true,
+        "orderTolerance": 0.2
+      }
+    }
+  ]
+}

@@ -1,0 +1,518 @@
+{
+  "schemaVersion": 1,
+  "category": "counterexample-rebuttal",
+  "exercises": [
+    {
+      "id": "ex-cex-001",
+      "version": 1,
+      "category": "counterexample-rebuttal",
+      "knowledgePoints": ["counterexample-form", "falsification"],
+      "difficulty": 2,
+      "estimatedSeconds": 50,
+      "format": "single-choice",
+      "context": "版本质量争议。",
+      "stem": "有人主张：“所有通过回归测试的版本都不会出现闪退。”以下哪种情形如果确凿为真，构成对这一主张的反例？",
+      "options": [
+        {
+          "key": "A",
+          "text": "某个版本通过了回归测试，上线当天就出现闪退"
+        },
+        {
+          "key": "B",
+          "text": "某个版本没有通过回归测试，也没有出现闪退",
+          "errorType": "premise-misidentification",
+          "reason": "该情形不在主张所覆盖的范围内"
+        },
+        {
+          "key": "C",
+          "text": "某个版本没有通过回归测试，出现了闪退",
+          "errorType": "denying-antecedent",
+          "reason": "以为没过测试就该闪退才算数"
+        },
+        {
+          "key": "D",
+          "text": "有人说这个主张太绝对，但拿不出任何一个具体版本的情况",
+          "errorType": "insufficient-evidence",
+          "reason": "只有态度没有可用于判定的事实"
+        }
+      ],
+      "answer": { "keys": ["A"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "主张可写成“若通过回归测试，则不会闪退”。反例必须让前件成立而后件落空，也就是“通过了测试但仍然闪退”。",
+        "steps": [
+          "把全称主张翻译成条件式：P＝通过回归测试，Q＝不出现闪退，主张为 所有 P 都是 Q。",
+          "写出反例的形式：存在一个对象，满足 P 且不满足 Q。",
+          "逐项比对：A 是 P 且非 Q，符合；B 是非 P 且 Q，C 是非 P 且非 Q，两者都不在原主张的承诺范围内。",
+          "D 只是表达对绝对化措辞的不满，没有提供可核对的事实，因而削弱不了主张。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "premise-misidentification",
+            "why": "把“与主张无关的情形”误当成反驳材料，落点找错了。"
+          },
+          {
+            "option": "C",
+            "errorType": "denying-antecedent",
+            "why": "主张没说没通过测试就一定会闪退，这个例子与主张同真。"
+          },
+          {
+            "option": "D",
+            "errorType": "insufficient-evidence",
+            "why": "指出措辞绝对并不等于给出反例，削弱力度接近于零。"
+          }
+        ],
+        "takeaway": "要推翻“所有 P 都是 Q”，只需要找到一个 P 却不是 Q 的确凿事例。"
+      },
+      "reviewTags": ["反例形式", "全称主张", "版本质量"],
+      "provenance": "原创题，场景取自研发质量争论，用于训练反例的最小形式要求。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cex-002",
+      "version": 1,
+      "category": "counterexample-rebuttal",
+      "knowledgePoints": ["counterexample-form", "rebuttal-target", "straw-man"],
+      "difficulty": 3,
+      "estimatedSeconds": 70,
+      "format": "single-choice",
+      "context": "研发流程评审中的反驳练习。",
+      "stem": "同事主张：“只要需求文档写得够细，开发就不会返工。”你想反驳他，下列哪一项真正构成反例？",
+      "options": [
+        {
+          "key": "A",
+          "text": "有一份需求文档细到字段和接口级别，开发仍因理解偏差返工了"
+        },
+        {
+          "key": "B",
+          "text": "有些返工是需求中途变更造成的，跟文档细不细没有关系",
+          "errorType": "premise-misidentification",
+          "reason": "反驳的是“文档是唯一原因”这一对方没说过的版本"
+        },
+        {
+          "key": "C",
+          "text": "有个团队几乎不写需求文档，也很少返工",
+          "errorType": "denying-antecedent",
+          "reason": "用“不写文档也不返工”去推翻“写得细就不返工”"
+        },
+        {
+          "key": "D",
+          "text": "文档细不细难以客观衡量，所以这个说法没有讨论价值",
+          "errorType": "missing-reasoning-step",
+          "reason": "由难以度量跳到没有价值"
+        }
+      ],
+      "answer": { "keys": ["A"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "主张是“文档够细 → 不返工”。反例必须是“文档确实够细但仍返工”。B 攻击的是“文档是唯一原因”这一对方没说过的话，属于落点错位。",
+        "steps": [
+          "符号化：P＝文档写得够细，Q＝不返工，主张为 若 P 则 Q。",
+          "反例要求：给出 P 且非 Q 的实例，A 正是这种情形。",
+          "检查 B：返工另有原因，只说明 P 不是唯一条件；主张从未否认过其他原因存在，所以 B 反驳的是被夸大的版本。",
+          "检查 C 与 D：C 是 非P 且 Q，与主张相容；D 讨论的是可度量性，没有触及主张真假。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "premise-misidentification",
+            "why": "把对方的主张加强成“返工只由文档粗糙引起”，再推翻这个加强版。"
+          },
+          {
+            "option": "C",
+            "errorType": "denying-antecedent",
+            "why": "主张没有对“不写文档”的情形作任何承诺，因此它不算反证。"
+          },
+          {
+            "option": "D",
+            "errorType": "missing-reasoning-step",
+            "why": "从概念难界定直接跳到命题无意义，中间缺少论证环节。"
+          }
+        ],
+        "takeaway": "反驳前先照原话复述一遍主张，检查你的例子打的是不是这句话本身。"
+      },
+      "reviewTags": ["反驳落点", "稻草人", "条件主张"],
+      "provenance": "原创题，场景为需求评审争论，专门区分“真反例”与“打错对象的反例”。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cex-003",
+      "version": 1,
+      "category": "counterexample-rebuttal",
+      "knowledgePoints": ["counterexample-form", "rebuttal-target", "evidence-relevance"],
+      "difficulty": 4,
+      "estimatedSeconds": 90,
+      "format": "single-choice",
+      "context": "劳动合规制度执行情况核查。",
+      "stem": "制度写：“凡是单次加班超过 3 小时的员工，必须安排第二个工作日的调休。”工会想证明这条制度在实际执行中被违反，下列哪项是最直接的反例？",
+      "options": [
+        {
+          "key": "A",
+          "text": "抽查的考勤与排班记录显示，张某上周一次加班 4 小时，第二个工作日并未安排调休"
+        },
+        {
+          "key": "B",
+          "text": "李某加班 2 小时，第二个工作日没有调休",
+          "errorType": "premise-misidentification",
+          "reason": "该情形不满足制度设定的条件"
+        },
+        {
+          "key": "C",
+          "text": "王某加班 5 小时并安排了调休，但他认为时长太短、制度不合理",
+          "errorType": "equivocation",
+          "reason": "把制度是否合理与是否被违反混为一谈"
+        },
+        {
+          "key": "D",
+          "text": "多数部门都没严格执行这条制度，所以它形同虚设",
+          "errorType": "hasty-generalization",
+          "reason": "用未经核实的整体印象替换具体反例"
+        }
+      ],
+      "answer": { "keys": ["A"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "制度设定了条件（加班超过 3 小时）与要求（次一工作日调休）。被违反只有一种形式：条件满足而要求未落实，A 用可核对记录给出这一形式。",
+        "steps": [
+          "符号化：P＝单次加班超过 3 小时，Q＝第二个工作安排了调休，制度为 若 P 则 Q。",
+          "确定反例形式：需要 P 且非 Q，且事实要能被第三方核对，否则只是说法。",
+          "A 同时满足两点：加班 4 小时（P 成立）、次一工作日无调休（Q 不成立），并有考勤与排班记录支撑。",
+          "B 是 非P，制度未作规定；C 中制度已被执行，争议转到合理性；D 是未经核实的总体印象，需要先落到具体个案。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "B",
+            "errorType": "premise-misidentification",
+            "why": "把制度没管的情形当成违反制度的证据。"
+          },
+          {
+            "option": "C",
+            "errorType": "equivocation",
+            "why": "“执行了但不够好”与“没有按条文执行”是两件事，用词滑动就偏离了靶心。"
+          },
+          {
+            "option": "D",
+            "errorType": "hasty-generalization",
+            "why": "以整体印象作结论，仍要回到具体个案才能成立。"
+          }
+        ],
+        "takeaway": "证明一条规定被违反，就要交出“条件已满足、要求未落实”的可核对个案。"
+      },
+      "reviewTags": ["反例", "必须句式", "合规执行"],
+      "provenance": "原创题，场景为工会核查加班调休执行情况，训练把制度条文转成可违反形式。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cex-004",
+      "version": 1,
+      "category": "counterexample-rebuttal",
+      "knowledgePoints": ["counterexample-form", "implicit-premise", "rebuttal-target"],
+      "difficulty": 4,
+      "estimatedSeconds": 110,
+      "format": "multi-choice",
+      "context": "上线安全检查有效性争论。",
+      "stem": "有人主张：“只要产品上线前完成安全扫描，就不会发生数据泄露事故。”下列哪些情形如果确凿为真，构成对这一主张的反例？（选出所有反例）",
+      "options": [
+        {
+          "key": "A",
+          "text": "某系统上线前完成了安全扫描，两周后仍发生数据库数据泄露"
+        },
+        {
+          "key": "B",
+          "text": "某系统上线前按流程完成了安全扫描，但扫描清单未覆盖一个新引入的组件，随后该组件发生数据泄露"
+        },
+        {
+          "key": "C",
+          "text": "某系统上线前没有做安全扫描，也没有发生数据泄露",
+          "errorType": "denying-antecedent",
+          "reason": "以为没做也没出事就能推翻主张"
+        },
+        {
+          "key": "D",
+          "text": "某系统上线前没有做安全扫描，随后发生数据泄露",
+          "errorType": "premise-misidentification",
+          "reason": "把主张没覆盖的情形当成反驳材料"
+        },
+        {
+          "key": "E",
+          "text": "某系统上线前只做了部分扫描就赶工发布，随后发生数据泄露",
+          "errorType": "equivocation",
+          "reason": "把“部分扫描”当作主张所说的“完成扫描”"
+        }
+      ],
+      "answer": { "keys": ["A", "B"] },
+      "alternatives": [],
+      "explanation": {
+        "summary": "主张形式是“完成扫描 → 不会泄露”。反例必须满足前件（按要求完成扫描）又不满足后件（确实发生了泄露），A 与 B 都符合这一形式。",
+        "steps": [
+          "符号化：P＝上线前完成安全扫描，Q＝不发生数据泄露事故，主张为 若 P 则 Q。",
+          "确定检验点：先看该案例的 P 是否成立，再看 Q 是否落空，两步都要有据。",
+          "A 直接给出 P 且非 Q；B 中的扫描按既定流程已经完成，泄露仍发生，同样满足反例形式，还解释了漏扫为何不影响 P 的成立。",
+          "C、D 的 P 不成立，主张本来就没对它们作承诺；E 用“部分扫描”替换“完成扫描”，属于偷换前提，只是暴露了执行不到位而非主张有误。"
+        ],
+        "commonMistakes": [
+          {
+            "option": "C",
+            "errorType": "denying-antecedent",
+            "why": "由“没做也没出事”推主张错误，方向不成立。"
+          },
+          {
+            "option": "D",
+            "errorType": "premise-misidentification",
+            "why": "泄露发生在未扫描的系统上，与“扫描后仍泄露”是两类事实。"
+          },
+          {
+            "option": "E",
+            "errorType": "equivocation",
+            "why": "关键词“完成扫描”的含义被替换，看似反例其实没有满足前件。"
+          }
+        ],
+        "takeaway": "判定反例分两步：先确认它满足主张的前提，再确认主张的结论确实落空。"
+      },
+      "reviewTags": ["反例形式", "偷换概念", "多选", "安全检查"],
+      "provenance": "原创题，场景为上线安全检查争论，重点区分真反例与偷换前提的反例。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cex-005",
+      "version": 1,
+      "category": "counterexample-rebuttal",
+      "knowledgePoints": ["counterexample-form", "rebuttal-target"],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "format": "true-false",
+      "context": "反驳方法讨论。",
+      "stem": "要反驳“所有 A 都是 B”，只要举出一个结论与主张不同的例子就行，因此举一个不属于 A 的例子同样有效。",
+      "answer": { "value": false },
+      "alternatives": [],
+      "explanation": {
+        "summary": "有效反例必须落在主张的主域内：它是 A，却不是 B。不属于 A 的例子与主张不发生冲突，因而推翻不了它。",
+        "steps": [
+          "把主张写成 若对象是 A 则是 B，其假只可能出现在“是 A 且不是 B”的情形。",
+          "举一个不属于 A 的例子，等于让前件为假，此时无论结论是什么，主张都不受影响。",
+          "举例“某个非 A 的对象不是 B”，与“所有 A 都是 B”可以同时为真，故不构成反驳。",
+          "因此该说法把“结论不同”当成充分条件，判断为错。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "premise-misidentification",
+            "why": "把“与主张唱反调的例子”当成反例，忽略反例必须满足原主张的前提。"
+          },
+          {
+            "errorType": "ignoring-counterexample",
+            "why": "反过来也会出错：主张内已存在真反例时，仍用例子数量众多来抵挡。"
+          }
+        ],
+        "takeaway": "检验一个例子能否反驳，先问它是否满足被反驳主张的前提。"
+      },
+      "reviewTags": ["反例条件", "全称主张", "判断题"],
+      "provenance": "原创题，用于纠正“只要例子相反就是反例”的普遍误解。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cex-006",
+      "version": 1,
+      "category": "counterexample-rebuttal",
+      "knowledgePoints": ["counterexample-form", "implicit-premise", "falsification"],
+      "difficulty": 4,
+      "estimatedSeconds": 125,
+      "format": "short-answer",
+      "context": "功能上线后的争论。",
+      "stem": "有人在评审会上说：“我们的老客户从来没投诉过这个功能，所以这个功能没有任何问题。”请用两三句话回答：这句话隐含地把哪个条件当成了判断标准？什么样的一个反例就足以削弱它？",
+      "answer": {
+        "checkpoints": [
+          {
+            "id": "c1",
+            "label": "把主张改写成可检验形式",
+            "keywords": ["全称"],
+            "weight": 2,
+            "required": true
+          },
+          {
+            "id": "c2",
+            "label": "指出隐含前提的漏洞",
+            "keywords": ["没有投诉"],
+            "weight": 3,
+            "required": true
+          },
+          {
+            "id": "c3",
+            "label": "给出满足前提却不满足结论的反例",
+            "keywords": ["反例"],
+            "weight": 2,
+            "required": false
+          }
+        ],
+        "correctRatio": 0.7,
+        "partialRatio": 0.45,
+        "modelAnswer": "这句话把“没有投诉”当成了“没有问题”的判断标准，等于提出全称主张：凡是使用这个功能的用户都不会遇到问题。漏洞在于两者并不等价，没有投诉可能只是问题没被发现、用户不知道投诉渠道，或者问题落在老客户的日常习惯之外。真正有削弱力的反例是：某位用户在使用该功能时确实遇到了问题，例如数据被误删或提交后页面卡死，即便他最终没有投诉，也已经与主张的结论不符。"
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "回答要点：先补出未说出口的等号（投诉等于问题的唯一表现），再把主张改写成可检验的全称形式，最后给出满足前提却推翻结论的反例。",
+        "steps": [
+          "识别隐含前提：用户遇到问题就一定会投诉；这是把“投诉”当成“问题”的必要表现。",
+          "把主张改写为全称形式：所有使用该功能的用户都不会遇到问题，从而可被单个反例检验。",
+          "列出替代解释：问题未被察觉、不知投诉渠道、投诉入口被隐藏、样本只有老客户而缺少新用户。",
+          "给出反例设计：在使用日志或回访中找到“遇到问题但未投诉”的用户，并说明该情形为何与前件相符、与后件冲突。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "ignoring-counterexample",
+            "why": "只用投诉记录作证据，等于只看能被自己看到的样本。"
+          },
+          {
+            "errorType": "conclusion-overreach",
+            "why": "由“没收到投诉”直接跳到“没有任何问题”，结论远强于证据。"
+          }
+        ],
+        "takeaway": "遇到“没人反馈所以没问题”，先问：什么问题是他这条渠道看不到的？"
+      },
+      "reviewTags": ["隐含前提", "反例设计", "简答题"],
+      "provenance": "原创题，场景来自产品评审会，训练把口头全称主张改写为可反驳形式。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cex-007",
+      "version": 1,
+      "category": "counterexample-rebuttal",
+      "knowledgePoints": ["counterexample-form", "rebuttal-target", "dependency-order"],
+      "difficulty": 3,
+      "estimatedSeconds": 95,
+      "format": "ordering",
+      "context": "用户协议免责条款争论。",
+      "stem": "产品负责人说：“只要用户注册时勾选了协议，我们公司就不承担数据泄露的责任。”你要用反例来检验这句话。请按最合理的先后顺序排列下列步骤。",
+      "items": [
+        {
+          "key": "s1",
+          "text": "把这句话改写成条件式：若用户勾选了协议，则公司不承担数据泄露责任"
+        },
+        {
+          "key": "s2",
+          "text": "写出反例必须满足的形式：前件成立（已勾选）且后件不成立（公司仍被认定担责）"
+        },
+        {
+          "key": "s3",
+          "text": "说明这句话谈的是公司单方规定还是法律效果，据此确定有效的资料来源"
+        },
+        {
+          "key": "s4",
+          "text": "在检索到的裁判文书、监管处理决定中筛选符合该形式的具体个案"
+        },
+        {
+          "key": "s5",
+          "text": "核对个案中的关键用语与主张是否同一含义，再说明它反驳的是哪一部分"
+        }
+      ],
+      "answer": { "keys": ["s1", "s2", "s3", "s4", "s5"] },
+      "alternatives": [
+        {
+          "keys": ["s1", "s2", "s4", "s3", "s5"],
+          "note": "如果先按协议条款文本检索、再确定资料来源的性质，s3 与 s4 的顺序可以互换；前提是最终仍需在 s5 校验用语同一含义。"
+        }
+      ],
+      "explanation": {
+        "summary": "合理链条是：翻译主张 → 定出反例形式 → 界定主张谈论的对象并确定资料来源 → 检索符合条件的个案 → 校验用语一致性并说明反驳力度。",
+        "steps": [
+          "不先写成条件式，就无法判断什么算反例，因此 s1 在最前。",
+          "s2 把“反驳成功”变成一个可核对的形式要求，避免随手举例。",
+          "这句话把公司规定当成法律效果，所以必须先去裁判文书与监管决定这类能对“是否担责”作认定的来源找证据，故 s3 在检索之前。",
+          "s5 放在最后：只有确认“勾选协议”“数据泄露”等用语含义一致，反例才真正击中主张，否则可能只是打在一个被改写的版本上。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "missing-reasoning-step",
+            "why": "跳过 s2 直接找例子，往往找到的是与公司内部处理相关的案例，而非责任认定。"
+          },
+          {
+            "errorType": "premise-misidentification",
+            "why": "把公司实际赔付了金额当成反例，却不检查用户是否勾选过协议，前件未核实。"
+          }
+        ],
+        "takeaway": "先定反例的形式，再去对的资料库里找，最后核对用语。"
+      },
+      "reviewTags": ["反驳步骤", "反例形式", "排序"],
+      "provenance": "原创题，场景为免责条款效力争论，训练按依赖顺序组织反驳流程。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    },
+    {
+      "id": "ex-cex-008",
+      "version": 1,
+      "category": "counterexample-rebuttal",
+      "knowledgePoints": ["counterexample-form", "rebuttal-target", "only-if"],
+      "difficulty": 5,
+      "estimatedSeconds": 150,
+      "format": "open-response",
+      "context": "日常争论中的条件与反例。",
+      "stem": "领导说：“只有客户满意度高的产品才是好产品。”有人反驳：“那款产品客户满意度很高，但售后成本高到亏损，所以它不是好产品。”请写出：这条主张的条件形式是什么？反驳者举的情形是否构成反例？如果他想反驳成功，应该举出什么样的例子？",
+      "answer": {
+        "scale": [
+          {
+            "score": 0,
+            "label": "站队式回答",
+            "criteria": "只说支持或不支持哪一方，没有写出主张的条件形式。"
+          },
+          {
+            "score": 1,
+            "label": "翻译不完整",
+            "criteria": "把主张写成“满意度高就是好产品”，方向已经翻错，后续判断随之失效。"
+          },
+          {
+            "score": 2,
+            "label": "正确翻译主张",
+            "criteria": "写成“若是好产品则客户满意度高”，并指出满意度高只是必要条件。"
+          },
+          {
+            "score": 3,
+            "label": "判定反驳落点",
+            "criteria": "指出反驳者的例子是“满意度高但不是好产品”，与前件未成立的情形相容，不构成反例。"
+          },
+          {
+            "score": 4,
+            "label": "构造出有效反例",
+            "criteria": "给出“公认是好产品但客户满意度低”的例子，并说明还需论证为何该产品确实算好产品。"
+          }
+        ],
+        "guidance": "先把“只有……才……”译成条件式；再写出反例的形式要求；然后逐层检查反驳者的例子满足了前件还是否定了前件，最后自己构造一个真正击中主张的例子。",
+        "selfAssessed": true
+      },
+      "alternatives": [],
+      "explanation": {
+        "summary": "“只有 P 才 Q”等于“若 Q 则 P”，P（满意度高）是 Q（好产品）的必要条件。反例应是 Q 成立而 P 不成立，即“是好产品却满意度低”。",
+        "steps": [
+          "符号化：P＝客户满意度高，Q＝是好产品，主张译为 若 Q 则 P。",
+          "写出反例形式：需要 Q 且非 P，也就是被公认是好产品、满意度却不高。",
+          "检查反驳者的例子：他给出 P 且非 Q（满意度高但不是好产品），这恰好与 若 Q 则 P 相容，因为该主张本来就允许满意度高却其他方面失败。",
+          "评估剩余空间：他的例子若要成立，还需要先论证“售后成本决定产品好坏”，这属于另提标准，而不是推翻原主张；真要反驳，可以改用“满意度高但产品明显失败”的情形去质疑该条件是否必要。"
+        ],
+        "commonMistakes": [
+          {
+            "errorType": "affirming-consequent",
+            "why": "把必要条件当充分条件，就会以为满意度高的产品必须是好产品。"
+          },
+          {
+            "errorType": "premise-misidentification",
+            "why": "误把“满意度高却不成功”看成对“满意度高是必要”的否定，方向找错。"
+          },
+          {
+            "errorType": "equivocation",
+            "why": "在同一场争论里悄悄替换“好产品”的判定标准，反驳力度无法评估。"
+          }
+        ],
+        "takeaway": "先分清被反驳的是“没它不行”还是“有它足够”，再决定要找哪一种反例。"
+      },
+      "reviewTags": ["必要条件", "反例形式", "开放题", "争论场景"],
+      "provenance": "原创题，场景为产品好坏标准的日常争论，量表按翻译—判定—构造三个层次设计。",
+      "status": "validated",
+      "grading": { "partialCredit": true, "orderTolerance": 0.2 }
+    }
+  ]
+}
