@@ -198,25 +198,32 @@
 
 `settingsSchema` 顶层 `.strict()`（未知键即解析失败）；嵌套 `ai`、`reminders` 非 strict，未知键被 zod 剥离。每个 profile 一行，主键就是 `profileId`。
 
-| 分组      | 字段                                                                           | 规则（默认值）                                                                                                                 |
-| --------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| 身份      | `profileId` / `displayName` / `onboarded`                                      | 必填非空 / ≤40（`'我'`） / boolean（`false`）                                                                                  |
-| 训练      | `dailyBudgetMinutes`                                                           | 3～60 整数（`10`）                                                                                                             |
-|           | `newToReviewRatio`                                                             | 0～1（`0.4`），新题占比                                                                                                        |
-|           | `preferredCategories`                                                          | 14 类子集（`[]` = 不限）                                                                                                       |
-|           | `restWeekdays`                                                                 | 0～6 整数数组（`[]`），0=周日；休息日只减轻任务，不清零连续天数                                                                |
-|           | `difficultyBias` / `timezone`                                                  | 0～1（`0.5`） / 非空字符串（`'UTC'`，首次启动写设备时区，`app/providers.tsx:104-107`）                                         |
-| 日志/提醒 | `journalDailyReminder`                                                         | boolean（`true`），控制计划里是否总留一篇日志入口（`lib/domain/daily-plan.ts:193`）                                            |
-|           | `reminders.enabled` / `.paused`                                                | boolean（`false` / `false`）                                                                                                   |
-|           | `reminders.time` / `.quietStart` / `.quietEnd`                                 | 必须匹配 `TIME_RE`（`'20:00'` / `'22:30'` / `'07:30'`）                                                                        |
-|           | `reminders.weeklyReviewDay`                                                    | 0～6（`0`）                                                                                                                    |
-| 外观      | `theme`                                                                        | `'system' \| 'light' \| 'dark'`（`'system'`）                                                                                  |
-| AI        | `ai.enabled`                                                                   | boolean（`false`），默认关闭                                                                                                   |
-|           | `ai.provider`                                                                  | 8 个预设标签之一（`'openai-compatible'`，`lib/domain/settings.ts:5-14`）                                                       |
-|           | `ai.model` / `ai.baseUrlLabel`                                                 | ≤80（`''`，留空用服务端默认模型） / ≤120（`''`）**仅展示用标签；API Key 永不进入客户端设置**（`lib/domain/settings.ts:72-73`） |
-|           | `ai.temperature` / `ai.timeoutMs` / `ai.maxOutputTokens` / `ai.dailyCallLimit` | 0～2（`0.4`）/ 3000～120000（`25000`）/ 128～4000（`900`）/ 0～200（`20`）                                                     |
+| 分组      | 字段                                                                           | 规则（默认值）                                                                                                                   |
+| --------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| 身份      | `profileId` / `displayName` / `onboarded`                                      | 必填非空 / ≤40（`'我'`） / boolean（`false`）                                                                                    |
+| 训练      | `dailyBudgetMinutes`                                                           | 3～60 整数（`10`）                                                                                                               |
+|           | `newToReviewRatio`                                                             | 0～1（`0.4`），新题占比                                                                                                          |
+|           | `preferredCategories`                                                          | 14 类子集（`[]` = 不限）                                                                                                         |
+|           | `restWeekdays`                                                                 | 0～6 整数数组（`[]`），0=周日；休息日只减轻任务，不清零连续天数                                                                  |
+|           | `difficultyBias` / `timezone`                                                  | 0～1（`0.5`） / 非空字符串（`'UTC'`，首次启动写设备时区，`app/providers.tsx:104-107`）                                           |
+| 日志/提醒 | `journalDailyReminder`                                                         | boolean（`true`），控制计划里是否总留一篇日志入口（`lib/domain/daily-plan.ts:193`）                                              |
+|           | `reminders.enabled` / `.paused`                                                | boolean（`false` / `false`）                                                                                                     |
+|           | `reminders.time` / `.quietStart` / `.quietEnd`                                 | 必须匹配 `TIME_RE`（`'20:00'` / `'22:30'` / `'07:30'`）                                                                          |
+|           | `reminders.weeklyReviewDay`                                                    | 0～6（`0`）                                                                                                                      |
+| 外观      | `theme`                                                                        | `'system' \| 'light' \| 'dark'`（`'system'`）                                                                                    |
+| AI        | `ai.enabled`                                                                   | boolean（`false`），默认关闭                                                                                                     |
+|           | `ai.mode`                                                                      | `'server' \| 'direct'`（`'server'`）。`direct` = 本机直连，请求不经服务端（`lib/ai/direct.ts`）                                  |
+|           | `ai.provider`                                                                  | 8 个预设标签之一（`'openai-compatible'`，`lib/domain/settings.ts`）。直连模式下只是快捷方式：改动 Base URL 会自动归为 `'custom'` |
+|           | `ai.model`                                                                     | ≤80（`''`，留空用服务端默认模型；**直连模式必须填**）                                                                            |
+|           | `ai.baseUrl`                                                                   | ≤300（`''`）。直连模式下由使用者自由填写的 OpenAI 兼容基址；`baseUrlLabel` 这个只做展示的字段已删除                              |
+|           | `ai.temperature` / `ai.timeoutMs` / `ai.maxOutputTokens` / `ai.dailyCallLimit` | 0～2（`0.4`）/ 3000～120000（`25000`）/ 128～4000（`900`）/ 0～200（`20`）                                                       |
 
-`TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/`（`lib/domain/settings.ts:36`）：拒绝 `24:00` 与单位数小时，错误文案"时间格式必须是 HH:MM"。`defaultSettings(profileId)` 就是 `settingsSchema.parse({ profileId })`（`lib/domain/settings.ts:85-87`）。
+`TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/`：拒绝 `24:00` 与单位数小时，错误文案"时间格式必须是 HH:MM"。`defaultSettings(profileId)` 就是 `settingsSchema.parse({ profileId })`。
+
+**不在 Dexie 里的本机状态**：除主题（`logicdaily:theme`）与提醒去重标记之外，直连模式的 API Key 存在
+`localStorage` 的 `logicdaily:ai-key:<profileId>`（`lib/ai/credentials.ts`）。它刻意不进 `settings` 记录，
+理由有两条：`migrateSettings()` 每次加载都会删掉 `apiKey`/`key`/`token` 字段，放在设置里会被自己抹掉；
+而 `settings` 是导出备份的一部分，密钥不该出现在用户会转发的文件里。因此「备份不含密钥」是结构保证。
 
 ### 3.11 ReviewState（`lib/domain/scheduling.ts:22-39`）
 
@@ -284,7 +291,7 @@ ewma' = clamp(ewma + 0.3 × 难度权重 × 信心信号 × (表现值 − ewma)
       "preferredCategories": ["conditional-reasoning"], "restWeekdays": [0], "difficultyBias": 0.5,
       "timezone": "Asia/Shanghai", "journalDailyReminder": true, "theme": "system",
       "reminders": { "enabled": false, "time": "20:00", "quietStart": "22:30", "quietEnd": "07:30", "weeklyReviewDay": 0, "paused": false },
-      "ai": { "enabled": false, "provider": "openai-compatible", "model": "", "baseUrlLabel": "", "temperature": 0.4, "timeoutMs": 25000, "maxOutputTokens": 900, "dailyCallLimit": 20 }
+      "ai": { "enabled": false, "mode": "server", "provider": "openai-compatible", "model": "", "baseUrl": "", "temperature": 0.4, "timeoutMs": 25000, "maxOutputTokens": 900, "dailyCallLimit": 20 }
     },
     "attempts": [
       { "id": "atp-mv0gvdc0-ex-cond-001", "profileId": "local", "exerciseId": "ex-cond-001", "exerciseVersion": 1, "dateKey": "2026-10-09", "createdAt": 1791520200000,

@@ -12,13 +12,13 @@ LogicDaily 是一个**离线优先、移动端优先**的逻辑思维训练 PWA�
 
 **仓库状态**：功能可用、测试通过、CI 已在 GitHub Actions 上跑通，**APK 已真实构建**（debug 包在 [Releases](https://github.com/luo173176/logicdaily/releases) 上），但**尚未部署过**。详见 [已知限制](#已知限制)。
 
-|        |                                                                                                                             |
-| ------ | --------------------------------------------------------------------------------------------------------------------------- |
-| 技术栈 | Next.js 16 (App Router / Turbopack) · React 19 · TypeScript strict · Tailwind CSS 4 · Dexie (IndexedDB) · Zod               |
-| 题库   | 14 个题型 × 8 题 = 112 道原创中文题，全部带解析、推理步骤、典型错误与知识点标签                                             |
-| 测试   | 220 个单元/集成测试 + 17 个移动端视口端到端测试（Pixel 7 模拟）+ 15 项 APK 离线包功能验证，CI 见 `.github/workflows/ci.yml` |
-| 分发   | PWA（添加到主屏幕）**或** 纯离线 APK（Capacitor 6，debug 签名，4.10 MB，无 Node 服务端 → App 内 AI 不可用）                 |
-| 许可   | AGPL-3.0-or-later（题库内容同为 AGPL）                                                                                      |
+|        |                                                                                                                                                 |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| 技术栈 | Next.js 16 (App Router / Turbopack) · React 19 · TypeScript strict · Tailwind CSS 4 · Dexie (IndexedDB) · Zod                                   |
+| 题库   | 14 个题型 × 8 题 = 112 道原创中文题，全部带解析、推理步骤、典型错误与知识点标签                                                                 |
+| 测试   | 235 个单元/集成测试 + 22 个移动端视口端到端测试（Pixel 7 模拟）+ 22 项 APK 离线包功能验证，CI 见 `.github/workflows/ci.yml`                     |
+| 分发   | PWA（添加到主屏幕）**或** 纯离线 APK（Capacitor 6，debug 签名）；APK 里没有 Node 服务端，App 内 AI 走「本机直连」：你自己填服务商地址与 API Key |
+| 许可   | AGPL-3.0-or-later（题库内容同为 AGPL）                                                                                                          |
 
 ## 界面
 
@@ -108,7 +108,7 @@ npm start
 
 **A. PWA（推荐，AI 教练可用）**：Chrome for Android 打开你部署的站点 → 菜单 → **添加到主屏幕**，即以 `standalone` 竖屏模式启动，离线可用。iOS 的 Safari 添加主屏幕同样可用（受 Safari 存储配额策略影响，长期不打开可能被清理）。
 
-**B. 纯离线 APK（不依赖任何服务器，App 内 AI 不可用）**：从 [Releases](https://github.com/luo173176/logicdaily/releases) 下载 debug 包直接安装。它把 112 道题和全部前端资源打进包内，从 APK 自身的本地资源加载（`capacitor.config.ts` 不设 `server.url`），所以不需要域名、不需要 HTTPS、不需要后端。代价是 **AI 思维教练在 App 内不可用** —— 那一条能力必然要经服务端转发给模型，界面会显示「AI 教练未启用」而不是报错崩溃。
+**B. 纯离线 APK（不依赖任何服务器）**：从 [Releases](https://github.com/luo173176/logicdaily/releases) 下载 debug 包直接安装。它把 112 道题和全部前端资源打进包内，从 APK 自身的本地资源加载（`capacitor.config.ts` 不设 `server.url`），所以不需要域名、不需要 HTTPS、不需要后端。AI 思维教练在 App 内**可用，但只能走「本机直连」**：在「我的 → AI 教练」选「本机直连」，填你自己的服务商地址与 API Key，请求从手机直接发出去。纯离线包里没有 Node 服务端，因此**服务端代理**那条通路在 App 内不可用（界面会给出说明，不会崩溃）。直连的代价写在这里也说清楚：密钥明文存在这台设备上、没有服务端配额与审计、服务商还必须允许浏览器跨域——详见 [docs/AI_INTEGRATION.md](docs/AI_INTEGRATION.md) 第 3.6 节。
 
 ```bash
 # 自己构建 APK（需要 JDK 17+ 与 Android SDK）
@@ -121,7 +121,7 @@ cd android && ./gradlew clean assembleDebug
 
 发布用的包请从 `clean` 开始构建：AGP 的增量打包会在条目变小时留下死空间（实测同一份代码增量包比干净包大 430 KB），见 [docs/ANDROID.md](docs/ANDROID.md) 第 4.2.2 节。
 
-两个诚实前提：这是 **debug 签名**包，不能提交 Google Play（release 需你自己的 keystore）；构建在这台机器上跑通了，但 **APK 从未在真机或模拟器上安装运行过**（`adb devices` 为空）—— 对打进包的那份资源是用 Playwright 逐条验证的（`npm run verify:apk-web`，15 项）。为什么够用 / 什么时候需要原生壳 / 已验证与未验证的分界，见 [docs/ANDROID.md](docs/ANDROID.md)。
+两个诚实前提：这是 **debug 签名**包，不能提交 Google Play（release 需你自己的 keystore）；构建在这台机器上跑通了，但 **APK 从未在真机或模拟器上安装运行过**（`adb devices` 为空）—— 对打进包的那份资源是用 Playwright 逐条验证的（`npm run verify:apk-web`，22 项，含一次真实的跨源直连调用）。为什么够用 / 什么时候需要原生壳 / 已验证与未验证的分界，见 [docs/ANDROID.md](docs/ANDROID.md)。
 
 ## 项目结构
 
@@ -171,11 +171,11 @@ tests/
 | `npm run build` / `npm start` | 生产构建与启动（Web 目标，含 `/api/ai/*`）                   |
 | `npm run typecheck`           | `tsc --noEmit`                                               |
 | `npm run lint`                | ESLint（flat config，`core-web-vitals` + `typescript` 预设） |
-| `npm run test`                | Vitest 单元 + 集成（220 个用例，用 fake-indexeddb）          |
-| `npm run test:e2e`            | Playwright 端到端（17 个用例，自动起停生产服务器）           |
+| `npm run test`                | Vitest 单元 + 集成（235 个用例，用 fake-indexeddb）          |
+| `npm run test:e2e`            | Playwright 端到端（22 个用例，自动起停生产服务器）           |
 | `npm run content:validate`    | 题库内容校验（id 规范、枚举、答案与解析自洽、重复题干检测）  |
 | `npm run build:apk-web`       | 静态导出 APK 用资源 → `apk-web/`（副本中排除服务端路由）     |
-| `npm run verify:apk-web`      | 用 Playwright 验证**打进 APK 的那份资源**（15 项）           |
+| `npm run verify:apk-web`      | 用 Playwright 验证**打进 APK 的那份资源**（22 项）           |
 | `npm run apk:sync`            | `build:apk-web` + `cap sync android`                         |
 | `npm run format`              | Prettier 写入格式化                                          |
 
@@ -184,6 +184,10 @@ tests/
 CI（`.github/workflows/ci.yml`）依次跑：`typecheck` → `eslint` → `content:validate` → `test` → `build`，通过后再跑 `test:e2e`。APK 构建**不在 CI 里**：它需要 JDK + Android SDK，而且产物是 debug 签名包，放在 Actions 上会给人一种「已发布可安装正式版」的错觉，所以只在本地构建并上传到 Release。
 
 ## 配置 AI（可选）
+
+AI 有两条通路，任选一条，也可以两者并存（默认是第一条）：
+
+**1. 服务端代理**（推荐：密钥不下发、有权威配额与 SSRF 边界）
 
 ```bash
 cp .env.example .env.local
@@ -198,21 +202,26 @@ AI_DAILY_LIMIT=60                       # 每用户每日调用上限
 AI_RATE_LIMIT_PER_MIN=12
 ```
 
+**2. 本机直连**（不用部署任何东西，App 与静态托管里也能用）：在「我的 → AI 教练」把「请求怎么走」切成
+「本机直连」，填 Base URL（OpenAI 兼容基址，如 `https://api.deepseek.com/v1`）、模型名称与 API Key，
+点「测试连接」。预设按钮只是快捷方式，任何 OpenAI 兼容服务都能填。代价是密钥明文存在这台设备上，
+没有服务端配额与审计，而且服务商要允许浏览器跨域（实测 DeepSeek、Kimi、通义、StepFun、SiliconFlow 可以，智谱不行）。
+
 安全边界（实现与理由见 [docs/AI_INTEGRATION.md](docs/AI_INTEGRATION.md)）：
 
-1. Key 只存在于服务端环境变量/密钥管理器；浏览器永远只调用本站 `/api/ai/analyze`。
-2. 用户自填 Base URL 必须命中服务端允许列表，且 DNS 解析结果落在公网段——内网、`localhost`、`169.254.169.254` 等一律拒绝。
-3. 输入长度、输出 token、超时、重试、每日配额全部有上限。
-4. 模型回复按不可信输入处理：Zod 校验后才使用，其中出现的题目 id 必须存在于题库，嵌入的指令文本不执行。
-5. 日志只记录 `{evt, task, model, ms, tokens, status}`，不记录 Key、认证头、请求正文或日志原文。
+1. 代理模式下 Key 只存在于服务端环境变量/密钥管理器，浏览器只调用本站 `/api/ai/analyze`；直连模式下 Key 只在这台设备的 `localStorage` 里，**不会**进导出备份。
+2. 代理模式下自填 Base URL 必须命中服务端允许列表，且 DNS 解析结果落在公网段——内网、`localhost`、`169.254.169.254` 等一律拒绝。直连模式不做 DNS 检查（那是保护别人的服务器的），改为强制 https（本机回环除外）、URL 不带凭据、不跟随重定向。
+3. 输入长度、输出 token、超时、重试有上限；配额在代理模式下由服务端权威执行，在直连模式下只有本机自己记的每日次数。
+4. 模型回复按不可信输入处理：Zod 校验后才使用，其中出现的题目 id 必须存在于题库，嵌入的指令文本不执行。两种模式共用同一套契约。
+5. 代理模式的服务端日志只记录 `{evt, task, model, ms, tokens, status}`，不记录 Key、认证头、请求正文或日志原文；直连模式压根不经过服务器，因此也没有服务端日志（部署者看不到这类调用）。
 
 ## 已知限制
 
 诚实清单：
 
 - **未部署**：本仓库从未发布到任何环境，`docs/DEPLOYMENT.md` 里的部署步骤是说明而非验证结果。
-- **APK 没在真机上跑过**：构建真实成功（首次完整构建 `BUILD SUCCESSFUL in 1m 29s`，产物 4,303,043 字节，`aapt2` 元数据与包内 93 个资源条目都核对过），打进包的那份资源也用 Playwright 验证了 15 项；构建机上 `adb devices` 为空，所以没有自动化真机测试；已有的一条真机反馈（App 能装能开，但降级文案漏出 JSON 解析错误）已修复，见 `docs/ANDROID.md` 4.6.1。返回键、闪屏、通知权限弹窗、存储配额这些原生行为仍无证据。而且它是 debug 签名，不能上架。
-- **APK 内没有 AI**：纯离线包不含 Node 服务端，`/api/ai/*` 不存在，AI 教练显示为「未启用」。要用 AI 得走 PWA 路线（或把 `capacitor.config.ts` 改成 `server.url` 指向你自己的部署，但那就不再是离线包）。
+- **APK 没在真机上跑过**：构建真实成功（首次完整构建 `BUILD SUCCESSFUL in 1m 29s`，产物 4,303,043 字节，`aapt2` 元数据与包内资源条目都核对过），打进包的那份资源也用 Playwright 验证了 22 项；构建机上 `adb devices` 为空，所以没有自动化真机测试；已有的一条真机反馈（App 能装能开，但降级文案漏出 JSON 解析错误）已修复，见 `docs/ANDROID.md` 4.6.1。返回键、闪屏、通知权限弹窗、存储配额这些原生行为仍无证据。而且它是 debug 签名，不能上架。
+- **APK 内只有直连这一条 AI 通路**：纯离线包不含 Node 服务端，`/api/ai/*` 不存在，服务端代理模式在 App 内必然不可用。直连模式已经在包内验证过（跨源调用、契约校验、密钥不进备份），但**从未用真实的付费 Key 打过真实服务商**，而且 Android 默认禁止明文流量、`assertDirectEndpoint` 只放行回环 http，所以局域网自建模型服务在 App 里需要 https 反向代理。
 - **后台提醒不可靠**：PWA 无法保证后台唤醒。`decideReminder()` 已接到运行时（`components/reminder-gate.tsx`：页内横幅 + 已授权时的系统通知），但只在应用被打开时表达；没有服务端推送（未实现 `PushSubscription`），APK 也没有引入原生本地通知插件。界面上没有承诺到点提醒。
 - **云端账户与同步未实现（Phase 3）**：`DataStore` 接口留了接缝，`supabase/migrations/` 有带 RLS 的 SQL 并在本地 Postgres 上验证过，但应用内没有登录、没有同步，装了 SQL 也不会改变产品行为。PWA 与 APK 的存储是两个不同的域，互不继承，只能靠导出/导入 JSON 搬运。
 - **题库为原创中文题，未经大规模实测**：112 题都通过了结构校验、答案自洽测试与人工解析编写，但没有做过样本化的难度标定；难度值是编辑判断。

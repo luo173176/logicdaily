@@ -2,53 +2,80 @@
 
 本文档描述 LogicDaily 如何调用大模型：调用链路、安全边界、输出契约、降级行为，以及新增一个任务类型的步骤。
 
-**前提**：AI 是可选能力。没有配置任何环境变量时，应用的全部核心功能（题库、答题、归因、思考日志、复习、报告、备份）都完整可用，界面上只会显示「AI 教练未启用」。
+**前提**：AI 是可选能力，并且有两条互不替代的通路——**服务端代理**（默认，密钥在服务器上）与**本机直连**（这台设备自己填 Base URL 与 API Key，请求直接发给服务商）。既没有配置环境变量、也没有开启直连时，应用的全部核心功能（题库、答题、归因、思考日志、复习、报告、备份）都完整可用，界面上只会显示「AI 教练未启用」。
 
-## 1. 调用链路
+## 1. 两种模式与调用链路
+
+|          | 服务端代理（`ai.mode = 'server'`，默认）     | 本机直连（`ai.mode = 'direct'`，需用户显式开启） |
+| -------- | -------------------------------------------- | ------------------------------------------------ |
+| 密钥在哪 | 服务器环境变量 `AI_API_KEY`，永不下发        | 这台设备的 `localStorage`，明文                  |
+| 谁能配置 | 部署者                                       | 使用者本人，Base URL 自由填写                    |
+| 出站检查 | 允许列表 + DNS 私网拒绝 + 协议/凭据/端口检查 | 协议与凭据检查（不做 DNS 检查，见 3.6）          |
+| 配额     | 服务端每分钟 + 每日权威限额                  | 只有本机自己统计的每日次数                       |
+| 适用构建 | 部署了 Node 服务端的网页版                   | 网页版与纯离线包（APK、静态托管）                |
+
+最后一行不说的事其实最重要：**两种模式共用同一份提示词、同一套输入上限与同一个输出契约**（`lib/ai/tasks.ts`、`lib/ai/provider-core.ts`），所以不存在「直连偷偷放宽校验」这种漂移。
+
+服务端代理：
 
 ```
 浏览器（features/coach/*、features/training/*）
-   │  POST /api/ai/analyze      请求体：{ task, input, exerciseIds?, profileId?, baseUrl? }
-   │  ❌ 浏览器永远不持有 API Key，也永远不直连模型服务商
+   │  POST /api/ai/analyze      请求体：{ task, payload, model?, temperature?, maxOutputTokens?, baseUrl? }
+   │  ❌ 浏览器不持有 API Key，也不知道密钥
    ▼
 app/api/ai/analyze/route.ts     ① 同源检查 ② Zod 请求校验 ③ 限流 ④ 错误→HTTP 映射
    ▼
 lib/ai/service.ts  runAiTask()  ⑤ 配置检查 ⑥ 目标地址解析（SSRF）⑦ 提示词装配
                                ⑧ 输入长度守卫 ⑨ 调用 ⑩ 输出 Zod 校验 ⑪ 题目 id 白名单过滤
    ▼
-lib/ai/provider.ts              OpenAI 兼容 /chat/completions：AbortController 超时、指数退避重试
+lib/ai/provider.ts              注入 createServerEndpointResolver()，出站前做 SSRF 检查
    ▼
 模型服务商                       Key 只在这一跳出现（Authorization 头，由服务端拼装）
+```
+
+本机直连：
+
+```
+浏览器 / Capacitor WebView
+   │  lib/ai/client.ts callTask() 按 ai.mode 分流
+   ▼
+lib/ai/direct.ts  callDirectTask()  ① 地址形状检查（https，仅回环放行 http）② 同一个 aiRequestSchema
+                                    ③ 同一份提示词与输入上限 ④ 同一个输出 Zod 契约
+   ▼
+lib/ai/provider-core.ts          OpenAI 兼容 /chat/completions，Authorization 头由本机拼装
+   ▼                               redirect: 'error'：凭据只发给校验过的那一个地址
+模型服务商                       跨源请求，服务商必须允许浏览器 CORS
 ```
 
 服务端配置读取集中在 `lib/ai/config.ts` 的 `readServerAiConfig()`，全部来自 **不带 `NEXT_PUBLIC_` 前缀** 的环境变量。
 
 ## 2. 环境变量
 
-| 变量                       | 默认          | 说明                                                                      |
-| -------------------------- | ------------- | ------------------------------------------------------------------------- |
-| `AI_API_KEY`               | 空            | 空 = AI 功能关闭。绝不写入 `next.config.ts` 的 `env`，那会被打进浏览器包  |
-| `AI_BASE_URL`              | 空            | OpenAI 兼容基址，例如 `https://api.openai.com/v1`                         |
-| `AI_MODEL`                 | `gpt-4o-mini` | 默认模型名                                                                |
-| `AI_ALLOWED_BASE_URLS`     | 空            | **SSRF 允许列表**。留空时自动包含 `AI_BASE_URL`；不在列表内的地址一律拒绝 |
-| `AI_ALLOW_CLIENT_BASE_URL` | `false`       | 是否允许前端在允许列表内指定 `baseUrl`。保持 false                        |
-| `AI_ALLOW_LOOPBACK`        | `false`       | 仅本地开发：放行 `http` 与 `127.0.0.1`（如本机 Ollama）。生产必须 false   |
-| `AI_MAX_INPUT_CHARS`       | 12000         | 单次请求正文上限（钳制在 500～60000）                                     |
-| `AI_MAX_OUTPUT_TOKENS`     | 900           | 钳制在 128～4000                                                          |
-| `AI_TIMEOUT_MS`            | 25000         | 钳制在 3000～120000                                                       |
-| `AI_DAILY_LIMIT`           | 60            | 每用户每日调用上限，0 表示禁用                                            |
-| `AI_RATE_LIMIT_PER_MIN`    | 12            | 每分钟窗口                                                                |
-| `AI_RETRY_LIMIT`           | 2             | 可重试错误的最大重试次数，0 表示不重试                                    |
+| 变量                       | 默认          | 说明                                                                                                         |
+| -------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------ |
+| `AI_API_KEY`               | 空            | 空 = AI 功能关闭。绝不写入 `next.config.ts` 的 `env`，那会被打进浏览器包                                     |
+| `AI_BASE_URL`              | 空            | OpenAI 兼容基址，例如 `https://api.openai.com/v1`                                                            |
+| `AI_MODEL`                 | `gpt-4o-mini` | 默认模型名                                                                                                   |
+| `AI_ALLOWED_BASE_URLS`     | 空            | **SSRF 允许列表**。留空时自动包含 `AI_BASE_URL`；不在列表内的地址一律拒绝                                    |
+| `AI_ALLOW_CLIENT_BASE_URL` | `false`       | **仅服务端代理模式**：是否允许前端在允许列表内指定 `baseUrl`。直连模式绕过本站接口，与本开关无关。保持 false |
+| `AI_ALLOW_LOOPBACK`        | `false`       | 仅本地开发：放行 `http` 与 `127.0.0.1`（如本机 Ollama）。生产必须 false                                      |
+| `AI_MAX_INPUT_CHARS`       | 12000         | 单次请求正文上限（钳制在 500～60000）                                                                        |
+| `AI_MAX_OUTPUT_TOKENS`     | 900           | 钳制在 128～4000                                                                                             |
+| `AI_TIMEOUT_MS`            | 25000         | 钳制在 3000～120000                                                                                          |
+| `AI_DAILY_LIMIT`           | 60            | 每用户每日调用上限，0 表示禁用                                                                               |
+| `AI_RATE_LIMIT_PER_MIN`    | 12            | 每分钟窗口                                                                                                   |
+| `AI_RETRY_LIMIT`           | 2             | 可重试错误的最大重试次数，0 表示不重试                                                                       |
 
 `GET /api/ai/status` 只暴露 `configured`、默认模型名、允许列表**条数**和各项限额（见 `publicAiStatus()`），不回显 Key、不回显完整 URL。
 
 ## 3. 安全边界
 
-### 3.1 密钥不出服务端
+### 3.1 服务端代理模式：密钥不出服务端
 
 - Key 只在 `lib/ai/provider.ts` 拼 `Authorization` 头时使用。
 - 前端只见本站接口；`AI_ALLOW_CLIENT_BASE_URL=false` 时前端连目标地址都无法指定。
 - 日志与错误信息里的 URL 经 `redactUrl()` 处理，避免把带凭据或带路径的地址写进日志。
+- 这条是**默认与推荐**的通路。直连模式是对它的有意放宽，见 3.6。
 
 ### 3.2 SSRF 防护（`lib/ai/ssrf.ts`）
 
@@ -84,6 +111,41 @@ lib/ai/provider.ts              OpenAI 兼容 /chat/completions：AbortControlle
 - 答题教练默认只发送题目结构化信息与用户的推理文字，不附带日志。
 - 保存 AI 结果时（`aiAnalyses`）只保留**结构化结论**，`retainedInputSummary` 置 `null`，即不回存发送出去的原文。
 - 普通日志只记录 `{evt, task, model, ms, tokens, status}`。
+- 直连模式下这段内容从这台设备直接发给**使用者自己选的服务商**，不经过部署者的服务器；部署者既看不到也无法审计。
+  「默认不把思考日志发给模型」这一条在两种模式下都由同一个 `consented` 前置条件把关。
+
+### 3.6 本机直连模式：放宽了什么、仍然守住什么
+
+存在的理由只有一个：纯离线构建（APK、静态托管）里没有 Node 服务端，3.1～3.3 那条通路根本不存在。
+这是用户在自己的设备上、用自己的密钥、连自己填的地址，所以放宽的边界都落在这个范围内。
+
+**仍然强制的**（`lib/ai/direct.ts` 的 `assertDirectEndpoint`）：
+
+1. 只允许 `https`；`http` 仅放行 `127.0.0.1` / `localhost` / `::1`，因为密钥不能明文过网。
+2. URL 中不得携带用户名或密码凭据——密钥只能填在 API Key 输入框里。
+3. `redirect: 'error'`：跟随重定向会把 `Authorization` 头发到一个未经校验的目标。
+4. 输入长度上限、`consented` 之类前置条件与输出契约与代理模式**完全同一套**（`lib/ai/tasks.ts`），直连不会偷偷放宽校验。
+5. 密钥不进导出备份。这一点是结构性保证而不是「记得剥离」：密钥存在 `localStorage` 的
+   `logicdaily:ai-key:<profileId>`，而备份导出的是 Dexie 里的 `settings` 记录；
+   顺带一提，`migrateSettings()` 每次加载都会删掉 `apiKey`/`key`/`token` 字段，所以密钥本来就存不进设置记录。
+6. 界面上只显示指纹（首尾各 2 字符 + 长度），输入框默认 `type="password"`。
+7. 「清除本地数据」会把所有 profile 的密钥一并删掉。
+
+**明确没有的**（不要在读文档时以为它们还在）：
+
+- 没有 DNS 解析结果检查，也不拦内网/保留地址。理由：这是用户自己的设备，浏览器本来就能自由访问这些地址，
+  拦在这里只会让「连局域网里的 Ollama」这种正当用法不可用。真正的出站边界是浏览器同源策略与服务商的 CORS。
+- 没有服务端权威配额。只有本机记录的每日次数上限，换一台设备就重新计数，也没有每分钟窗口。
+- 没有服务端日志：这条通路在服务器侧完全不可见，因此也就没有任何服务端审计痕迹可查。
+
+**实测的可用性边界**：服务商必须允许浏览器跨域。实测 DeepSeek、Kimi（Moonshot）、通义千问（DashScope 兼容模式）、
+StepFun、SiliconFlow 允许，智谱（open.bigmodel.cn）的接口不允许浏览器直连。这些结论来自预检探测，
+不是来自一次成功的付费调用。
+
+**APK 内的额外限制**：`android/app/src/main/AndroidManifest.xml` 没有声明 `usesCleartextTraffic`，
+而 targetSdk 34 下 Android 默认禁止明文流量，所以即使 `assertDirectEndpoint` 放行回环 `http`，
+在 App 里它指的也是手机自己（那里通常没有模型服务）。局域网模型服务需要 https 反向代理，或者改用浏览器版。
+这条限制来自清单与系统默认行为的推断，**尚未在真机上验证**。
 
 ## 4. 任务类型与输出契约
 
@@ -137,16 +199,23 @@ lib/ai/prompts/
 
 `AiErrorKind` → 界面表现（`lib/ai/client.ts` 的 `describeAiError`）：
 
-| 情况                      | 行为                                                                                                                                                                                                                                                                                                                                                              |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 未配置 Key/基址           | 面板显示「AI 教练未启用」+ 一句怎么开启；训练流程完全不受影响（端到端有测试）                                                                                                                                                                                                                                                                                     |
-| `timeout`                 | 「请求超过 N 秒已中断」，可重试                                                                                                                                                                                                                                                                                                                                   |
-| `rate_limited`            | 「操作太频繁，稍后再试」，HTTP 429 带 `Retry-After`（端到端有测试）                                                                                                                                                                                                                                                                                               |
-| `auth`                    | 「服务端凭据无效」——提示运维，不提示用户去改自己的设置                                                                                                                                                                                                                                                                                                            |
-| `unavailable` / `network` | 「模型服务暂时不可用」，本地功能不受影响                                                                                                                                                                                                                                                                                                                          |
-| `bad_output`              | 「模型返回格式不符合预期」，原始文本不渲染                                                                                                                                                                                                                                                                                                                        |
-| `unsafe_url`              | 「目标地址不在服务端允许列表中」                                                                                                                                                                                                                                                                                                                                  |
-| 状态接口不可达            | `unreachable: true` + 「状态接口返回 <状态码>」或底层异常文本。**APK 就是这个情况**：静态导出没有 `/api/ai/*`，请求 404，界面落到「未启用」。这条有专门的自动化检查（`npm run verify:apk-web` 的第 5 项，断言页面出现「AI 教练未启用」或「服务端还没有模型凭据」而非崩溃）。端到端另有三条降级用例：状态接口返回未配置、`/api/ai/analyze` 返回 502、返回 429 限流 |
+| 情况                      | 服务端代理模式的行为                                                                                    | 本机直连模式的行为                                                                              |
+| ------------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| 未配置                    | 面板显示「AI 教练未启用」或「服务端还没有模型凭据」+ 一句怎么开启；训练流程完全不受影响（端到端有测试） | 「直连还差一步：还没有填写模型服务地址/模型名称/API Key」，按钮不可点，**不出站**               |
+| `timeout`                 | 「请求超过 N 秒已中断」，可重试                                                                         | 同一条通路，同一种提示；`ping` 的超时钳到 15 秒                                                 |
+| `rate_limited`            | HTTP 429 带 `Retry-After`，界面上「调用过于频繁或已达当日上限」                                         | 服务端才有 429；直连由本机每日次数上限拦下，提示「本机今天已调用 N 次，达到你设定的上限」       |
+| `auth`                    | 「模型服务拒绝了当前凭据」——提示运维查 `AI_API_KEY`                                                     | 同样的文案，只不过此时该检查的是用户自己填的 Key                                                |
+| `unavailable` / `network` | 「模型服务暂时不可用」/「无法连接模型服务」，本地功能不受影响                                           | 「无法连接模型服务，请检查网络或服务地址」；跨域被服务商拒绝时也落在这里                        |
+| `bad_response`            | 输出未通过 Zod 就丢弃，报「模型返回的结构不符合要求」，原始文本不渲染                                   | **同一个契约**，端到端各有一条用例验证「不合结构就报错而不是透传」                              |
+| `unsafe_url`              | 「该地址不在服务端允许列表中」等 SSRF 原因                                                              | 「只有本机地址可以使用 http，其他地址必须用 https」这类形状检查原因                             |
+| 没有服务端                | —                                                                                                       | 代理模式在纯离线包里得到 `no_server`：「这个构建里没有服务端，AI 教练不可用；训练本身不受影响」 |
+| 状态接口不可达            | `unreachable: true` + 状态码或底层异常文本                                                              | 直连模式**不去查**状态接口，避免一条误导性的错误                                                |
+
+**纯离线包（APK）里的降级是被自动化检查盯着的**：Capacitor 的本地服务器默认 `html5mode=true`，
+`/api/ai/status` 这类无扩展名路径不会被 404，而是**返回 200 + 应用自己的 index.html**，于是 `response.ok` 为真、
+JSON 解析才失败。`readAiJson()` 按内容判定并给出设计好的文案，`npm run verify:apk-web` 复刻了这一响应形状，
+断言 `/me/` 与 `/coach/` 出现可读说明而不是 `"Unexpected token '<'"`——真机上第一次反馈就是从这里漏出解析器文案的。
+端到端另有三条降级用例：状态接口返回未配置、`/api/ai/analyze` 返回 502、返回 429 限流。
 
 原则：**AI 失败永远不能阻断训练**。所有 AI 调用都在独立的错误边界内，失败只影响那块面板。
 
@@ -154,8 +223,8 @@ lib/ai/prompts/
 
 1. `lib/ai/output-schema.ts`：`AI_TASKS` 加名字，写专属 schema（继承 `coachBaseSchema`），在 `TASK_OUTPUT_SCHEMAS` 与 `TASK_INPUT_LIMITS` 注册。
 2. `lib/ai/prompts/<task>.ts`：写模板 + `<TASK>_PROMPT_VERSION`，在 `index.ts` 注册 builder。
-3. `lib/ai/service.ts` 的 `aiRequestSchema` 加该任务的入参分支（含长度约束）。
-4. 前端调用 `requestAi({ task, input, ... })`，并处理 `!response.ok` 的降级文案。
+3. `lib/ai/tasks.ts` 的 `aiRequestSchema` 加该任务的入参分支（含长度约束）——服务端与直连共用这一个判别联合。
+4. 前端调用 `lib/ai/client.ts` 里对应的函数（`analyzeReasoning` / `analyzeMaterial` / …），并处理 `!response.ok` 的降级文案。两种模式由 `ai.mode` 分流，界面不需要知道走的是哪条路。
 5. 加测试：`tests/unit/` 里对 builder 输出断言（含版本字符串），端到端里至少覆盖「未配置时不报错」。
 6. 若该任务需要发送用户私人内容，必须在调用处加显式确认，并更新 [PRIVACY.md](PRIVACY.md) 的数据流表。
 
@@ -166,3 +235,7 @@ lib/ai/prompts/
 - 服务端持久化的分布式限流（现在是单进程内存，多实例部署需换 Redis）。
 - 提示词 A/B 评估面板（只做到了回传 `promptVersion` 并存进 `aiAnalyses`）。
 - 云端账户下的按用户配额（当前限流键是 IP + 访客 profile）。
+- 直连模式的额度不跨设备：换一台设备就重新计数，也没有每分钟窗口，更没有服务端审计。
+- 直连模式的密钥只能明文存在本机浏览器存储里。Web Crypto 加密它没有意义——解密用的还在同一台设备上；
+  真正的解法是服务端代理或系统级安全存储（如 Android Keystore + 原生插件），两者都未实现。
+- 直连模式未做任何 DNS 层面的私网拦截（见 3.6），因此不能把它当成「企业受控部署」的形态来用。

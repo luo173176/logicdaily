@@ -6,7 +6,7 @@
 
 本仓库**从未部署到任何环境**。本文里的部署步骤是**说明**，不是验证结论。
 
-已经真实验证过的部分：`.github/workflows/ci.yml` 在 GitHub Actions 上跑通（`main` 分支 push 触发，两个任务全绿：类型检查 / ESLint / 题库校验 / 220 个单元与集成测试 / 生产构建，随后 Ubuntu 上的 Chromium 以 Pixel 7 视口跑过 17 个端到端用例）。这证明的是「干净机器上从 `npm ci` 起整条链路可复现」，**不等于**任何托管平台的部署可用性。
+已经真实验证过的部分：`.github/workflows/ci.yml` 在 GitHub Actions 上跑通（`main` 分支 push 触发，三个任务全绿：① 类型检查 / ESLint / 题库校验 / 235 个单元与集成测试 / 生产构建；② Ubuntu 上的 Chromium 以 Pixel 7 视口跑 22 个端到端用例；③ 静态导出 `apk-web/` 并在无 Node 服务端的情况下跑 22 项包内验证，含一次真实的跨源直连调用。实测运行 2m9s 全绿）。这证明的是「干净机器上从 `npm ci` 起整条链路可复现」，**不等于**任何托管平台的部署可用性。
 
 区分方式：
 
@@ -293,8 +293,8 @@ CMD ["node", "server.js"]
 
 ### 6.4 纯静态托管（GitHub Pages、S3、Cloudflare Pages 之类）
 
-- 用户数据本来就在浏览器 IndexedDB，纯静态能跑通训练/日志/复习/报告。AI 会不可用：`readAiStatus()` 在 `fetch` 失败时返回 `{ configured: false, unreachable: true }`，其兜底文案明确写着「纯静态部署时属于预期」（实测 `lib/ai/client.ts:67`）。
-- 但要真正 `output: 'export'` 需要改配置并接受限制：Next 官方文档（本仓库内 `02-guides/static-exports.md` 的 Unsupported Features 一节）列出「依赖 Request 的 Route Handlers」不属于静态导出支持范围，而 `app/api/ai/analyze/route.ts` 的 POST 正是读 `Request` 的。**本会话未尝试过静态导出，不能保证它现在能构建成功。**
+- 用户数据本来就在浏览器 IndexedDB，纯静态能跑通训练/日志/复习/报告。**服务端代理那条 AI 通路在纯静态下不存在**：`readAiStatus()` 拿不到本站接口，界面给出「这个构建里没有服务端」的设计说明而不是崩溃（`lib/ai/client.ts` 的 `NO_SERVER_MESSAGE`）。但用户仍可以自行开启**本机直连**（自己的地址 + 自己的 Key），所以「静态托管 = 没有 AI」这个说法已经不准确了；代价与边界见 `docs/AI_INTEGRATION.md` 3.6。
+- 但要真正 `output: 'export'` 需要改配置并接受限制：Next 官方文档（本仓库内 `02-guides/static-exports.md` 的 Unsupported Features 一节）列出「依赖 Request 的 Route Handlers」不属于静态导出支持范围，而 `app/api/ai/analyze/route.ts` 的 POST 正是读 `Request` 的。**这条路已经跑通并有 CI 盯着**：`npm run build:apk-web` 按 `BUILD_TARGET=capacitor` 切到 `output: 'export'`，由 `scripts/build-apk-web.mjs` 在 `.apk-src/` 副本里排除 `app/api`（仓库本体不动），CI 的「离线静态包与直连模式」任务每次 push 都重新导出并验证一遍。自己部署纯静态版可以直接复用这条命令，产物在 `apk-web/`。
 - 静态托管下 Service Worker 仍需要 HTTPS（GitHub Pages 默认给）。
 
 ## 7. 环境变量总表
@@ -325,7 +325,7 @@ CMD ["node", "server.js"]
 
 逐项勾选，顺序无关紧要，前四项没做完就别对外announce。
 
-- [ ] **密钥不在客户端。** `AI_API_KEY` 只能通过 `process.env` 在服务端读取（`lib/ai/config.ts` 的注释与 `.env.example` 的注释都强调了这点）。禁止：加 `NEXT_PUBLIC_` 前缀、写进 `next.config.ts` 的 `env` 字段（那份配置会被打进浏览器包）、写进前端组件。自查方式：构建后在浏览器 DevTools 的 Sources 里全文搜你的 Key 前缀，必须搜不到。
+- [ ] **服务端代理的密钥不在客户端。** `AI_API_KEY` 只能通过 `process.env` 在服务端读取（`lib/ai/config.ts` 的注释与 `.env.example` 的注释都强调了这点）。禁止：加 `NEXT_PUBLIC_` 前缀、写进 `next.config.ts` 的 `env` 字段（那份配置会被打进浏览器包）、写进前端组件。自查方式：构建后在浏览器 DevTools 的 Sources 里全文搜你的 Key 前缀，必须搜不到。注意这条约束管的是**你自己的** Key：用户可以开启本机直连，把他自己的 Key 存在他自己的设备上（`lib/ai/credentials.ts`），那不是你泄漏，也不需要你配置。
 - [ ] **`.env*` 不进版本库。** 实测本仓库 `.gitignore` 含 `.env*`。同时确认托管平台的日志/预览功能不会把变量值打印出来。
 - [ ] **密钥扫描。** CI 里目前**没有**密钥扫描步骤（实测 `.github/workflows/ci.yml` 全文：只有 checkout、setup-node、`npm ci`、`typecheck`、`npx eslint . --max-warnings=20`、`content:validate`、`test`、`build`，e2e job 用 `npx playwright install --with-deps chromium`）。若要开启，可在 CI 里自行加入 gitleaks / GitHub 的 Secret Scanning + Push Protection。本会话没有配置它，也没有验证它。
 - [ ] **轮换方案。** 上游 Key 泄露时的处置顺序：上游吊销 → 新 Key 注入 → 重新构建（因为 4.1 的缓存行为）→ purge CDN `/api/*` → 用第 9 节自检确认 `configured` 变化。
@@ -399,14 +399,14 @@ npm run test:e2e         # playwright test（会自己起 next start -p 3123）
 npm run test:coverage    # vitest run --coverage（v8，统计范围只有 lib/**）
 ```
 
-| 命令                             | 覆盖                                                                                                                                                                                                                                                                                           | 本会话是否运行                      |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `npm run test`                   | 15 个文件：12 个单元（`lib/domain` 的 schema、判分、错因归因、调度、掌握度、每日计划、统计、时间、提醒决策 + `ai-security`）与 3 个集成（`local-store`、`training-flow`、`content`），集成用 fake-indexeddb 在 node 环境跑                                                                     | 已运行，全绿                        |
-| `npm run typecheck`              | 全项目 TS 严格检查                                                                                                                                                                                                                                                                             | 已运行，exit 0                      |
-| `npm run content:validate`       | 题库：id 规范、枚举、答案与解析自洽、重复题干、类别覆盖                                                                                                                                                                                                                                        | 已运行，通过                        |
-| `npm run lint`                   | ESLint flat config                                                                                                                                                                                                                                                                             | **未运行**                          |
-| `npm run test:e2e`               | `tests/e2e/core-flow.spec.ts` 6 个 + `tests/e2e/data-and-ai.spec.ts` 11 个 = 17 个 `test` 声明（引导、答题与错因归类、日志八步与证据清单、复习、报告、导出→清除→导入、AI 三种降级、393×851 溢出与遮挡）。配置为 `devices['Pixel 7']`、`workers: 1`、headless                                   | **未运行**（3123 已被现有实例占用） |
-| CI（`.github/workflows/ci.yml`） | job `check`：`npm ci` → `typecheck` → `npx eslint . --max-warnings=20` → `content:validate` → `test` → `build`；job `e2e`（needs check）：`npx playwright install --with-deps chromium` → `CI=true npm run test:e2e`，失败上传 `playwright-report/` 与 `test-results/`。Node 22，ubuntu-latest | **本会话未触发 CI**                 |
+| 命令                             | 覆盖                                                                                                                                                                                                                                                                                                                                  | 本会话是否运行                                                           |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `npm run test`                   | 17 个文件：14 个单元（`lib/domain` 的 schema、判分、错因归因、调度、掌握度、每日计划、统计、时间、提醒决策 + `ai-security`、`ai-client`、`ai-direct`）与 3 个集成（`local-store`、`training-flow`、`content`），集成用 fake-indexeddb 在 node 环境跑                                                                                  | 已运行，全绿                                                             |
+| `npm run typecheck`              | 全项目 TS 严格检查                                                                                                                                                                                                                                                                                                                    | 已运行，exit 0                                                           |
+| `npm run content:validate`       | 题库：id 规范、枚举、答案与解析自洽、重复题干、类别覆盖                                                                                                                                                                                                                                                                               | 已运行，通过                                                             |
+| `npm run lint`                   | ESLint flat config                                                                                                                                                                                                                                                                                                                    | **未运行**                                                               |
+| `npm run test:e2e`               | `tests/e2e/core-flow.spec.ts` 6 个 + `tests/e2e/data-and-ai.spec.ts` 11 个 + `tests/e2e/ai-direct.spec.ts` 5 个 = 22 个 `test` 声明（引导、答题与错因归类、日志八步与证据清单、复习、报告、导出→清除→导入、AI 三种降级、本机直连全程含真实跨源 mock 服务商、393×851 溢出与遮挡）。配置为 `devices['Pixel 7']`、`workers: 1`、headless | **已运行**：本机 22 passed（Edge 通道），CI 里用下载的 Chromium 同样全绿 |
+| CI（`.github/workflows/ci.yml`） | job `check`：`npm ci` → `typecheck` → `npx eslint . --max-warnings=20` → `content:validate` → `test` → `build`；job `e2e`（needs check）：`npx playwright install --with-deps chromium` → `CI=true npm run test:e2e`，失败上传 `playwright-report/` 与 `test-results/`。Node 22，ubuntu-latest                                        | **本会话未触发 CI**                                                      |
 
 本会话的真实输出：
 

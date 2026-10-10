@@ -4,7 +4,44 @@
 
 ## [Unreleased]
 
-_暂无。_
+### 新增
+
+- **AI 本机直连模式**（`ai.mode = 'direct'`，用户显式开启）：请求从这台设备直接发给使用者自己填的服务商，
+  因此纯离线包（APK）与静态托管里也能用上 AI。仍然强制 https（`127.0.0.1` / `localhost` / `::1` 除外）、
+  URL 内不得携带凭据、`redirect: 'error'` 不跟随重定向；提示词、输入上限、输出契约与错误种类与代理模式
+  **共用同一份** `lib/ai/tasks.ts`，直连不会偷偷放宽校验。明确没有的防护也写清楚：不做 DNS 私网检查、
+  没有服务端权威配额与每分钟窗口、没有服务端日志（部署者看不到这类调用）。见 `docs/AI_INTEGRATION.md` 3.6、`SECURITY.md` 2.7。
+- **API Key 的独立存放**（`lib/ai/credentials.ts`）：只存 `localStorage` 的 `logicdaily:ai-key:<profileId>`，
+  不进 `settings` 记录，因此**结构上不可能出现在导出备份里**（`migrateSettings()` 本来就会在每次加载时删掉
+  `apiKey`/`key`/`token`，密钥放进设置会被自己抹掉）。界面默认遮罩输入框、只显示首尾各 2 字符与长度的指纹、
+  「清除本机密钥」与「清除本地数据」都会删掉所有 profile 的密钥。端到端与包内验证都真的导出一次备份文件并断言搜不到那串 Key。
+- **AI 设置界面重写**（`features/me/ai-settings.tsx`）：「请求怎么走」模式切换、两种模式各自的说明、
+  Base URL 与模型名称改为自由填写、8 个预设只作快捷方式（点一下填入、之后可改）、按草稿测连通性的「测试连接」、
+  以及直连模式的代价说明（明文在设备上、不进备份、无服务端配额、需要服务商允许跨域；实测 DeepSeek、Kimi、通义、
+  StepFun、SiliconFlow 允许浏览器跨域，智谱不允许）。
+- **CI 增加离线静态包任务**：`npm run build:apk-web` + `npm run verify:apk-web`，让「导出目标」与直连通路在 CI 里就被盯住。
+
+### 修复
+
+- **纯离线包里教练按钮永远点不动**：`CoachPanel` 与材料分析页用本站 `/api/ai/status` 的结果判断是否就绪，
+  而直连模式下这个接口不存在，即使地址、模型、密钥都填齐了也只会看到「这里连不上 AI 接口」。就绪判断改为按模式分流
+  （`directReadiness()`），直连下不再查询状态接口，缺件时给出「直连还差一步：还缺什么」的具体提示且不出站。
+- **自定义 Base URL 后用量记录仍写着预设供应商**：改动地址时把 `ai.provider` 归为 `custom`，
+  避免 `aiUsage.provider` 与实际出站目标不一致。
+
+### 变更
+
+- `settings.ai` 新增 `mode`（默认 `server`）与 `baseUrl`；移除只做展示的 `baseUrlLabel`；「提供商」由下拉框变成快捷方式按钮。
+  旧备份经 `migrateSettings()` 浅合并升级，缺字段自动补默认值。
+- `lib/ai/provider.ts` 只保留服务端的出站前检查（SSRF），HTTP/解析/重试实现移进客户端可导入的 `lib/ai/provider-core.ts`；
+  任务定义与契约在 `lib/ai/tasks.ts`。两种模式共用，不存在两份实现漂移。
+
+### 测试
+
+- 新增 15 个单元测试（地址形状检查、缺件不出站、`Bearer` 头与 `/chat/completions` 路径、不跟随重定向、
+  契约不符即丢弃、密钥存放与清除范围）与 5 个端到端用例（起一个真实的本地跨源 mock 服务商，走完
+  「设置里填直连 → 测试连接 → 保存 → 教练页拿到结构化分析」）。`npm run verify:apk-web` 由 15 项增加到 22 项，
+  其中包含在无 Node 服务端的包内完成一次跨源直连调用。**没有用真实付费 Key 打过真实服务商。**
 
 ## [1.0.0] - 2026-10-09
 

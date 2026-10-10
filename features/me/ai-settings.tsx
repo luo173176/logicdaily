@@ -93,10 +93,12 @@ export function AiSettingsSection({ draft, patch, profileId, ready }: Props) {
             <div className="stack gap-1">
               <p>请求从本机直接发给模型服务商，不经过任何服务器，所以 APK 和静态托管也能用。</p>
               <p>
-                代价要说清楚：密钥以明文存在本设备的浏览器存储里，拿到这台设备就能看到；它<strong>不会</strong>写进导出的备份文件； 没有服务端配额与
-                SSRF 允许列表，只有你设定的每日次数上限；服务商必须允许浏览器跨域访问 （实测 DeepSeek、Kimi、通义、StepFun、SiliconFlow
-                可以，智谱的接口不允许）。
+                密钥以明文存在<strong>这台设备</strong>的浏览器存储里，拿到设备就能看到；它<strong>不会</strong>写进导出的备份文件。
               </p>
+              <p>没有服务端配额，也没有 SSRF 允许列表，只有你设定的每日次数上限；服务商还要允许浏览器跨域访问。</p>
+              <p>实测 DeepSeek、Kimi、通义、StepFun、SiliconFlow 允许浏览器跨域，智谱的接口不允许。</p>
+              <p>地址必须是 https。http 只放行 127.0.0.1 与 localhost，而在 App 里那指的是手机自己。</p>
+              <p>Android 还默认禁止明文流量，所以局域网里的 Ollama 需要 https 反向代理，或者改用浏览器版。</p>
             </div>
           </Note>
         )}

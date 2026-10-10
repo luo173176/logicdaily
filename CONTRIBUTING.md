@@ -115,14 +115,14 @@ npm run test:e2e     # 会自己起停生产服务器，注意别占用 3000/312
 
 ```bash
 npm run build:apk-web    # 复制源码到 .apk-src/ → 静态导出 → apk-web/
-npm run verify:apk-web   # 用 Playwright 验证打进包内的那份资源（14 项）
+npm run verify:apk-web   # 用 Playwright 验证打进包内的那份资源（22 项，含一次真实的跨源直连调用）
 npm run apk:sync         # build:apk-web + cap sync android
 cd android && ./gradlew clean assembleDebug
 ```
 
 需要知道的前提与禁忌：
 
-- **不要在仓库里删除或改动 `app/api`** 来「让导出通过」。那是 SSRF 防护、密钥只留服务端、限流所在地；构建脚本的做法是把源码复制进 `.apk-src/`，**只在副本里**排除服务端路由。
+- **不要在仓库里删除或改动 `app/api`** 来「让导出通过」。那是代理通路的 SSRF 防护、密钥隔离、限流所在地；构建脚本的做法是把源码复制进 `.apk-src/`，**只在副本里**排除服务端路由。包内因此只剩「本机直连」这条 AI 通路（`lib/ai/direct.ts`），改任何一侧都要同时想清楚另一侧：提示词、输入上限、输出契约都在 `lib/ai/tasks.ts` 里共用，别把它们分叉成两份。
 - 静态导出不支持：依赖 `Request` 的 Route Handler、无 `generateStaticParams()` 的动态段、`useSearchParams()` outside `<Suspense>`、元数据路由（`app/manifest.ts`）。这就是日志用 `/journal?edit=<id>`、manifest 数据放 `content/app-manifest.json` 的原因 —— 改这两处会同时影响 Web 与 APK。
 - `android/local.properties` 里的 `sdk.dir` **必须用正斜杠**（`sdk.dir=D:/dev/android-sdk`）。反斜杠转义会让 Gradle 在 `SdkLocator` 校验路径时抛 `java.io.IOException`。这个文件不提交。
 - Capacitor 版本要与本机 JDK 匹配：8.x 生成的工程要求 JDK 21 + compileSdk 36；本仓库现在钉在 6.2.2（Java 17 / compileSdk 34）。升级要连 `android/` 工程一起重新生成并真机验证。
@@ -138,7 +138,7 @@ cd android && ./gradlew clean assembleDebug
 
 行为变化要同步文档，尤其是：`README.md` 的功能与「已知限制」清单、`docs/DATA_MODEL.md`（字段）、`docs/PRIVACY.md`（数据是否离开设备）、`CHANGELOG.md`。
 
-这个项目的一个原则是**不夸大**：如果某个能力受限（PWA 后台提醒、APK 未真机验证、APK 内没有 AI、云端同步未实现），文档和界面都要如实写明。修好了再删掉那句限制说明。
+这个项目的一个原则是**不夸大**：如果某个能力受限（PWA 后台提醒、APK 未真机验证、APK 内没有服务端代理通路因此只能直连、直连从未打过真实服务商、云端同步未实现），文档和界面都要如实写明。修好了再删掉那句限制说明。
 
 ## 许可
 
