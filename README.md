@@ -220,7 +220,7 @@ AI_RATE_LIMIT_PER_MIN=12
 诚实清单：
 
 - **未部署**：本仓库从未发布到任何环境，`docs/DEPLOYMENT.md` 里的部署步骤是说明而非验证结果。
-- **APK 没在真机上跑过**：构建真实成功（首次完整构建 `BUILD SUCCESSFUL in 1m 29s`，产物 4,303,043 字节，`aapt2` 元数据与包内资源条目都核对过），打进包的那份资源也用 Playwright 验证了 22 项；构建机上 `adb devices` 为空，所以没有自动化真机测试；已有的一条真机反馈（App 能装能开，但降级文案漏出 JSON 解析错误）已修复，见 `docs/ANDROID.md` 4.6.1。返回键、闪屏、通知权限弹窗、存储配额这些原生行为仍无证据。而且它是 debug 签名，不能上架。
+- **APK 没在真机上跑过**：构建真实成功（1.1 的发布包来自 `clean assembleDebug`，`BUILD SUCCESSFUL in 12s`，产物 4,341,131 字节，`aapt2` 核验 versionName 1.1 / versionCode 2，包内 91 个资源文件与导出目录**逐文件 sha256 相同**），打进包的那份资源也用 Playwright 验证了 22 项；构建机上 `adb devices` 为空，所以没有自动化真机测试；已有的两条真机反馈（App 能装能开；一条是降级文案漏出 JSON 解析错误，已修复，见 `docs/ANDROID.md` 4.6.1；另一条是「AI 教练配置不了」，因此有了本机直连，见 4.6.2）。返回键、闪屏、通知权限弹窗、存储配额这些原生行为仍无证据。而且它是 debug 签名，不能上架。
 - **APK 内只有直连这一条 AI 通路**：纯离线包不含 Node 服务端，`/api/ai/*` 不存在，服务端代理模式在 App 内必然不可用。直连模式已经在包内验证过（跨源调用、契约校验、密钥不进备份），但**从未用真实的付费 Key 打过真实服务商**，而且 Android 默认禁止明文流量、`assertDirectEndpoint` 只放行回环 http，所以局域网自建模型服务在 App 里需要 https 反向代理。
 - **后台提醒不可靠**：PWA 无法保证后台唤醒。`decideReminder()` 已接到运行时（`components/reminder-gate.tsx`：页内横幅 + 已授权时的系统通知），但只在应用被打开时表达；没有服务端推送（未实现 `PushSubscription`），APK 也没有引入原生本地通知插件。界面上没有承诺到点提醒。
 - **云端账户与同步未实现（Phase 3）**：`DataStore` 接口留了接缝，`supabase/migrations/` 有带 RLS 的 SQL 并在本地 Postgres 上验证过，但应用内没有登录、没有同步，装了 SQL 也不会改变产品行为。PWA 与 APK 的存储是两个不同的域，互不继承，只能靠导出/导入 JSON 搬运。

@@ -12,7 +12,7 @@
 | 其余全部功能 | 离线可用                           | 离线可用（题库 112 题随包播种进 IndexedDB）                                            |
 | 分发         | 你自己的 HTTPS 域名                | GitHub Releases 上的 debug 签名 APK                                                    |
 
-- **APK 已经真实构建成功并有产物**：`android/app/build/outputs/apk/debug/app-debug.apk`，4,303,043 字节（4.10 MB），Gradle 首次完整构建 `BUILD SUCCESSFUL in 1m 29s`（82/82 tasks）。第 4 节贴了环境版本、构建命令与 `aapt2` 的真实输出。
+- **APK 已经真实构建成功并有产物**：当前 Release 上的包是 1.1 的 `clean assembleDebug` 产物，4,341,131 字节（4.14 MB），`aapt2` 核验 `versionCode 2 / versionName 1.1`，构建 `BUILD SUCCESSFUL in 12s`。1.0.0 那一次首次完整构建是 `BUILD SUCCESSFUL in 1m 29s`（82/82 tasks）产物 4,303,043 字节。第 4 节贴了环境版本、构建命令与 `aapt2` 的真实输出。
 - **走的是「纯离线单机」路线**：APK 从打包进自身的本地资源加载页面（`capacitor.config.ts` 里不设 `server.url`），因此不依赖任何服务器，也不需要 HTTPS 域名。代价是**服务端代理那条 AI 通路在 App 内不存在**；1.1 起可以改用**本机直连**（我的 → AI 教练 → 请求怎么走 → 本机直连），密钥与地址都存在这台设备上，代价见 `docs/AI_INTEGRATION.md` 3.6 与 `SECURITY.md` 2.7。
 - **推荐用法仍然是 PWA**（第 1 节）：不需要签名、上架、升级策略，且两种 AI 通路都可用（服务端代理不需要用户自己持有 Key）。APK 的价值在于「不依赖浏览器站点数据清理策略」「可在没有 Chrome 的设备分发」，以及为将来的原生通知留出入口。
 - **这是 debug 包，不是上架包**：用 Android 默认的 debug keystore 签名，只能直接安装到手机上侧载试用，不能提交 Google Play（那需要 `bundleRelease` + 你自己的 keystore，见 5.5）。
@@ -219,18 +219,23 @@ exit=0
 
 之后又重建了两次，都是增量：换构建脚本的配置传递方式后 `BUILD SUCCESSFUL in 34s`（23 executed / 59 up-to-date），换掉启动器图标后 `BUILD SUCCESSFUL in 28s`（6 executed / 76 up-to-date），最后 `clean assembleDebug` 完整重建 `BUILD SUCCESSFUL in 15s`（76 executed / 10 up-to-date）。四次 exit 都是 0。
 
+1.1 的发布包同样来自 `clean assembleDebug`：`BUILD SUCCESSFUL in 12s`（86 actionable tasks：75 executed / 11 up-to-date），exit=0。
+这次顺手确认了 4.1 那条前提仍然成立：`gradlew` 会先去下载 `gradle-8.2.1-all.zip`，而本机 JDK 校验 `services.gradle.org` 的证书链失败
+（`PKIXValidator` → `unable to find valid certification path`），失败的是**取 Gradle 这一步**，不是构建本身；照 4.1 用本机 8.9 就绕开了。
+
 产物（当前仓库里这一次的输出）：
 
 ```text
 $ ls -la android/app/build/outputs/apk/debug/
--rw-r--r-- 1 luo17 197609 4303043 Oct 10 09:24 app-debug.apk
--rw-r--r-- 1 luo17 197609     368 Oct 10 09:24 output-metadata.json
+-rw-r--r-- 1 luo17 197609 4341131 Oct 10 12:01 app-debug.apk
+-rw-r--r-- 1 luo17 197609     368 Oct 10 12:01 output-metadata.json
 
 $ certutil -hashfile android/app/build/outputs/apk/debug/app-debug.apk MD5
-a0ed509159b65dd02d244df085a0d133
+44ff1420444b66daff3c3c96dbb49a7c
 ```
 
-4,303,043 字节 ≈ 4.10 MB。
+4,341,131 字节 ≈ 4.14 MB（v1.0.0 是 4,303,043 字节；多的约 37 KB 是新的直连模块与设置界面，不是打包空洞——条目数 578、`assets/public/` 93 个、
+逐条目 sha256 与 `apk-web/` 完全一致，见 4.4）。
 
 一个踩过的坑：**把 gradle 的输出管道给 `tail` 会让 `$?` 变成 `tail` 的退出码**，第一次构建失败时我因此误判成成功。之后改成先重定向到文件再读，才拿到真实的 `exit=1` 和失败任务名。
 
@@ -262,7 +267,7 @@ a0ed509159b65dd02d244df085a0d133
 
 ```text
 $ /d/dev/android-sdk/build-tools/34.0.0/aapt2.exe dump badging android/app/build/outputs/apk/debug/app-debug.apk
-package: name='com.logicdaily.app' versionCode='1' versionName='1.0' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
+package: name='com.logicdaily.app' versionCode='2' versionName='1.1' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
 sdkVersion:'22'
 targetSdkVersion:'34'
 uses-permission: name='android.permission.INTERNET'
@@ -290,6 +295,8 @@ cordova_plugins.js
 ```
 
 即 **`apk-web/` 的 91 个文件一个不少地全在 APK 里**，另加 Capacitor 注入的 2 个桥接文件。APK 根下还有 `assets/capacitor.config.json`、`assets/capacitor.plugins.json`、`assets/native-bridge.js`（这三个不属于 `assets/public/`）。
+
+1.1 这一次不止比了路径，还**逐文件比了内容**：把 `apk-web/` 每个文件的 sha256 与 APK 内同名条目解压后的 sha256 对照，91 个全部相同（0 处不一致）。
 
 **这一步是必要的**：它证明「被验证过的那份资源」和「打进包里的资源」是同一份，否则 4.6 的功能验证都不算数。
 
@@ -518,7 +525,7 @@ components/reminder-gate.tsx:40:      const decision = decideReminder({
 
 **APK 侧 —— 已验证的部分：**
 
-- 有可安装的 debug APK（4,303,043 字节，`com.logicdaily.app` 1.0 / versionCode 1，minSdk 22 / target 34 / compileSdk 34），Gradle 首次完整构建 `BUILD SUCCESSFUL in 1m 29s`（第 4 节有全部命令与原始输出）。
+- 有可安装的 debug APK（1.1：4,341,131 字节，`com.logicdaily.app` versionName 1.1 / versionCode 2，minSdk 22 / target 34 / compileSdk 34），来自 `clean assembleDebug`（`BUILD SUCCESSFUL in 12s`）；`assets/public/` 93 个条目与 `apk-web/` 的 91 个文件**逐文件 sha256 相同**（第 4 节有全部命令与原始输出）。
 - APK 内 93 个 `assets/public/*` 条目与打包前的 `apk-web/` 逐路径一致（4.4）。
 - 打进包的那份资源经 Playwright 验证 22/22 通过：题库 112 题随包播种、答题判分、`/journal?edit=` 全流程含冷启动刷新、AI 优雅降级、无 Node 服务端时的本机直连（含跨源调用与「备份里没有密钥」）、5 条路由无横向溢出（4.6）。
 - APK 是**纯离线单机**：不依赖任何服务器。包内没有 Node 服务端，因此**服务端代理**那条 AI 通路不可用（界面给出说明而非崩溃）；**本机直连**可用，已在包内验证过一次真实的跨源调用（4.6 表第 7～13 项），代价见 4.6.2。
