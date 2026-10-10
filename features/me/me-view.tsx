@@ -11,7 +11,9 @@ import { masteryBand, masteryPercent } from '@/lib/domain/mastery';
 import { EXERCISE_CONTENT_TAG } from '@/lib/content/packs';
 import { weekdayLabel } from '@/lib/domain/time';
 import type { ExerciseIssueReport } from '@/lib/domain/records';
-import { applyTheme, readAiStatus, testAiConnection, type AiStatus } from '@/lib/ai/client';
+import { applyTheme } from '@/lib/ai/client';
+import { clearAllAiKeys } from '@/lib/ai/credentials';
+import { AiSettingsSection } from '@/features/me/ai-settings';
 
 const WEEKDAYS = [0, 1, 2, 3, 4, 5, 6];
 
@@ -19,8 +21,6 @@ export function MeView() {
   const { store, profileId, settings, saveSettings, ready, seeding, reseedContent, notify, timezone } = useApp();
   const [draft, setDraft] = useState<AppSettings>(settings);
   const [dirty, setDirty] = useState(false);
-  const [ai, setAi] = useState<AiStatus | null>(null);
-  const [aiProbe, setAiProbe] = useState<string | null>(null);
   const [notificationState, setNotificationState] = useState<string>('未检测');
   const [issues, setIssues] = useState<ExerciseIssueReport[]>([]);
   const [syncInfo, setSyncInfo] = useState<{ localRevision: number; mode: string; pendingOps: number } | null>(null);
@@ -39,7 +39,6 @@ export function MeView() {
   useEffect(() => {
     if (!ready) return;
     void refresh();
-    void readAiStatus().then(setAi);
     if (typeof window !== 'undefined' && 'Notification' in window) {
       setNotificationState(Notification.permission);
     } else {
@@ -248,107 +247,7 @@ export function MeView() {
         ))}
       </section>
 
-      <SectionTitle>AI 教练</SectionTitle>
-      <section className="card stack gap-3">
-        {ai === null ? (
-          <p className="faint">正在检查服务端配置…</p>
-        ) : ai.unreachable ? (
-          <Note tone="warn" title="无法连接 AI 服务">
-            <p>{ai.message}</p>
-            <p className="faint">没有 AI 也不影响训练：判分、解析、错因归类与复习调度都是本地规则。</p>
-          </Note>
-        ) : ai.configured ? (
-          <Note tone="ok" title="服务端凭据已就绪">
-            <p>
-              默认模型 {ai.defaultModel}；允许的用户 Base URL 数量 {ai.allowedBaseUrlCount}。密钥由服务端环境变量保存，
-              不会下发到浏览器，也不会写入本机数据。
-            </p>
-          </Note>
-        ) : (
-          <Note tone="neutral" title="尚未配置模型服务">
-            <p>请在服务器环境变量里设置 AI_API_KEY、AI_BASE_URL 与 AI_MODEL（见 .env.example 与 docs/AI_INTEGRATION.md）。</p>
-          </Note>
-        )}
-
-        <div className="row-between">
-          <span className="font-semibold">在本设备启用 AI 教练</span>
-          <Chip pressed={draft.ai.enabled} onPress={() => patch({ ai: { ...draft.ai, enabled: !draft.ai.enabled } })}>
-            {draft.ai.enabled ? '已启用' : '未启用'}
-          </Chip>
-        </div>
-        <Field label="提供商" hint="必须是服务端允许列表中的取值。">
-          <select
-            value={draft.ai.provider}
-            onChange={(event) => patch({ ai: { ...draft.ai, provider: event.target.value as AppSettings['ai']['provider'] } })}
-          >
-            {['openai-compatible', 'openai', 'deepseek', 'moonshot', 'zhipu', 'qwen', 'local', 'custom'].map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </Field>
-        <Field label="模型名称" hint="留空则使用服务端默认模型。">
-          <input type="text" value={draft.ai.model} onChange={(event) => patch({ ai: { ...draft.ai, model: event.target.value } })} />
-        </Field>
-        <Field label="温度" hint="思维分析建议 0.2～0.6，越高越发散但也更容易跑题。">
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={Math.round(draft.ai.temperature * 100)}
-            onChange={(event) => patch({ ai: { ...draft.ai, temperature: Number(event.target.value) / 100 } })}
-          />
-        </Field>
-        <div className="row gap-2">
-          <Field label="超时（毫秒）">
-            <input
-              type="number"
-              min={3000}
-              max={120000}
-              step={1000}
-              value={draft.ai.timeoutMs}
-              onChange={(event) => patch({ ai: { ...draft.ai, timeoutMs: Number(event.target.value) } })}
-            />
-          </Field>
-          <Field label="输出长度上限">
-            <input
-              type="number"
-              min={128}
-              max={4000}
-              step={64}
-              value={draft.ai.maxOutputTokens}
-              onChange={(event) => patch({ ai: { ...draft.ai, maxOutputTokens: Number(event.target.value) } })}
-            />
-          </Field>
-        </div>
-        <Field
-          label="每日调用次数上限"
-          hint="0 表示完全不调用模型。这是本机的自我约束；服务端另有权威配额（由部署者的 AI_DAILY_LIMIT 决定），以先到的一方为准。"
-        >
-          <input
-            type="number"
-            min={0}
-            max={200}
-            value={draft.ai.dailyCallLimit}
-            onChange={(event) => patch({ ai: { ...draft.ai, dailyCallLimit: Number(event.target.value) } })}
-          />
-        </Field>
-        <div className="row wrap gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={async () => {
-              setAiProbe('测试中…');
-              const result = await testAiConnection();
-              setAiProbe(result.ok ? `连接正常：${result.reply ?? ''}` : `失败：${result.message}`);
-            }}
-          >
-            测试连接
-          </Button>
-          {aiProbe ? <p className="faint">{aiProbe}</p> : null}
-        </div>
-      </section>
+      <AiSettingsSection draft={draft} patch={patch} profileId={profileId} ready={ready} />
 
       <SectionTitle>数据与隐私</SectionTitle>
       <section className="card stack gap-3">
@@ -436,9 +335,14 @@ export function MeView() {
           variant="ghost"
           onClick={async () => {
             if (!store) return;
-            const confirmed = window.confirm('将删除本机保存的设置、作答记录、复习队列、日志与分析结果。已导出的备份文件不受影响。确定继续？');
+            const confirmed = window.confirm(
+              '将删除本机保存的设置、作答记录、复习队列、日志与分析结果，以及直连模式保存在本机的 API Key。已导出的备份文件不受影响。确定继续？',
+            );
             if (!confirmed) return;
             await store.clearLocalData(profileId);
+            // API Key 存在 localStorage（不在 Dexie 里），必须一并清掉，
+            // 否则「清除本地数据」会留下一把还能花钱的密钥。
+            clearAllAiKeys();
             notify('本地数据已清除，页面即将刷新。');
             setTimeout(() => window.location.reload(), 800);
           }}

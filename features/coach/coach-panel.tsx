@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { useApp } from '@/app/providers';
 import { Button, Note, StatusBadge } from '@/components/ui';
-import { analyzeReasoning, describeAiError, readAiStatus, reviewJournal, type AiStatus, type CoachResponse } from '@/lib/ai/client';
+import { analyzeReasoning, describeAiError, directReadiness, readAiStatus, reviewJournal, type AiStatus, type CoachResponse } from '@/lib/ai/client';
 import { CATEGORY_LABELS, KNOWLEDGE_POINT_LABELS } from '@/lib/domain/taxonomy';
 import type { Exercise } from '@/lib/domain/exercise-schema';
 import type { AnswerInput } from '@/lib/domain/grading';
@@ -41,8 +41,11 @@ export function CoachPanel({ context }: { context: CoachContext }) {
   const [payload, setPayload] = useState<CoachResponse<CoachResultShape> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+  const direct = settings.ai.mode === 'direct';
+
   useEffect(() => {
-    if (!settings.ai.enabled) return;
+    // 直连模式没有本站状态接口可查，查了只会得到一条误导性的「连不上」。
+    if (!settings.ai.enabled || direct) return;
     let cancelled = false;
     void readAiStatus().then((value) => {
       if (!cancelled) setStatus(value);
@@ -50,7 +53,7 @@ export function CoachPanel({ context }: { context: CoachContext }) {
     return () => {
       cancelled = true;
     };
-  }, [settings.ai.enabled]);
+  }, [settings.ai.enabled, direct]);
 
   useEffect(() => {
     return () => abortRef.current?.abort();
@@ -58,7 +61,7 @@ export function CoachPanel({ context }: { context: CoachContext }) {
 
   const run = useCallback(async () => {
     if (!settings.ai.enabled) return;
-    // 服务端配额才是权威；这一层只是避免在本机已经用完当天额度时继续发无意义的请求。
+    // 代理模式下服务端还有权威配额，这里只避免明显无意义的请求；直连模式下这是唯一的额度约束。
     if (store && settings.ai.dailyCallLimit > 0) {
       const usedLocally = await store.countAIUsageToday(profileId, dateKey, timezone);
       if (usedLocally >= settings.ai.dailyCallLimit) {
@@ -186,7 +189,21 @@ export function CoachPanel({ context }: { context: CoachContext }) {
     );
   }
 
-  if (status && !status.configured) {
+  if (direct) {
+    const readiness = directReadiness(settings);
+    if (!readiness.ready) {
+      return (
+        <Note tone="warn" title="直连还差一步">
+          <div className="stack gap-2">
+            <p>{readiness.missing}。在这个构建里没有服务端可查，填齐之后教练会直接从本机调用模型服务。其他功能不受影响。</p>
+            <Link href="/me" className="text-sm text-brand no-underline">
+              去设置 →
+            </Link>
+          </div>
+        </Note>
+      );
+    }
+  } else if (status && !status.configured) {
     return (
       <Note tone="warn" title={status.unreachable ? '这里连不上 AI 接口' : '服务端还没有模型凭据'}>
         <div className="stack gap-2">
@@ -330,8 +347,15 @@ export function CoachPanel({ context }: { context: CoachContext }) {
 
           {payload.meta ? (
             <p className="faint">
-              {payload.meta.model} · 提示词 {payload.meta.promptVersion} · {payload.meta.latencyMs}ms · 输入 {payload.meta.inputChars} 字 · 今日已用{' '}
-              {payload.meta.usedToday}/{payload.meta.usedToday + payload.meta.remainingToday}
+              {payload.meta.model} · 提示词 {payload.meta.promptVersion} · {payload.meta.latencyMs}ms · 输入 {payload.meta.inputChars} 字
+              {payload.meta.usedToday !== undefined && payload.meta.remainingToday !== undefined ? (
+                <>
+                  {' '}
+                  · 今日已用 {payload.meta.usedToday}/{payload.meta.usedToday + payload.meta.remainingToday}
+                </>
+              ) : (
+                <> · 本机直连</>
+              )}
             </p>
           ) : null}
         </div>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { useApp } from '@/app/providers';
 import { Button, Field, Note, SectionTitle } from '@/components/ui';
-import { analyzeMaterial, describeAiError, readAiStatus, type AiStatus } from '@/lib/ai/client';
+import { analyzeMaterial, describeAiError, directReadiness, readAiStatus, type AiStatus } from '@/lib/ai/client';
 
 interface MaterialResult {
   mainConclusion?: string;
@@ -48,8 +48,11 @@ export function MaterialCoachView() {
   const [result, setResult] = useState<MaterialResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const direct = settings.ai.mode === 'direct';
 
   useEffect(() => {
+    // 直连模式没有本站状态接口可查，查了只会得到一条误导性的「连不上」。
+    if (direct) return;
     let cancelled = false;
     void readAiStatus().then((value) => {
       if (!cancelled) setStatus(value);
@@ -57,7 +60,7 @@ export function MaterialCoachView() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [direct]);
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
@@ -66,7 +69,7 @@ export function MaterialCoachView() {
       setError('请至少粘贴 20 个字，太短无法分析论证结构。');
       return;
     }
-    // 服务端配额才是权威；这一层只是避免在本机已经用完当天额度时继续发无意义的请求。
+    // 代理模式下服务端还有权威配额，这里只避免明显无意义的请求；直连模式下这是唯一的额度约束。
     if (store && settings.ai.dailyCallLimit > 0) {
       const usedLocally = await store.countAIUsageToday(profileId, dateKey, timezone);
       if (usedLocally >= settings.ai.dailyCallLimit) {
@@ -122,7 +125,8 @@ export function MaterialCoachView() {
     }
   }, [dateKey, nowTs, profileId, question, settings, store, text, timezone]);
 
-  const aiReady = Boolean(status?.configured);
+  const directState = direct ? directReadiness(settings) : null;
+  const aiReady = directState ? directState.ready : Boolean(status?.configured);
 
   return (
     <div className="stack gap-4">
@@ -137,9 +141,13 @@ export function MaterialCoachView() {
       </header>
 
       {!aiReady ? (
-        <Note tone="warn" title="这个功能需要配置模型服务">
+        <Note tone="warn" title={directState ? '直连还差一步' : '这个功能需要配置模型服务'}>
           <div className="stack gap-2">
-            <p>{status?.message ?? '服务端还没有设置 AI_API_KEY、AI_BASE_URL 与 AI_MODEL。其余训练功能不依赖模型，可以照常使用。'}</p>
+            <p>
+              {directState
+                ? `${directState.missing}。这个构建里没有服务端，填齐之后请求从本机直接发给模型服务。`
+                : (status?.message ?? '服务端还没有设置 AI_API_KEY、AI_BASE_URL 与 AI_MODEL。其余训练功能不依赖模型，可以照常使用。')}
+            </p>
             <Link href="/me" className="text-sm text-brand no-underline">
               查看配置说明 →
             </Link>

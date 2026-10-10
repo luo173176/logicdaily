@@ -80,3 +80,29 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 7
+
+  # 纯离线构建目标：没有 Node 服务端的那份产物（APK 用它）必须能导出、能跑通离线全流程，
+  # 并且「本机直连」这条 AI 通路要在没有服务端的情况下真的完成一次调用。
+  apk-web:
+    name: 离线静态包与直连模式
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 安装 Playwright 浏览器
+        run: npx playwright install --with-deps chromium
+
+      - name: 导出静态包（BUILD_TARGET=capacitor）
+        run: npm run build:apk-web
+
+      - name: 包内功能验证
+        run: npm run verify:apk-web

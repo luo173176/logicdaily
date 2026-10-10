@@ -4,6 +4,22 @@ import { EXERCISE_CATEGORIES } from '@/lib/domain/taxonomy';
 
 export const AI_PROVIDER_PRESETS = ['openai', 'openai-compatible', 'deepseek', 'moonshot', 'zhipu', 'qwen', 'local', 'custom'] as const;
 
+/**
+ * 预设只是**快捷方式**：点一下把 base_url 和常用模型名填进输入框，
+ * 之后那两个值仍然由用户自由编辑。不拿它约束任何取值。
+ * baseUrl 留空表示「按 OpenAI 兼容规则自行拼接 /chat/completions」。
+ */
+export const AI_PROVIDER_SHORTCUTS: Array<{ id: (typeof AI_PROVIDER_PRESETS)[number]; label: string; baseUrl: string; model: string }> = [
+  { id: 'openai', label: 'OpenAI', baseUrl: 'https://api.openai.com/v1', model: 'gpt-4o-mini' },
+  { id: 'deepseek', label: 'DeepSeek', baseUrl: 'https://api.deepseek.com/v1', model: 'deepseek-chat' },
+  { id: 'moonshot', label: 'Kimi / Moonshot', baseUrl: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-8k' },
+  { id: 'zhipu', label: '智谱 GLM', baseUrl: 'https://open.bigmodel.cn/api/paas/v4', model: 'glm-4-flash' },
+  { id: 'qwen', label: '通义千问', baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-plus' },
+  { id: 'local', label: '本机 Ollama', baseUrl: 'http://127.0.0.1:11434/v1', model: 'qwen2.5' },
+  { id: 'openai-compatible', label: '其他 OpenAI 兼容服务', baseUrl: '', model: '' },
+  { id: 'custom', label: '自定义', baseUrl: '', model: '' },
+];
+
 const REMINDER_DEFAULTS = {
   enabled: false,
   time: '20:00',
@@ -15,9 +31,10 @@ const REMINDER_DEFAULTS = {
 
 const AI_DEFAULTS = {
   enabled: false,
+  mode: 'server',
   provider: 'openai-compatible',
   model: '',
-  baseUrlLabel: '',
+  baseUrl: '',
   temperature: 0.4,
   timeoutMs: 25_000,
   maxOutputTokens: 900,
@@ -58,10 +75,13 @@ export const settingsSchema = z
     ai: z
       .object({
         enabled: z.boolean().default(false),
+        /** 'server' 走本站 /api/ai/*（密钥留在服务端）；'direct' 由本机直连模型服务商。 */
+        mode: z.enum(['server', 'direct']).default('server'),
+        /** 仅作快捷方式使用，不约束任何取值。 */
         provider: z.enum(AI_PROVIDER_PRESETS).default('openai-compatible'),
         model: z.string().max(80).default(''),
-        /** 只保存用于展示的 Base URL 标签；API Key 永不进入客户端设置。 */
-        baseUrlLabel: z.string().max(120).default(''),
+        /** 直连模式下用户自由填写；服务端模式忽略此值。 */
+        baseUrl: z.string().max(300).default(''),
         temperature: z.number().min(0).max(2).default(0.4),
         timeoutMs: z.number().int().min(3_000).max(120_000).default(25_000),
         maxOutputTokens: z.number().int().min(128).max(4_000).default(900),

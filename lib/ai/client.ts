@@ -1,5 +1,9 @@
 'use client';
 
+import { readAiKey } from '@/lib/ai/credentials';
+import { callDirectTask } from '@/lib/ai/direct';
+import { AiError } from '@/lib/ai/provider-core';
+import { aiRequestSchema } from '@/lib/ai/tasks';
 import type { AppSettings } from '@/lib/domain/settings';
 
 export interface AiStatus {
@@ -27,8 +31,9 @@ export interface CoachResponse<T = unknown> {
     promptTokens: number | null;
     completionTokens: number | null;
     totalTokens: number | null;
-    usedToday: number;
-    remainingToday: number;
+    /** 服务端配额计数；直连模式下没有服务端，因此不下发这两个字段。 */
+    usedToday?: number;
+    remainingToday?: number;
   };
   code?: string;
   message?: string;
@@ -94,7 +99,22 @@ export async function readAiStatus(): Promise<AiStatus> {
   }
 }
 
+/**
+ * 直连模式是否已经填齐。
+ *
+ * 这里在渲染期同步读 localStorage，而不是订阅：配置改动发生在「我的」页，
+ * 教练页每次挂载时重新求值就够了。要的是「没填完就别让按钮可点」，不是实时联动。
+ */
+export function directReadiness(settings: AppSettings): { ready: boolean; missing: string | null } {
+  if (!settings.ai.enabled) return { ready: false, missing: '这台设备还没有启用 AI 教练' };
+  if (!settings.ai.baseUrl.trim()) return { ready: false, missing: '还没有填写模型服务地址（Base URL）' };
+  if (!settings.ai.model.trim()) return { ready: false, missing: '还没有填写模型名称' };
+  if (!readAiKey(settings.profileId).trim()) return { ready: false, missing: '还没有填写 API Key' };
+  return { ready: true, missing: null };
+}
+
 async function callTask<T>(task: string, payload: unknown, settings: AppSettings, signal?: AbortSignal): Promise<CoachResponse<T>> {
+  if (settings.ai.mode === 'direct') return callDirect<T>(task, payload, settings, signal);
   try {
     const response = await fetch('/api/ai/analyze', {
       method: 'POST',
@@ -139,6 +159,66 @@ async function callTask<T>(task: string, payload: unknown, settings: AppSettings
   }
 }
 
+/**
+ * 直连模式。与服务端代理返回**完全相同**的 CoachResponse 形状，所以教练面板
+ * 不需要知道走的是哪条路。
+ *
+ * 代理模式下请求体由服务端 aiRequestSchema 校验；直连没有服务端，因此这里跑
+ * 同一个 schema —— 否则长度上限、consented 这类前置条件就被悄悄绕过了。
+ */
+async function callDirect<T>(task: string, payload: unknown, settings: AppSettings, signal?: AbortSignal): Promise<CoachResponse<T>> {
+  const parsed = aiRequestSchema.safeParse({
+    task,
+    payload,
+    model: settings.ai.model || undefined,
+    temperature: settings.ai.temperature,
+    maxOutputTokens: settings.ai.maxOutputTokens,
+  });
+  if (!parsed.success) {
+    return { ok: false, code: 'invalid_request', message: describeAiError('invalid_request', '这次请求的内容不符合格式要求。') };
+  }
+
+  try {
+    const outcome = await callDirectTask(
+      parsed.data,
+      {
+        baseUrl: settings.ai.baseUrl,
+        apiKey: readAiKey(settings.profileId),
+        model: settings.ai.model,
+        temperature: settings.ai.temperature,
+        maxOutputTokens: settings.ai.maxOutputTokens,
+        timeoutMs: settings.ai.timeoutMs,
+      },
+      signal,
+    );
+
+    return {
+      ok: true,
+      task: parsed.data.task,
+      result: outcome.result as T,
+      meta: {
+        model: outcome.model,
+        promptVersion: outcome.promptVersion,
+        latencyMs: outcome.latencyMs,
+        inputChars: outcome.inputChars,
+        outputChars: outcome.outputChars,
+        promptTokens: outcome.promptTokens,
+        completionTokens: outcome.completionTokens,
+        totalTokens: outcome.totalTokens,
+      },
+    };
+  } catch (error) {
+    if (error instanceof AiError) {
+      // AiError 的文案全部由我们自己写，不含密钥与请求正文，可以直接给用户看。
+      return { ok: false, code: error.kind, message: error.message };
+    }
+    if (error instanceof Error && error.name === 'AbortError') {
+      return { ok: false, code: 'timeout', message: describeAiError('timeout') };
+    }
+    return { ok: false, code: 'network', message: describeAiError('network') };
+  }
+}
+
 export function analyzeReasoning(settings: AppSettings, payload: Record<string, unknown>, signal?: AbortSignal) {
   return callTask('analyze-reasoning', payload, settings, signal);
 }
@@ -159,9 +239,13 @@ export function weeklySummary(settings: AppSettings, payload: Record<string, unk
   return callTask('weekly-summary', payload, settings, signal);
 }
 
-export async function testAiConnection(): Promise<{ ok: boolean; reply?: string; message?: string }> {
-  const settings = (await import('@/lib/domain/settings')).defaultSettings('local');
-  const result = await callTask<{ reply?: string }>('ping', { note: 'logicdaily' }, settings);
+/**
+ * 连通性自检。传入当前设置草稿时按草稿的模式测（界面上「测试连接」就是这么调的），
+ * 不传则退回服务端代理模式 —— 这样旧调用点行为不变。
+ */
+export async function testAiConnection(settings?: AppSettings): Promise<{ ok: boolean; reply?: string; message?: string }> {
+  const used = settings ?? (await import('@/lib/domain/settings')).defaultSettings('local');
+  const result = await callTask<{ reply?: string }>('ping', { note: 'logicdaily' }, used);
   if (result.ok) return { ok: true, reply: result.result?.reply };
   return { ok: false, message: result.message ?? describeAiError(result.code) };
 }
