@@ -2,6 +2,9 @@ import { lookup } from 'node:dns/promises';
 
 import { isIP } from 'node:net';
 
+// joinChatCompletions 的唯一实现在 provider-core（客户端也要用），这里转发出去保持既有导入路径可用。
+export { joinChatCompletions } from '@/lib/ai/provider-core';
+
 export class UnsafeUrlError extends Error {
   constructor(reason: string) {
     super(reason);
@@ -134,10 +137,4 @@ export async function resolveSafeTarget(rawUrl: string, allowlist: string[], opt
     throw new UnsafeUrlError('目标是内网或保留地址，已拒绝。');
   }
   return { url, hostname: url.hostname, addresses: [url.hostname] };
-}
-
-export function joinChatCompletions(baseUrl: string): string {
-  const trimmed = baseUrl.replace(/\/+$/, '');
-  if (trimmed.endsWith('/chat/completions')) return trimmed;
-  return `${trimmed}/chat/completions`;
 }
