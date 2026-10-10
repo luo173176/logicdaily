@@ -7,6 +7,10 @@ test-results
 playwright-report
 package-lock.json
 next-env.d.ts
+# APK 构建目标：整份源码副本与静态导出结果，重排它们没有意义；原生工程由 Android Studio 维护
+.apk-src
+apk-web
+android
 # 由 scripts/export-sql-seed.mjs 生成，重排会破坏「与内容包一致」的可比对性
 supabase/migrations/0003_seed_exercises.sql
 # 二进制与截图

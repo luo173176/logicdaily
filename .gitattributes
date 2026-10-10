@@ -4,6 +4,11 @@
 *.png binary
 *.ico binary
 *.jpg binary
+*.jar binary
+*.apk binary
+
+# cmd.exe 处理纯 LF 的批处理文件不可靠（goto 标签可能失效），Gradle wrapper 保持 CRLF
+*.bat text eol=crlf
 
 *.ts text eol=lf
 *.tsx text eol=lf

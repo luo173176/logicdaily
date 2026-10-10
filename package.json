@@ -1,6 +1,6 @@
 {
   "name": "logicdaily",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -15,9 +15,14 @@
     "test:e2e": "playwright test",
     "content:validate": "node scripts/validate-exercises.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,md,json,css}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,md,json,css}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json,css}\"",
+    "build:apk-web": "node scripts/build-apk-web.mjs",
+    "verify:apk-web": "node scripts/verify-apk-web.mjs",
+    "apk:sync": "node scripts/build-apk-web.mjs && cap sync android"
   },
   "dependencies": {
+    "@capacitor/android": "^6.2.2",
+    "@capacitor/core": "^6.2.2",
     "dexie": "^4.4.6",
     "dexie-react-hooks": "^4.4.0",
     "next": "16.4.0",
@@ -26,6 +31,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@capacitor/cli": "^6.2.2",
     "@playwright/test": "^1.64.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^22.20.5",

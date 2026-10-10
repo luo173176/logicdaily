@@ -23,6 +23,12 @@ const eslintConfig = defineConfig([
     "test-results/**",
     "playwright-report/**",
     "coverage/**",
+    // APK 构建目标的可再生产物与原生工程：
+    // .apk-src 是整份源码副本（ lint 会把每个文件数两遍），
+    // apk-web 是静态导出结果，android 是 Capacitor 生成的 Java 工程。
+    ".apk-src/**",
+    "apk-web/**",
+    "android/**",
   ]),
 ]);
 

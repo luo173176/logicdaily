@@ -16,6 +16,17 @@
 /playwright-report
 /blob-report
 
+# APK 构建产物（可由 scripts/build-apk-web.mjs + cap sync + gradle 完整重建）
+/.apk-src
+/apk-web
+/android/app/src/main/assets/public
+/android/app/src/main/assets/capacitor.config.json
+/android/.gradle
+/android/build
+/android/capacitor-cordova-android-plugins/build
+# 机器相关的 SDK 路径，不入库
+/android/local.properties
+
 # env files (can opt-in for committing if needed)
 .env*
 # 模板文件必须入库，它是配置说明的一部分
