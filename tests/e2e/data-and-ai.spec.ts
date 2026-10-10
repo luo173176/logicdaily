@@ -7,8 +7,8 @@ async function createJournal(page: Page, title: string, problem: string) {
   await page.getByLabel('我要回答的问题').fill(problem);
   await page.getByRole('button', { name: '保存' }).click();
   await expect(page.getByRole('button', { name: '已保存' })).toBeVisible();
-  // 新建保存后地址会换成该篇的可分享地址，等导航稳定后再继续操作。
-  await expect(page).toHaveURL(/\/journal\/jr-/);
+  // 新建保存后地址会换成带 edit 参数的形式（静态导出兼容的路由方案），等导航稳定后再继续。
+  await expect(page).toHaveURL(/\/journal\?edit=jr-/);
 }
 
 test.describe('思考日志', () => {
@@ -22,6 +22,14 @@ test.describe('思考日志', () => {
     await expect(page.getByText('为什么涨价后销量反而增加')).toBeVisible();
     await page.getByLabel('搜索日志').fill('完全不存在的关键词zzz');
     await expect(page.getByText('没有匹配的日志')).toBeVisible();
+
+    // 从列表点进编辑器：走的是 /journal?edit=<id>，刷新后仍应停在同一篇。
+    await page.getByLabel('搜索日志').fill('涨价');
+    await page.getByText('为什么涨价后销量反而增加').first().click();
+    await expect(page).toHaveURL(/\/journal\?edit=jr-/);
+    await expect(page.getByLabel('标题')).toHaveValue('为什么涨价后销量反而增加');
+    await page.reload();
+    await expect(page.getByLabel('标题')).toHaveValue('为什么涨价后销量反而增加');
   });
 
   test('八步向导与证据清单可以填写并保存', async ({ page }) => {
@@ -172,7 +180,7 @@ test.describe('AI 降级与错误处理', () => {
 });
 
 test.describe('手机视口', () => {
-  test('各主要页面在 393×851 下无横向溢出且导航可用', async ({ page }) => {
+  test('各主要页面在 Pixel 7 视口（412×839）下无横向溢出且导航可用', async ({ page }) => {
     for (const path of ['/', '/train', '/journal', '/review', '/me', '/stats', '/coach', '/offline']) {
       await page.goto(path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);

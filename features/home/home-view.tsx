@@ -231,7 +231,7 @@ export function HomeView() {
         <ul className="stack gap-2">
           {overview.recentJournals.map((journal) => (
             <li key={journal.id}>
-              <Link href={`/journal/${journal.id}`} className="card row-between no-underline" data-pressable>
+              <Link href={`/journal?edit=${journal.id}`} className="card row-between no-underline" data-pressable>
                 <span className="font-semibold">{journal.title}</span>
                 <span className="faint">{relativeDayLabel(dateKey, dateKey)}</span>
               </Link>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 import { useApp } from '@/app/providers';
@@ -27,6 +27,20 @@ const STATUS_TONE: Record<Journal['status'], 'ok' | 'warn' | 'neutral'> = {
   decided: 'ok',
   archived: 'neutral',
 };
+
+/**
+ * 日志页的两种形态由查询参数决定，而不是动态路径段：
+ * `/journal` 显示列表，`/journal?edit=<id>` 显示该篇的编辑器。
+ *
+ * 这样做的原因是日志 id 属于本机 IndexedDB 数据，构建期不可枚举，
+ * 因此 `/journal/<id>` 这种动态段无法参与静态导出（APK 走的路线）。
+ * 查询参数变化不需要新的路由载荷，静态外壳与站内跳转都成立。
+ */
+export function JournalScreen() {
+  const params = useSearchParams();
+  const editId = params.get('edit');
+  return editId ? <JournalEditorView journalId={editId} /> : <JournalListView />;
+}
 
 export function JournalListView() {
   const { store, profileId, dateKey, ready, timezone } = useApp();
@@ -117,7 +131,7 @@ export function JournalListView() {
             const completeness = journalCompleteness(journal);
             return (
               <li key={journal.id}>
-                <Link href={`/journal/${journal.id}`} className="card stack gap-2 no-underline" data-pressable>
+                <Link href={`/journal?edit=${journal.id}`} className="card stack gap-2 no-underline" data-pressable>
                   <div className="row-between">
                     <span className="font-semibold text-ink">{journal.title}</span>
                     <StatusBadge tone={STATUS_TONE[journal.status]}>{JOURNAL_STATUS_LABELS[journal.status]}</StatusBadge>
@@ -192,7 +206,7 @@ export function JournalEditorView({ journalId }: { journalId?: string }) {
       setJournal(validated);
       setDirty(false);
       // 新建的日志保存后换成可分享地址，刷新不会再丢内容。
-      if (!journalId) router.replace(`/journal/${validated.id}`);
+      if (!journalId) router.replace(`/journal?edit=${validated.id}`);
       notify('已保存到本机。');
     } catch (e) {
       setError(e instanceof Error ? e.message : '保存失败');
