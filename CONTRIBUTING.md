@@ -107,7 +107,27 @@ npm run test:e2e     # 会自己起停生产服务器，注意别占用 3000/312
 - 提交信息用祈使句中文或英文均可，第一行 ≤ 72 字符，正文说明**为什么**改。
 - 一个 PR 做一件事。题库改动不要和功能改动混在同一个 PR 里（复核方式完全不同）。
 - PR 描述里请写：改了哪些文件、跑了哪些命令与结果、哪些没来得及验证。
-- UI 改动请附截图（`npx tsx scripts/capture-screenshots.mjs` 可以重新生成文档截图），并确认 393×851 与 412×915 两种视口都没有横向滚动、输入框不被底部导航挡住（端到端里已有这两项检查）。
+- UI 改动请附截图（`npx tsx scripts/capture-screenshots.mts` 可以重新生成文档截图，视口 412×915），并确认在手机视口下没有横向滚动、输入框不被底部导航挡住（端到端里已有这两项检查，视口取 `devices['Pixel 7']`，实测 412×839）。
+
+## 改到 APK 相关的东西
+
+项目有两个构建目标：Web（默认，含 `/api/ai/*` 服务端路由）与 APK（纯离线，无服务端）。`next.config.ts` 用 `BUILD_TARGET=capacitor` 切换，因为 `output: 'export'` 与 `cacheComponents` 互斥，而 Next 16 的 `next build` 没有 `-c` 参数可以指定第二份配置。
+
+```bash
+npm run build:apk-web    # 复制源码到 .apk-src/ → 静态导出 → apk-web/
+npm run verify:apk-web   # 用 Playwright 验证打进包内的那份资源（14 项）
+npm run apk:sync         # build:apk-web + cap sync android
+cd android && ./gradlew assembleDebug
+```
+
+需要知道的前提与禁忌：
+
+- **不要在仓库里删除或改动 `app/api`** 来「让导出通过」。那是 SSRF 防护、密钥只留服务端、限流所在地；构建脚本的做法是把源码复制进 `.apk-src/`，**只在副本里**排除服务端路由。
+- 静态导出不支持：依赖 `Request` 的 Route Handler、无 `generateStaticParams()` 的动态段、`useSearchParams()` outside `<Suspense>`、元数据路由（`app/manifest.ts`）。这就是日志用 `/journal?edit=<id>`、manifest 数据放 `content/app-manifest.json` 的原因 —— 改这两处会同时影响 Web 与 APK。
+- `android/local.properties` 里的 `sdk.dir` **必须用正斜杠**（`sdk.dir=D:/dev/android-sdk`）。反斜杠转义会让 Gradle 在 `SdkLocator` 校验路径时抛 `java.io.IOException`。这个文件不提交。
+- Capacitor 版本要与本机 JDK 匹配：8.x 生成的工程要求 JDK 21 + compileSdk 36；本仓库现在钉在 6.2.2（Java 17 / compileSdk 34）。升级要连 `android/` 工程一起重新生成并真机验证。
+- 产物 `*.apk`、`apk-web/`、`.apk-src/`、`android/app/src/main/assets/public` 都在 `.gitignore` 里：APK 走 GitHub Release，不进工作树。
+- 影响用户可见行为的改动，`npm run test:e2e` 与 `npm run verify:apk-web` 都要跑；后者会告诉你包内那份资源是否还自洽。
 
 ## 加一个 AI 任务
 
@@ -117,7 +137,7 @@ npm run test:e2e     # 会自己起停生产服务器，注意别占用 3000/312
 
 行为变化要同步文档，尤其是：`README.md` 的功能与「已知限制」清单、`docs/DATA_MODEL.md`（字段）、`docs/PRIVACY.md`（数据是否离开设备）、`CHANGELOG.md`。
 
-这个项目的一个原则是**不夸大**：如果某个能力受限（PWA 后台提醒、没有 APK、云端同步未实现），文档和界面都要如实写明。修好了再删掉那句限制说明。
+这个项目的一个原则是**不夸大**：如果某个能力受限（PWA 后台提醒、APK 未真机验证、APK 内没有 AI、云端同步未实现），文档和界面都要如实写明。修好了再删掉那句限制说明。
 
 ## 许可
 

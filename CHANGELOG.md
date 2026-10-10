@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+_暂无。_
+
+## [1.0.0] - 2026-10-09
+
+首个版本。两条分发路径都在：可自托管的 PWA（含 AI 教练），以及可直接安装的纯离线 APK。
+
 ### 新增
 
 - **本地优先数据层**：Dexie（IndexedDB）13 个对象仓库，全部按 `profileId` 隔离；`DataStore` 接口为将来的云端实现留接缝，`syncState` 已记录 `localRevision` 与 `pendingOps`。
@@ -20,6 +26,9 @@
 - **AI 安全层**：服务端密钥隔离、SSRF 允许列表 + DNS 私有段拒绝（含云元数据地址）、同源检查、每分钟与每日限额、输入长度与输出 token 上限、超时与指数退避重试、用量记录、日志脱敏。
 - **数据管理**：JSON 备份导出/导入（结构 + 应用标识 + 版本校验，导入设置时剥离 `apiKey`/`key`/`token`），一键清除本地数据。
 - **移动端优先 PWA**：manifest（standalone、竖屏、快捷方式）、手写 Service Worker（页面外壳 stale-while-revalidate、静态资源 cache-first、`/api/*` 永不缓存）、更新提示不自动接管、纯 Node 脚本生成图标（无图像依赖）、深浅色主题无闪烁切换、安全区与键盘避让。
+- **两种构建目标（Web 与 APK）**：`next.config.ts` 按 `BUILD_TARGET=capacitor` 在 `cacheComponents` 与 `output: 'export'` 之间切换（两者互斥，Next 16 的 `next build` 又没有 `-c` 参数）。`scripts/build-apk-web.mjs` 把源码复制进 `.apk-src/`，**只在副本里**排除 `app/api` 与 `app/manifest.ts`（服务端路由是 SSRF/密钥隔离/限流所在，仓库本体不动），导出结果同步到 `apk-web/` 作为 Capacitor 的 `webDir`。manifest 数据抽成 `content/app-manifest.json` 单一来源，两条路共用。
+- **纯离线单机 APK**：`android/` 由 `npx cap add android`（Capacitor 6.2.2，选它是因为本机 JDK 17 而 8.x 要求 JDK 21）生成，`capacitor.config.ts` **不设** `server.url` 因此从包内本地资源加载，`androidScheme: 'https'`、`allowMixedContent: false`，清单只声明 `android.permission.INTERNET`。Gradle `assembleDebug` 实测 `BUILD SUCCESSFUL in 1m 29s`（82/82 tasks），产物 4,732,472 字节，`aapt2` 核验 `com.logicdaily.app` versionCode 1 / versionName 1.0 / minSdk 22 / target 34 / compileSdk 34，包内 93 个 `assets/public/*` 与 `apk-web/` 的 91 个文件逐路径一致（另 2 个是 Capacitor 注入的桥接文件）。**APK 内 AI 教练不可用**（没有 Node 服务端），界面显示「未启用」。
+- **APK 资源的功能验证**：`scripts/verify-apk-web.mjs` 用静态服务器托管 `apk-web/` 并用 Playwright 跑 14 项检查（首页引导、112 题随包播种、题目深链接、提交判分、AI 优雅降级、`/journal?edit=` 的保存/刷新/列表/进入、5 条路由无横向溢出）。实测 14/14 通过。注意这验证的是打进包内的那份资源，**不是**安装后的 App —— APK 从未在真机或模拟器上运行（`adb devices` 为空）。
 - **测试**：211 个单元/集成测试（Vitest + fake-indexeddb）+ 17 个端到端测试（Playwright，Pixel 7 视口），覆盖引导、答题与解析、错因与歧义标记、复习说明、刷新后持久化、日志增删改查与向导、报告指标、导出→清除→导入、非法导入被拒、AI 三种降级、横向溢出与输入遮挡。
 - **CI**：`.github/workflows/ci.yml`，先跑类型检查、ESLint、内容校验、单元/集成测试与生产构建，再跑端到端测试并在失败时保留报告。
 - **每日额度的本机自检**：教练面板与材料分析在发请求前检查本机当天用量，达到「我的」里设定的上限就不再发送（服务端 `AI_DAILY_LIMIT` 仍是权威）。此前该设置项完全不生效，界面却写着「两侧都会检查」。
@@ -37,7 +46,8 @@
 - **模板里的空变量**：`NEXT_PUBLIC_APP_URL` 声明了但无代码读取，已从 `.env.example` 移除。
 - **报告页看不到当天的作答记录**：Dexie 的 `between()` 默认左闭右开，`[profileId+dateKey]` 区间查询把上界当天整段排除，表现为「已提交成功但报告页永远显示还没有作答记录」。所有日期区间查询显式使用闭区间，并在 `tests/integration/local-store.test.ts` 加了端点回归用例。
 - **首次打开时今日计划为空**：题库播种尚未完成就生成了计划并持久化，导致首页显示「今天的任务已经完成 / 已完成 0 项」。现在 `ready` 在播种完成后才置位，题库为空时不落库并给出可操作的提示与「重新载入题库」按钮。
-- **新建日志后刷新丢失**：保存后地址栏仍停在 `/journal/new`，刷新即丢内容。首存之后改为 `router.replace('/journal/<id>')`。
+- **新建日志后刷新丢失**：保存后地址栏仍停在 `/journal/new`，刷新即丢内容。首存之后改为 `router.replace('/journal?edit=<id>')`。
+- **日志路由改为查询参数（静态导出的前置条件）**：`app/journal/[id]/page.tsx` 动态段在 `output: 'export'` 下必须有非空的 `generateStaticParams()`，而日志 id 属于本机数据、构建期不可枚举（先返回空数组被导出器拒绝）。现改为 `/journal?edit=<id>` + `<Suspense>` 包裹的 `useSearchParams()`，`JournalScreen` 按参数决定渲染列表还是编辑器；列表项、保存跳转、首页入口与端到端用例同步更新，并新增「从列表点进编辑器 + 冷启动刷新后仍在同一篇」两步断言。代价：日志不再有 `/journal/<id>` 短链接（Web 侧同样如此，且本项目本就没有云端分享能力，可用路径是导出备份 JSON）。
 - **Service Worker 缓存了 AI 状态接口**：配置好模型凭据后界面仍显示「未配置」，且测试的路由桩被绕过。SW 不再缓存 `/api/*`。
 - **报告页性能**：原本逐日调用 `getProgress` 共 121 次，改为 `listProgress` 一次区间查询。
 - **复习到期判定**：当日重学项的次日日期在未来时被误判为未到期，`isDueForReview` 已修正为允许当日重学优先。
@@ -47,9 +57,11 @@
 
 ### 已知限制
 
-- 未部署到任何环境，也没有 APK：本机没有 JDK 与 Android SDK，Capacitor / Kotlin 方案均未尝试。
+- 未部署到任何环境：`docs/DEPLOYMENT.md` 的步骤是说明而非验证结果。
+- APK 未在真机或模拟器上运行过：构建成功、包内资源逐路径核对、那份资源经 Playwright 14 项验证，但 `adb devices` 为空，原生层行为（WebView 内核差异、IndexedDB 配额与系统清理、返回键、闪屏、通知权限弹窗）未验证。且是 debug 签名，不能上架；Release/AAB 步骤未执行。
+- APK 内 AI 教练不可用（纯离线包不含服务端）；PWA 与 APK 的存储是两个不同域，训练记录不互通，只能靠导出/导入 JSON 搬运。
 - 云端账户与同步（Phase 3）未接入应用，仅有 `DataStore` 接缝与 SQL 迁移。
-- PWA 无法保证后台唤醒，提醒只在应用打开时生效；未实现服务端推送（无 `PushSubscription`）。
+- PWA 无法保证后台唤醒，提醒只在应用打开时生效；未实现服务端推送（无 `PushSubscription`），APK 也未引入原生本地通知插件。
 - 限流是单进程内存实现，多实例部署需要换成共享存储。
 - `components/reminder-gate.tsx` 的接线本身没有自动化测试（决策函数有 15 个单元测试），需要真机验证横幅与系统通知的实际表现。
 - SSRF 校验存在 DNS 重绑定（TOCTOU）残余风险，详见 `SECURITY.md` 第 3 节。

@@ -143,7 +143,7 @@
 | 不把 Key、认证头、敏感正文写入普通日志                                 | `app/api/ai/analyze/route.ts:72-81`、`106-107`（只记 `evt/task/model/ms/tokens/status`）                                                                                                     |
 | 模型响应视为不可信输入，不执行其中指令                                 | `lib/ai/prompts/system.ts:23`、`lib/ai/service.ts:227-242`                                                                                                                                   |
 
-**实现状态**：部分实现（有意为之的偏离）。需求允许"用户配置 API Key / API Base URL"，本仓库**不让用户在客户端填密钥**：客户端只有 `baseUrlLabel` 展示字段，真实凭据由部署者在服务器环境变量里配置。因此需求里的"用户自带凭据的加密存储策略"未实现，也不在计划内。限流是单进程内存实现，多实例部署需换共享存储（`lib/ai/ratelimit.ts`）。另有一处提示语与实现不符：`features/me/me-view.tsx:324` 写着"限额在本机与服务端两侧都会检查"，但 `settings.ai.dailyCallLimit` 目前只被保存与展示，没有任何代码在发起调用前用它拦截（全仓库对它的使用只有 `features/me/me-view.tsx:329-330` 的输入绑定），真正生效的是服务端 `AI_DAILY_LIMIT`（`app/api/ai/analyze/route.ts:71-83`）；客户端只把 `model`、`temperature`、`maxOutputTokens` 传给服务端（`lib/ai/client.ts:79-86`）。
+**实现状态**：部分实现（有意为之的偏离）。需求允许"用户配置 API Key / API Base URL"，本仓库**不让用户在客户端填密钥**：客户端只有 `baseUrlLabel` 展示字段，真实凭据由部署者在服务器环境变量里配置。因此需求里的"用户自带凭据的加密存储策略"未实现，也不在计划内。限流是单进程内存实现，多实例部署需换共享存储（`lib/ai/ratelimit.ts`）。`settings.ai.dailyCallLimit` 现在两侧都生效：客户端在发起调用前用 `store.countAIUsageToday()` 拦截（`features/coach/coach-panel.tsx:62-70`、`features/coach/material-view.tsx:70-74`），服务端 `AI_DAILY_LIMIT` 为权威配额（`app/api/ai/analyze/route.ts:69-80`），界面提示（`features/me/me-view.tsx:327`）如实写成"本机自我约束 + 服务端权威配额，以先到的一方为准"。**这一条是修过的真 bug**：原先设置项只被保存与展示、没有任何代码用它拦截，而界面却承诺两侧都检查。客户端只把 `model`、`temperature`、`maxOutputTokens` 传给服务端（`lib/ai/client.ts:82-84`）。
 
 ### C-09 间隔复习与个性化训练（需求 §4.8）
 
@@ -198,27 +198,27 @@
 
 ### C-13 移动端与 PWA（需求 §5.1）
 
-| 验收标准                                         | 实现位置                                                                                                                                                                                       |
-| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 可安装到主屏幕、`standalone` 竖屏                | `app/manifest.ts`（含 shortcuts、maskable 图标）                                                                                                                                               |
-| HTTPS 下的 Service Worker 与合理离线能力         | `public/sw.js`（外壳 stale-while-revalidate、静态资源缓存优先、**`/api/*` 一律不缓存**）、`components/service-worker-registration.tsx`、`app/offline/page.tsx`                                 |
-| 底部导航包含首页、训练、思考日志、复习、我的     | `components/nav.tsx:7-11`                                                                                                                                                                      |
-| 触屏友好、重要操作不依赖悬停、适配安全区与软键盘 | `app/globals.css:77-78`（`env(safe-area-inset-*)`）、`app/layout.tsx:31-36`（`viewport`，含 `viewportFit: 'cover'`）、长文本输入不被导航遮挡由 e2e 验证（`tests/e2e/data-and-ai.spec.ts:183`） |
-| 中文阅读字体与行距、浅色/深色主题                | `app/globals.css`、`lib/ai/client.ts:130-141`（主题应用与本地记忆）                                                                                                                            |
-| 清晰的加载/空/成功/错误反馈                      | `components/ui.tsx`（Skeleton、Note、Chip、Button）、`app/providers.tsx:185-191`（全局 `aria-live` toast）                                                                                     |
-| 控制资源体积，避免大型依赖                       | `package.json` 运行时依赖仅 6 个（next/react/dexie/dexie-react-hooks/zod）                                                                                                                     |
+| 验收标准                                         | 实现位置                                                                                                                                                                                                               |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 可安装到主屏幕、`standalone` 竖屏                | `app/manifest.ts`（含 shortcuts、maskable 图标）                                                                                                                                                                       |
+| HTTPS 下的 Service Worker 与合理离线能力         | `public/sw.js`（外壳 stale-while-revalidate、静态资源缓存优先、**`/api/*` 一律不缓存**）、`components/service-worker-registration.tsx`、`app/offline/page.tsx`                                                         |
+| 底部导航包含首页、训练、思考日志、复习、我的     | `components/nav.tsx:7-11`                                                                                                                                                                                              |
+| 触屏友好、重要操作不依赖悬停、适配安全区与软键盘 | `app/globals.css:77-78`（`env(safe-area-inset-*)`）、`app/layout.tsx:31-36`（`viewport`，含 `viewportFit: 'cover'`）、长文本输入不被导航遮挡由 e2e 验证（`tests/e2e/data-and-ai.spec.ts:198`，注意它只覆盖无键盘情形） |
+| 中文阅读字体与行距、浅色/深色主题                | `app/globals.css`、`lib/ai/client.ts:130-141`（主题应用与本地记忆）                                                                                                                                                    |
+| 清晰的加载/空/成功/错误反馈                      | `components/ui.tsx`（Skeleton、Note、Chip、Button）、`app/providers.tsx:185-191`（全局 `aria-live` toast）                                                                                                             |
+| 控制资源体积，避免大型依赖                       | Web 目标的运行时依赖 6 个（next/react/dexie/dexie-react-hooks/zod）；`@capacitor/core` 与 `@capacitor/android` 只在 APK 目标用到，静态导出的前端资源实测 91 个文件 / 1,725,157 字节                                    |
 
-**实现状态**：完整实现，并有手机视口的端到端验证（`tests/e2e/data-and-ai.spec.ts:168`，393×851 无横向溢出）。
+**实现状态**：完整实现，并有手机视口的端到端验证（`tests/e2e/data-and-ai.spec.ts:183`，`devices['Pixel 7']` 实测 412×839，8 条路由无横向溢出）。
 
 ### C-14 Android 原生应用（需求 §5.2）
 
-| 验收标准                                                                                     | 实现状态                                                                                                  |
-| -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| 先评估 PWA 是否满足需求，只有必要才加原生层                                                  | 已按此执行：仓库无 `android/` 目录，没有为了凑结构创建空壳工程                                            |
-| 若采用 Capacitor：工程可实际构建、权限与网络配置、签名模板、Debug/Release 区分、提供构建说明 | **未实现**：本机无 JDK 与 Android SDK，Capacitor 从未尝试；没有 APK。README 明确写出"不要伪称 APK 已生成" |
-| 环境缺少 SDK 时完成可验证的工程配置并指出未执行的步骤                                        | 已如实说明（`README.md` 已知限制、`lib/services/reminders.ts:33-36`）                                     |
+| 验收标准                                                                                     | 实现状态                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 先评估 PWA 是否满足需求，只有必要才加原生层                                                  | 已按此执行：先交付 PWA，之后本机装上 JDK 17 + Android SDK 才构建原生壳。`android/` 是 `npx cap add android` 真实生成的工程，不是空目录凑数                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| 若采用 Capacitor：工程可实际构建、权限与网络配置、签名模板、Debug/Release 区分、提供构建说明 | **已实现并构建成功**：`@capacitor/*@6.2.2`，`capacitor.config.ts` 指定 `webDir: 'apk-web'` 且**不设** `server.url`（从包内本地资源加载），`android.allowMixedContent: false`、`server.androidScheme: 'https'`。`android/variables.gradle` 实测 minSdk 22 / compileSdk 34 / targetSdk 34。**权限最小化**：`android/app/src/main/AndroidManifest.xml` 只声明 `android.permission.INTERNET`（Capacitor 必需，给 WebView 自身），构建产物里另见 AGP 自动注入的 `com.logicdaily.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`；没有存储、通知、定位、相机权限。Gradle `assembleDebug` → `BUILD SUCCESSFUL in 1m 29s`，产物 4,732,472 字节，`aapt2 dump badging` 实测 `com.logicdaily.app` versionCode 1 / versionName 1.0 / minSdk 22 / target 34 / compileSdk 34。Debug 与 Release 已区分说明（Release 需自建 keystore，见 `docs/ANDROID.md` 5.5，**该步骤未执行**）。构建与验证步骤写在 README「手机使用」与 `docs/ANDROID.md` 第 4 节 |
+| 环境缺少 SDK 时完成可验证的工程配置并指出未执行的步骤                                        | 已如实说明：真机安装未做（`adb devices` 为空）、Release 未做、上架未做、包内 AI 不可用（没有 Node 服务端）——见 `README.md` 已知限制、`docs/ANDROID.md` 第 6 节                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-**实现状态**：未实现（有意不做，因为需求本身允许在 PWA 足够时不构建原生层）。代价是 C-11 的可靠后台提醒无法兑现。
+**实现状态**：已实现（纯离线单机 APK）。**注意两点诚实边界**：（1）没有在任何真机或模拟器上安装运行过，功能验证针对的是打进包内的那份静态资源（`npm run verify:apk-web`，14 项）；（2）APK 内 AI 思维教练不可用，因为该能力必然经服务端转发给模型，界面显示「未启用」而非崩溃，这一条有专门的自动化检查。代价是 C-11 的可靠后台提醒仍未兑现 —— 原生壳本身不带来本地通知插件。
 
 ### C-15 界面风格与首次引导（需求 §8）
 
@@ -278,14 +278,14 @@
 
 ## 5. 阶段对照（需求 §12）
 
-| 阶段                              | 状态                   | 说明                                                                                                                                                                              |
-| --------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Phase 0 环境检查与技术调研        | 完成                   | 技术选型（Next.js 16 + Dexie + Zod + Playwright）与 MVP 范围已落进代码结构                                                                                                        |
-| Phase 1 可运行的核心 MVP          | 完成                   | 中文界面、每日任务、题库、答题判分、解析、本地持久化、错题、复习、日志、统计、112 题、自动化测试                                                                                  |
-| Phase 2 AI 思维教练               | 完成（能力 12 缺 1）   | 适配层、服务端调用、提示词版本、结构化校验、超时重试、限额、用量记录、安全控制、降级                                                                                              |
-| Phase 3 账户与跨设备同步          | 未实现（应用侧）       | 已有 `DataStore` 接缝、`syncState` 字段与云端 SQL（`supabase/migrations/` 共 13 张表、RLS 49 条策略、题库种子）；但无登录、无 Supabase 客户端、无同步逻辑，执行迁移不改变产品行为 |
-| Phase 4 移动端完善与 Android 评估 | PWA 完成，Android 未做 | 结论是 PWA 足够，未创建原生工程，因此后台提醒的可靠性缺口保留（前台提醒已接通，见 C-11）                                                                                          |
-| Phase 5 发布与维护                | 部分                   | 文档已齐（含 `CHANGELOG.md`、`CONTRIBUTING.md`、`SECURITY.md`），但从未部署，也没有实际执行过云端迁移                                                                             |
+| 阶段                              | 状态                 | 说明                                                                                                                                                                                                        |
+| --------------------------------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Phase 0 环境检查与技术调研        | 完成                 | 技术选型（Next.js 16 + Dexie + Zod + Playwright）与 MVP 范围已落进代码结构                                                                                                                                  |
+| Phase 1 可运行的核心 MVP          | 完成                 | 中文界面、每日任务、题库、答题判分、解析、本地持久化、错题、复习、日志、统计、112 题、自动化测试                                                                                                            |
+| Phase 2 AI 思维教练               | 完成（能力 12 缺 1） | 适配层、服务端调用、提示词版本、结构化校验、超时重试、限额、用量记录、安全控制、降级                                                                                                                        |
+| Phase 3 账户与跨设备同步          | 未实现（应用侧）     | 已有 `DataStore` 接缝、`syncState` 字段与云端 SQL（`supabase/migrations/` 共 13 张表、RLS 49 条策略、题库种子）；但无登录、无 Supabase 客户端、无同步逻辑，执行迁移不改变产品行为                           |
+| Phase 4 移动端完善与 Android 评估 | 完成                 | PWA 与纯离线 APK 两条路都交付：`android/` 工程真实构建成功（debug 包 4.51 MB），包内资源经 Playwright 14 项验证。后台提醒的可靠性缺口仍保留（前台提醒已接通，见 C-11；APK 未引入原生本地通知插件，见 C-14） |
+| Phase 5 发布与维护                | 部分                 | 文档已齐（含 `CHANGELOG.md`、`CONTRIBUTING.md`、`SECURITY.md`），但从未部署，也没有实际执行过云端迁移                                                                                                       |
 
 ## 6. 需求与实现不一致之处
 
@@ -294,7 +294,7 @@
 1. **API Key 的所有权**：需求 §4.7 允许用户配置 API Key；实现把密钥限制为服务端环境变量，客户端设置连字段都不接受（`lib/domain/settings.ts:72-73`，导入时主动剥离，`lib/domain/settings.ts:103-109`）。取舍理由是本地优先应用无法保护浏览器里的密钥。
 2. **"支持多模型"的深度**：需求 §4.1 说允许切换不同大模型服务；实现只有 OpenAI 兼容一种协议适配（`lib/ai/service.ts:204`），设置里的 8 个供应商标签不会改变请求形态。
 3. **提醒的语义被收窄**：需求 §4.10 的"本地提醒/浏览器通知"在实现里明确为**只在应用被打开时表达一次**（`components/reminder-gate.tsx:12-18` 把这条限制写进了代码注释与界面文案），去重状态放在 `localStorage` 而不是 IndexedDB；后台唤醒与推送订阅因 PWA 限制而不承诺，需求也允许这样如实说明（§4.10 第 378 行）。
-4. **每日调用上限只有服务端生效**：需求 §4.7 要求可配"每日调用次数上限"，设置的字段确实在 `settings.ai.dailyCallLimit`，但没有任何客户端拦截（见 C-08）；界面提示"两侧都会检查"与代码不符，应改为"服务端配额，本机仅展示用量"。
+4. **每日调用上限是两侧生效、以先到的一方为准**：需求 §4.7 要求可配"每日调用次数上限"。实现有两道闸：客户端在 `features/coach/coach-panel.tsx:62-70` 与 `features/coach/material-view.tsx:70-74` 用 `store.countAIUsageToday()` 拦截并给出 `local_budget` 文案；服务端 `lib/ai/ratelimit.ts` 的 `AI_DAILY_LIMIT` 是权威配额。这是**修过的**：原先设置项完全不起作用而界面写着"两侧都会检查"，属于文档与代码不符。界面提示现在如实写成"这是本机的自我约束；服务端另有权威配额，以先到的一方为准"。
 5. **"每月趋势"的口径**：需求 §4.9 按月，实现按滚动 30 天窗口，避免月初样本为零的错觉（`features/stats/stats-view.tsx:33`）。
 6. **支持证据与反对证据**：需求 §4.5 把它们列为两个字段；实现用一条证据数组加 `stance` 四态（支持/冲突/支持另一种解释/不确定）表达，能表达更多情况（`lib/domain/journal.ts:3-12`）。
 7. **`ExerciseVersion` 实体**：需求 §7 要求版本实体，实现只有 `version` 整数与被覆盖的旧正文，题目历史不可追回。
@@ -307,8 +307,8 @@
 诚实清单，与 `README.md` 的已知限制保持一致：
 
 - **云端账户与同步在应用里未实现**（Phase 3）：没有注册、登录、同步代码，`SyncState.mode` 恒为 `'local'`。`supabase/migrations/` 有 13 张表 + RLS 49 条策略 + 题库种子，`supabase/README.md:7-13` 明确说明"应用尚未使用这套 schema，装上迁移也不会改变产品行为"；隔离效果有一次性 Docker Postgres 上的手工验证记录（`supabase/README.md:102-146`），但 CI 里没有 Postgres 作业，`tests/` 里也只有本地 `profileId` 层面的隔离用例（`tests/integration/local-store.test.ts:167-172`）。
-- **没有 APK，也没有原生工程**：未安装 JDK/Android SDK，Capacitor 与 Kotlin 方案都未尝试；未创建 `android/` 目录充数。`docs/ANDROID.md` 是评估与操作说明，不是构建产物。
-- **提醒只在应用打开时生效**：`components/reminder-gate.tsx` 在根布局里执行当日决策（页内横幅 + 已授权时的系统通知），但没有 `PushSubscription`、`public/sw.js` 也没有 `push`/`notificationclick` 处理器，关闭页面后不会有任何提醒；`ReminderGate` 自身没有自动化测试。
+- **APK 未在真机上运行**：`android/` 工程与 debug 包真实构建成功（`docs/ANDROID.md` 第 4 节有 Gradle 输出、`aapt2` 元数据、包内 93 个资源条目与 `apk-web/` 的逐路径比对），打进包内的那份资源由 `npm run verify:apk-web` 验证 14 项。但 `adb devices` 为空，**没有安装到任何真机或模拟器**，所以原生层行为未验证；并且是 debug 签名，不能上架；包内 AI 不可用（没有 Node 服务端，界面显示「未启用」）。PWA 与 APK 的存储是两个不同域，训练记录不互通。
+- **提醒只在应用打开时生效**：`components/reminder-gate.tsx` 在根布局里执行当日决策（页内横幅 + 已授权时的系统通知），但没有 `PushSubscription`、`public/sw.js` 也没有 `push`/`notificationclick` 处理器，关闭页面后不会有任何提醒；APK 同样没有引入原生本地通知插件；`ReminderGate` 自身没有自动化测试。
 - **AI 依赖服务端密钥**：`AI_API_KEY`/`AI_BASE_URL` 缺失时接口返回 `not_configured`（503），所有 AI 功能降级为说明文案，训练主流程不受影响。纯静态部署没有服务端路由时，状态接口不可达（`lib/ai/client.ts:57-70`）。
 - **限流为单进程内存实现**：多实例部署需要共享存储（`lib/ai/ratelimit.ts`）。
 - **多标签页并发写入未做冲突合并**：同一 profile 在两个标签页同时作答，进度行可能被后写一方覆盖。

@@ -2,12 +2,23 @@
 
 ## 0. 结论先说
 
-- **推荐用法就是 PWA**：在 Chrome for Android 上打开你的部署地址 → 菜单 → 「添加到主屏幕」，之后以 `standalone` 独立窗口运行，训练、日志、复习、报告全部离线可用。
-- **没有 APK**。本仓库从未构建过 Android 安装包，也没有 `android/` 目录。
-- **本机不具备打包条件**：这台机器上没有 Java JDK、没有 Android SDK、没有 adb，`@capacitor/*` 也不是依赖。下面第 4 节贴了我亲自跑的验证命令和真实输出。
-- 因此本文第 4、5 节里的 Capacitor 步骤是**给愿意自己装环境的读者的说明**，标注为「在你的机器上执行」，**不是**这里做过的、也不是验证过的操作。照做之后能不能成功，本文不承诺。
+本仓库现在有**两条构建目标**，都在同一份源码上：
 
-写这份文档时，本仓库同样从未部署过，部署相关见 `docs/DEPLOYMENT.md`。要在手机上试用，你需要先用某种方式把它跑在一个 HTTPS 地址上（本机 `http://localhost` 只能用于同一台机器的调试，且 Service Worker 之外的手机访问不会是安全上下文）。
+|              | Web / PWA（默认）                 | APK（`android/`，Capacitor 6）                            |
+| ------------ | --------------------------------- | --------------------------------------------------------- |
+| 构建方式     | `npm run build` + `npm start`     | `npm run build:apk-web` → `npx cap sync android` → Gradle |
+| Next 配置    | `cacheComponents` + Route Handler | `output: 'export'`，**不含** `app/api`                    |
+| AI 思维教练  | 可用（需要服务端配 Key）          | **不可用**（没有 Node 服务端，UI 优雅降级为「未启用」）   |
+| 其余全部功能 | 离线可用                          | 离线可用（题库 112 题随包播种进 IndexedDB）               |
+| 分发         | 你自己的 HTTPS 域名               | GitHub Releases 上的 debug 签名 APK                       |
+
+- **APK 已经真实构建成功并有产物**：`android/app/build/outputs/apk/debug/app-debug.apk`，4,732,472 字节（4.51 MB），Gradle 首次完整构建 `BUILD SUCCESSFUL in 1m 29s`（82/82 tasks）。第 4 节贴了环境版本、构建命令与 `aapt2` 的真实输出。
+- **走的是「纯离线单机」路线**：APK 从打包进自身的本地资源加载页面（`capacitor.config.ts` 里不设 `server.url`），因此不依赖任何服务器，也不需要 HTTPS 域名。代价是 AI 教练在 App 内不可用 —— 那一条能力必然要经过服务端转发给模型。
+- **推荐用法仍然是 PWA**（第 1 节）：不需要签名、上架、升级策略，且 AI 教练可用。APK 的价值在于「不依赖浏览器站点数据清理策略」「可在没有 Chrome 的设备分发」，以及为将来的原生通知留出入口。
+- **这是 debug 包，不是上架包**：用 Android 默认的 debug keystore 签名，只能直接安装到手机上侧载试用，不能提交 Google Play（那需要 `bundleRelease` + 你自己的 keystore，见 5.5）。
+- **没有在任何真机/模拟器上安装运行过**：`adb devices` 输出为空（第 4.5 节）。所以本仓库对 APK 的验证方式是**用 Playwright 驱动与打包进 APK 的那一份静态资源逐条核对功能**（`npm run verify:apk-web`，14 项全通过），而不是真机点按。第 6 节明确区分了「已验证」和「未验证」。
+
+写这份文档时，本仓库同样从未部署过公网实例，部署相关见 `docs/DEPLOYMENT.md`。PWA 路线需要你先把它跑在一个 HTTPS 地址上（本机 `http://localhost` 只能用于同一台机器的调试，且 Service Worker 之外的手机访问不会是安全上下文）；APK 路线不需要。
 
 ## 1. 安装为 PWA：步骤与前提
 
@@ -18,12 +29,12 @@ Chrome 判定「可安装」需要的东西，逐条对照本仓库：
 | 条件                               | 本仓库状态                                                                                                                                                                                                         | 依据（实测文件）                                                                                   |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
 | HTTPS（或 localhost）              | 由你的部署提供                                                                                                                                                                                                     | `components/service-worker-registration.tsx:13` 只在 `https:` 或 `localhost`/`127.0.0.1` 下注册 SW |
-| `start_url` 可访问、在 `scope` 内  | `id`/`start_url` = `/`，`scope` = `/`                                                                                                                                                                              | `app/manifest.ts`                                                                                  |
-| Web App Manifest 被链接            | `metadata.manifest = '/manifest.webmanifest'`，由 `app/manifest.ts`（`MetadataRoute.Manifest`）动态生成；实测该 URL 返回 `content-type: application/manifest+json`                                                 | `app/layout.tsx:19`                                                                                |
-| 图标 ≥192px 与 ≥512px，且 maskable | `/icons/icon-192.png`、`/icons/icon-512.png`、`/icons/icon-maskable-512.png`（purpose 分别为 `any`/`any`/`maskable`）；4 个 PNG 文件实测存在于 `public/icons/`                                                     | `app/manifest.ts`、`public/icons/`                                                                 |
-| 已注册且能工作的 Service Worker    | `public/sw.js`，`scope: '/'`，`updateViaCache: 'none'`                                                                                                                                                             | `components/service-worker-registration.tsx:54`                                                    |
-| 名称/显示模式                      | `name`、`short_name` = `LogicDaily`，`display: standalone`，`display_override: ['standalone','minimal-ui']`，`orientation: portrait-primary`，`background_color` `#f6f6f4`，`theme_color` `#2f5d88`，`lang: zh-CN` | `app/manifest.ts`                                                                                  |
-| 桌面长按菜单快捷方式               | 3 条：`/train`「开始今天的训练」、`/journal/new`「写思考日志」、`/review`「复习错题」                                                                                                                              | `app/manifest.ts:25-29`                                                                            |
+| `start_url` 可访问、在 `scope` 内  | `id`/`start_url` = `/`，`scope` = `/`                                                                                                                                                                              | `content/app-manifest.json`                                                                        |
+| Web App Manifest 被链接            | `metadata.manifest = '/manifest.webmanifest'`，由 `app/manifest.ts`（`MetadataRoute.Manifest`）输出，数据取自 `content/app-manifest.json`；实测该 URL 返回 `content-type: application/manifest+json`               | `app/layout.tsx`                                                                                   |
+| 图标 ≥192px 与 ≥512px，且 maskable | `/icons/icon-192.png`、`/icons/icon-512.png`、`/icons/icon-maskable-512.png`（purpose 分别为 `any`/`any`/`maskable`）；4 个 PNG 文件实测存在于 `public/icons/`                                                     | `content/app-manifest.json`、`public/icons/`                                                       |
+| 已注册且能工作的 Service Worker    | `public/sw.js`，`scope: '/'`，`updateViaCache: 'none'`                                                                                                                                                             | `components/service-worker-registration.tsx:57`                                                    |
+| 名称/显示模式                      | `name`、`short_name` = `LogicDaily`，`display: standalone`，`display_override: ['standalone','minimal-ui']`，`orientation: portrait-primary`，`background_color` `#f6f6f4`，`theme_color` `#2f5d88`，`lang: zh-CN` | `content/app-manifest.json:3,10-14`                                                                |
+| 桌面长按菜单快捷方式               | 3 条：`/train`「开始今天的训练」、`/journal/new`「写思考日志」、`/review`「复习错题」                                                                                                                              | `content/app-manifest.json:21-25`                                                                  |
 
 `/manifest.webmanifest` 与 `/sw.js` 是否 200，可以用 `docs/DEPLOYMENT.md` 第 9.3 节的 curl 先确认。
 
@@ -71,16 +82,15 @@ Chrome 判定「可安装」需要的东西，逐条对照本仓库：
 
 ### 3.1 视口与方向
 
-- `app/manifest.ts:16` 设了 `orientation: 'portrait-primary'`。这是 manifest 的**建议值**，浏览器/系统是否强制不锁定不保证；不要把它当成「横屏被禁用」的既成事实。
-- `app/layout.tsx:30-38` 的 `viewport` 导出只有 `width: 'device-width'`、`initialScale: 1`、`maximumScale: 5` 和 `themeColor`（浅色 `#f6f6f4` / 深色 `#14161a`，按 `prefers-color-scheme` 分派）。
-- **注意：没有设置 `viewportFit`。** 在生产实例上实测拿到的 HTML 是：
+- `content/app-manifest.json:12` 设了 `"orientation": "portrait-primary"`（Web 侧由 `app/manifest.ts` 作为 `MetadataRoute.Manifest` 输出，APK 侧由 `scripts/build-apk-web.mjs` 复制成 `public/manifest.webmanifest`，见 5.2）。这是 manifest 的**建议值**，浏览器/系统是否强制锁定不保证；不要把它当成「横屏被禁用」的既成事实。
+- `app/layout.tsx` 的 `viewport` 导出：`width: 'device-width'`、`initialScale: 1`、`maximumScale: 5`、`viewportFit: 'cover'`，以及 `themeColor`（浅色 `#f6f6f4` / 深色 `#14161a`，按 `prefers-color-scheme` 分派）。在生产实例上实测拿到的 HTML 是：
 
 ```text
 $ curl -s http://127.0.0.1:3123/ | grep -o '<meta name="viewport"[^>]*>'
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"/>
 ```
 
-`viewport-fit=cover` 已在 `app/layout.tsx` 的 `viewport` 导出里设置（Next 16 的 `Viewport` 类型支持它：`node_modules/next/dist/lib/metadata/types/extra-types.d.ts:52`）。
+`viewportFit` 这一项 Next 16 的类型是支持的（`node_modules/next/dist/lib/metadata/types/extra-types.d.ts:52`）。
 
 - 历史背景（值得知道，因为它曾经是个真 bug）：这一项**曾经缺失**，导致 `app/globals.css` 里给 `html` 加的 `padding: env(safe-area-inset-top) … env(safe-area-inset-left)` 与 `components/nav.tsx` 的 `paddingBottom: 'env(safe-area-inset-bottom)'` 在实践中全部解析为 0——安全区代码写了但没生效。加上 `viewportFit: 'cover'` 之后它们才真正起作用。
 - 除安全区变量之外，仍有**固定尺寸补偿**在兜底（即使某个浏览器不支持 `env()` 也不会挡住内容）：
@@ -108,8 +118,8 @@ $ curl -s http://127.0.0.1:3123/ | grep -o '<meta name="viewport"[^>]*>'
 
 - 容器高度用 `min-h-dvh`（`dvh` 会随移动浏览器的 URL 栏/工具栏变化，而不是被键盘挤压）。
 - 长文本框在滚动流里，键盘弹起时浏览器把聚焦元素滚进视口；导航是 `fixed` 且 `z-40`，所以理论上仍可能盖住底部输入区 —— 靠 `main` 的 `pb-28` 缓冲。
-- 这一条有测试但标题不准：`tests/e2e/data-and-ai.spec.ts:183` 的用例「长文本输入不会被底部导航遮挡」断言的是 `/journal/new` 第一个标注输入的 `y + height < viewport.height`；`:168` 的用例标题写着「393×851」，但配置 `playwright.config.ts:20` 用的是 `devices['Pixel 7']`。实测该描述符（下面这段是本会话真实输出）与标题不一致，应以 412×839 为准。
-- 本会话**没有**跑过 e2e（`127.0.0.1:3123` 已有本仓库的 `next start` 实例在监听，Playwright 的 `webServer` 默认也占 3123），所以「键盘弹起不遮挡」在真机上仍未验证。
+- 这一条有测试但标题不准：`tests/e2e/data-and-ai.spec.ts:198` 的用例「长文本输入不会被底部导航遮挡」断言的是 `/journal/new` 第一个标注输入的 `y + height < viewport.height`；它只证明**没有键盘时**输入框在视口内，软键盘真正弹起后的表现仍然无法在 Playwright 里模拟。同一文件 `:183` 的用例标题曾写着「393×851」，而配置 `playwright.config.ts:20` 用的是 `devices['Pixel 7']`，实测该描述符（下面这段是真实输出）是 412×839，标题与断言不符 —— 现已把标题改成实际使用的描述符，数字以 412×839 为准。
+- 本仓库的 e2e 是跑过的（`npx playwright test` → 17 passed，见 4.6），但**没有**跑在真机上，所以「键盘弹起不遮挡」仍属未验证。
 
 ```text
 $ node -e "const {devices}=require('@playwright/test'); console.log(JSON.stringify(devices['Pixel 7'],null,1))"
@@ -130,178 +140,352 @@ $ node -e "const {devices}=require('@playwright/test'); console.log(JSON.stringi
 }
 ```
 
-## 4. 环境实测：这台机器上到底有没有打包 Android 的条件
+## 4. 环境实测与真实构建记录
 
-下面的命令都是我在 Git Bash（Windows）里真实执行的，输出原样粘贴。`where` 的「找不到」消息是 GBK 编码，Git Bash 里直接显示为乱码，所以我额外用 `iconv` 转了一遍并标注。
+下面的命令全部是在这台 Windows + Git Bash 机器上真实执行的，输出原样粘贴（`iconv -f GBK -t UTF-8` 只用于还原中文乱码，不改变语义）。
+
+### 4.1 工具链
+
+JDK 与 Android SDK 装在 `D:\dev` 下，**都不在系统 PATH 上**，所以每条命令都要显式给出路径或 `JAVA_HOME`：
 
 ```text
-$ java -version
-/usr/bin/bash: line 1: java: command not found
-exit=127
+$ ls -d /d/dev/*
+/d/dev/android-sdk  /d/dev/jdk17  /d/dev/gradle-8.9  /d/dev/gradle-9.4.0  /d/dev/gradle-9.5.0  …
 
-$ where java
-信息: 用提供的模式无法找到文件。          # 原始输出为 GBK 乱码，已用 iconv -f GBK -t UTF-8 还原；exit=1
+$ "D:/dev/jdk17/bin/java.exe" -version
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
 
-$ where adb
-信息: 用提供的模式无法找到文件。          # 同上；exit=1
+$ echo "[${JAVA_HOME:-unset}]"
+[unset]
 
-$ echo "[${ANDROID_HOME:-unset}] [${ANDROID_SDK_ROOT:-unset}] [${JAVA_HOME:-unset}]"
-[unset] [unset] [unset]
-
-$ ls -d "$LOCALAPPDATA/Android" ; ls -d "$PROGRAMFILES/Android"
-ls: cannot access 'C:\Users\luo17\AppData\Local/Android': No such file or directory
-ls: cannot access 'C:\Program Files/Android': No such file or directory
-
-$ ls node_modules/.bin | grep -i cap
-（无输出：node_modules/.bin 里没有 cap 可执行文件）
-
-$ npx --no-install cap --version
-npm error could not determine executable to run
-exit=1
-
-$ timeout 90 npx cap --version < /dev/null
-npm error could not determine executable to run
-exit=1
+$ cd android && JAVA_HOME="D:/dev/jdk17" /d/dev/gradle-8.9/gradle-8.9/bin/gradle.bat --version
+Gradle 8.9
+Build time:    2024-07-11 14:37:41 UTC
+Kotlin:        1.9.23
+Launcher JVM:  17.0.20.1 (Eclipse Adoptium 17.0.20.1+1)
+Daemon JVM:    D:\dev\jdk17 (no JDK specified, using current Java home)
+OS:            Windows 10 10.0 amd64
 ```
 
-说明最后一条：我把 stdin 关闭了，因此 npm 没有在「是否下载 `@capacitor/cli`」的交互提示上等待，而是直接报「找不到可执行文件」退出。**本会话没有下载或安装任何 Capacitor 包**（也就没有改动 `package.json` / `node_modules`）。
-
-再看依赖与目录（实测）：
+SDK 目录内容：
 
 ```text
+$ ls /d/dev/android-sdk
+build-tools  cmake  cmdline-tools  licenses  ndk  platform-tools  platforms
+
+$ ls /d/dev/android-sdk/platforms
+android-34  android-35  android-36
+
+$ ls /d/dev/android-sdk/build-tools
+34.0.0  36.0.0
+```
+
+Capacitor 与依赖：
+
+```text
+$ npx cap --version
+6.2.2
+
 $ node -e "const p=require('./package.json');console.log(Object.keys(p.dependencies))"
-[ 'dexie', 'dexie-react-hooks', 'next', 'react', 'react-dom', 'zod' ]
-
-$ node -e "const p=require('./package.json');console.log(Object.keys(p.devDependencies))"
-[ '@playwright/test', '@tailwindcss/turbopack', '@types/node', '@types/react',
-  '@types/react-dom', '@vitest/coverage-v8', 'eslint', 'eslint-config-next',
-  'eslint-config-prettier', 'fake-indexeddb', 'prettier', 'tailwindcss', 'typescript', 'vitest' ]
-
-$ ls -d android
-ls: cannot access 'android': No such file or directory
+[ '@capacitor/android', '@capacitor/core', 'dexie', 'dexie-react-hooks', 'next', 'react', 'react-dom', 'zod' ]
+# devDependencies 里另有 '@capacitor/cli'
 ```
 
-结论，逐条对应上面的证据：
+版本选择是有原因的，不是随手挑的：
 
-- 没有 Java JDK（`java: command not found`，`JAVA_HOME` 未设置）。
-- 没有 Android SDK / platform-tools（`adb` 找不到、`ANDROID_HOME` 与 `ANDROID_SDK_ROOT` 未设置、SDK 常见安装目录不存在）。
-- 没有 Capacitor：既不是 `dependencies` 也不是 `devDependencies`，`node_modules/.bin` 里没有 `cap`。
-- 没有 `android/` 工程目录，也没有 `capacitor.config.ts`。
-- Gradle 无从运行（连 JDK 都没有）。
+- **Capacitor 6.2.2 而不是 8.x**：Capacitor 8 生成的工程要求 `sourceCompatibility JavaVersion.VERSION_21` 与 compileSdk 36，而这台机器只有 JDK 17。6.2.2 的工程是 Java 17 / compileSdk 34，正好匹配。实测 `android/variables.gradle` 是 `minSdkVersion = 22`、`compileSdkVersion = 34`、`targetSdkVersion = 34`；`android/build.gradle` 是 `classpath 'com.android.tools.build:gradle:8.2.1'`（AGP 8.2.1）。
+- **用本机 Gradle 8.9 而不是 wrapper**：`android/gradle/wrapper/gradle-wrapper.properties` 里写的是 `gradle-8.2.1-all.zip`，跑 `gradlew.bat` 会先联网下载 8.2.1 发行包。手上有 8.9，就直接用 `gradle.bat` 构建，避开一次无谓的大下载。**这只影响本机复现方式**：正常环境用 `./gradlew` 即可，仓库里没有对 wrapper 做任何改动。
+- `android/local.properties` 写的是 `sdk.dir=D:/dev/android-sdk`。**必须用正斜杠**：写成 `sdk.dir=D\:\dev\android-sdk` 时 `:app:compileDebugJavaWithJavac` 会失败在 `SdkLocator$SdkLocationSource.validateSdkPath`，报 `java.io.IOException: 文件名、目录名或卷标语法不正确`（GBK 输出，原文如此）。这个文件在 `android/.gitignore` 里，每台机器自己生成。
 
-所以：**Capacitor / Gradle 打包在这台机器上没有尝试过，连尝试的前提都不存在**。本文其余部分关于 APK 的一切都写成「你如果要自己做，需要先满足什么」，不写成「做过」。
-
-## 5. 为什么暂时没有 APK，以及真要做得装什么
-
-### 5.1 为什么 PWA 目前够用
-
-核心功能全部离线、数据在浏览器本地、没有账号体系、没有后台服务。安装后是独立窗口 + 桌面图标 + 长按快捷方式，对「每天 5～15 分钟做一道题、写一篇日志」这件事，浏览器壳提供的能力和原生壳差别不大；而原生壳会额外带来签名、上架、版本升级、审核等长期成本。AGPL-3.0-or-later 下，多一个分发渠道就多一份源码公开义务的对接工作。
-
-### 5.2 什么情况下才真的需要原生壳
-
-- 需要**可靠到点的提醒**（下面 5.3 展开）。
-- 需要系统级分享/接收文本（把一篇文章丢进 App 让它拆解论证）之类的 intent。
-- 希望在应用商店被搜到、或在不装 Chrome 的设备分发。
-- 需要避开浏览器对存储的清理策略（站点数据被系统/用户清除时 IndexedDB 会一起没）。
-
-### 5.3 通知与推送的真实状态（本仓库）
-
-这是最容易误判的一块，逐条摆事实。下面三条都是本会话在 Git Bash 里真实跑的 grep，检索范围限定代码目录（`app lib components features scripts tests public content`），以免被 Markdown 文档自身的叙述污染：
-
-```text
-$ grep -rn "PushSubscription\|pushManager\|showNotification\|new Notification(" app lib components features scripts tests public content
-（无输出，exit=1）
-
-$ grep -rn "decideReminder" app lib components features
-./lib/services/reminders.ts:37:export function decideReminder(
-```
-
-1. **没有 Web Push。** `PushSubscription`、`pushManager` 在代码目录里零命中；`public/sw.js` 里没有 `push`/`notification` 事件监听器（实测全文 96 行，只有 `install`、`activate`、`fetch`、`message` 四个）。也就是说：没有订阅、没有应用服务器密钥（VAPID）、没有保存订阅的服务端接口。因此**关掉 App、关掉网页之后，没有任何机制能把 LogicDaily 唤醒并通知你**。
-2. **连前台通知都没接线。** `features/me/me-view.tsx` 里只有权限处理：读取 `Notification.permission` 显示状态（`:43-46`、`:216`）和一个「请求通知权限」按钮调 `Notification.requestPermission()`（`:217-229`）。`new Notification(`、`showNotification` 零命中 —— 拿到了权限也没有任何地方去构造通知。
-3. **提醒决策函数是纯逻辑，运行时没有调用点。** `lib/services/reminders.ts` 的 `decideReminder()` 实现了：开关/暂停、今天已提醒过、休息日不打扰、未到点、超过 2 小时窗口不再打扰、免打扰时段（支持跨午夜 22:30–07:30 这类区间）、每周复盘日、待办数/逾期优先。上面的 grep 显示代码目录里只有它的定义行，没有任何调用；唯一使用它的是 `tests/unit/reminders.test.ts`。
-4. 该文件自己的注释就是官方口径（实测 `reminders.ts:33-36`）：
-
-   > PWA 无法保证后台准时唤醒（浏览器与系统都会限制），因此这里只做「应用处于打开状态时的当日提醒」。真正的可靠后台提醒需要原生包装层，见 docs/ANDROID.md 的说明。
-
-   界面上也照这个说了（`me-view.tsx:230-233`）：「作为网页应用，只有页面开着（或 Service Worker 被系统唤醒）时才可能发出提醒，浏览器与系统的电池优化都会限制后台任务。」
-
-5. 结论：**当前版本对用户可见的「提醒」是设置项 + 文案 + 权限按钮，不会真的产生一条到点的系统通知。** 这一点在 `README.md` 的「已知限制」里同样写着。
-
-另外要讲清两条一般性事实：
-
-- **Chrome for Android 的 Web Push 确实能在 App 未打开时送达**，但代价是你必须实现订阅端（`pushManager.subscribe`）、服务端订阅存储、VAPID 应用服务器与推送发送逻辑 —— 本仓库一个都没有。而且它推送的是**服务器主动发的消息**，本地定时提醒并不需要 push，但**准时唤醒 Service Worker 是不可靠的**：Doze、厂商电池优化、进程冻结都会推迟或丢弃，`setTimeout` 在页面被后台化后不保证执行。
-- **Capacitor 不会把这件事变可靠。** 加了原生壳只是给 WebView 套了层容器；要让提醒到点，必须再引入原生本地通知/精确闹钟（例如 `@capacitor/local-notifications` 之类插件，配合 Android 12+ 的 `SCHEDULE_EXACT_ALARM`/`POST_NOTIFICATIONS` 权限）并自己处理厂商省电策略。**「打包成 APK」不等于「后台通知可靠」**，这是最常见的误解。
-
-### 5.4 如果你要做原生壳：前置条件与步骤（未验证，在你的机器上执行）
-
-**先决条件（本机全部缺失，见第 4 节）**
-
-1. JDK 17 或 Android Studio 当前要求的版本（以 Android Gradle Plugin 官方兼容表为准；不要照抄网上的「JDK 8 也行」）。
-2. Android SDK：platform-tools（`adb`）、与目标 compileSdk 匹配的 platforms、build-tools；并接受许可 `sdkmanager --licenses`。
-3. 设置 `JAVA_HOME`、`ANDROID_HOME`（或 `ANDROID_SDK_ROOT`）。
-4. 真机或模拟器（`adb devices` 能看到设备）。
-
-**一个必须先解决的技术前提**：Capacitor 需要一个**纯静态的前端目录**（`webDir`），而 Next.js 的生产产物要跑在 Node 上。本仓库的 `next.config.ts` **没有** `output` 字段（既不是 `export` 也不是 `standalone`），而且 `app/api/ai/analyze/route.ts` 的 POST 是依赖 `Request` 的 Route Handler —— Next 官方文档（`node_modules/next/dist/docs/01-app/02-guides/static-exports.md` 的 Unsupported Features）明确把它列为静态导出**不支持**的项。所以在动手打包前，你必须先三选一：
-
-- **A. 静态导出 + 关掉 AI**：给 `next.config.ts` 加 `output: 'export'`，App 里 `/api/ai/*` 变成 404，`lib/ai/client.ts` 会走 `unreachable` 分支（文案「纯静态部署时属于预期」），AI 教练在 App 内不可用。**这条路本会话没有尝试，不确定当前代码能否直接构建成功。**
-- **B. App 指向你的自托管地址**（Capacitor 的 `server.url`）：能用 AI，但那不是离线打包，且你要重新评估 HTTPS 证书锁定与「这还算不算原生 App」。
-- **C. 保持 PWA，只做「可信源 + 原生通知」的最小壳**：需要自己加原生通知插件并解决 5.3 的可靠性问题。
-
-**步骤（示例命令，未在此机器执行过，`@capacitor/*` 目前不是本仓库依赖）**
+### 4.2 构建命令（按顺序，每条都真实执行过）
 
 ```bash
-# 在你的机器上执行；本会话没有运行其中任何一条，也没有安装任何包
-npm install @capacitor/core @capacitor/cli @capacitor/android
-
-npx cap init "LogicDaily" "com.example.logicdaily" --web-dir=out
-# 说明：--web-dir 只是示例值。走 A 路线时它应当是 next export 的输出目录
-# （配了 output: 'export' 后 next build 的静态产物位置需要你按 Next 文档确认），
-# 本仓库现在既没有 export 配置，也没有 out/ 目录，所以这一步现在必然要先改配置。
-
-npm run build           # 或你为静态导出调整后的构建命令
-npx cap add android
-npx cap sync
-
-# 用 Android Studio 打开 android/ 目录做真机调试与构建：
-cd android && ./gradlew assembleDebug      # 本地测试包
-cd android && ./gradlew bundleRelease      # 上架用的 AAB，需要你自己的 keystore
+npm run build:apk-web        # node scripts/build-apk-web.mjs → apk-web/（91 个文件，1,725,157 字节 ≈ 1.65 MB）
+npx cap sync android         # 把 apk-web/ 复制进 android/app/src/main/assets/public
+cd android
+JAVA_HOME="D:/dev/jdk17" /d/dev/gradle-8.9/gradle-8.9/bin/gradle.bat assembleDebug
 ```
+
+Gradle 真实输出（尾部）。第一次是完整构建：
+
+```text
+BUILD SUCCESSFUL in 1m 29s
+82 actionable tasks: 82 executed
+exit=0
+```
+
+之后又重建了两次，都是增量：换构建脚本的配置传递方式后 `BUILD SUCCESSFUL in 34s`（23 executed / 59 up-to-date），换掉启动器图标后 `BUILD SUCCESSFUL in 28s`（6 executed / 76 up-to-date）。三次 exit 都是 0。
+
+产物（当前仓库里这一次的输出）：
+
+```text
+$ ls -la android/app/build/outputs/apk/debug/
+-rw-r--r-- 1 luo17 197609 4732472 Oct  9 22:31 app-debug.apk
+-rw-r--r-- 1 luo17 197609     368 Oct  9 22:31 output-metadata.json
+
+$ certutil -hashfile android/app/build/outputs/apk/debug/app-debug.apk MD5
+74bc65bc6130fa13375cf06af301b5ec
+```
+
+4,732,472 字节 ≈ 4.51 MB。
+
+一个踩过的坑：**把 gradle 的输出管道给 `tail` 会让 `$?` 变成 `tail` 的退出码**，第一次构建失败时我因此误判成成功。之后改成先重定向到文件再读，才拿到真实的 `exit=1` 和失败任务名。
+
+### 4.2.1 启动器图标与闪屏
+
+`npx cap add android` 生成的工程带的是 Capacitor 模板自带的 logo —— 直接发布会让 App 在手机上显示别人的图标。`scripts/generate-icons.mjs` 现在在生成 PWA 图标之后，若检测到 `android/app/src/main/res` 存在，就用同一套图案覆写 25 个 PNG：
+
+- `mipmap-{m,h,x,xx,xxx}hdpi/ic_launcher.png`：圆角方块版（48/72/96/144/192）。
+- `mipmap-*/ic_launcher_round.png`：圆形裁切版。
+- `mipmap-*/ic_launcher_foreground.png`：adaptive icon 的前景层，满幅铺品牌色、图案收在 108dp 画布的 72dp 可信区内（`ringOuter = 0.30 × 短边`），这样启动器裁成圆形或方形时成品与 PWA 图标一致。
+- `drawable-port-*` / `drawable-land-*` 的 `splash.png`：品牌渐变底 + 居中标记。
+- `values/ic_launcher_background.xml`：背景色层改成 `#2F5D88`，避免与前景接缝。
+
+脚本是纯 Node（zlib + 手写 CRC32），没有引入任何图像处理依赖；重构后 PWA 那 4 个 PNG 的输出与之前**逐字节相同**（`md5sum -c` 验证）。改完图标后重新 `assembleDebug`，包体从 4,436,189 变成 4,732,472 字节（PNG 比模板那几张重）。
+
+### 4.3 用 aapt2 核验 APK 元数据
+
+```text
+$ /d/dev/android-sdk/build-tools/34.0.0/aapt2.exe dump badging android/app/build/outputs/apk/debug/app-debug.apk
+package: name='com.logicdaily.app' versionCode='1' versionName='1.0' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
+sdkVersion:'22'
+targetSdkVersion:'34'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='com.logicdaily.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+application-label:'LogicDaily'
+application: label='LogicDaily' icon='res/mipmap-anydpi-v26/ic_launcher.xml'
+launchable-activity: name='com.logicdaily.app.MainActivity'  label='LogicDaily' icon=''
+```
+
+对照 `capacitor.config.ts` 实测内容：`appId: 'com.logicdaily.app'`、`appName: 'LogicDaily'`、`webDir: 'apk-web'`、`backgroundColor: '#f6f6f4'`、`android.allowMixedContent: false`、`server.androidScheme: 'https'`，并且**没有 `server.url`** —— 这正是「从 APK 内的本地资源加载」的开关；一旦设了 `server.url`，WebView 就变成指向你服务器的远程壳，离线特性全丢。
+
+### 4.4 核验 APK 里到底装了什么
+
+```text
+$ /d/dev/jdk17/bin/jar.exe tf android/app/build/outputs/apk/debug/app-debug.apk | grep -c "^assets/public"
+93
+
+# 与打包前的 apk-web/ 逐个路径比对
+$ … | sed -n 's|^assets/public/||p' | sort > /tmp/apk-list.txt
+$ (cd apk-web && find . -type f | sed 's|^\./||' | sort) > /tmp/src-list.txt
+$ comm -13 /tmp/apk-list.txt /tmp/src-list.txt   # 在 apk-web 但没进 APK 的：空
+$ comm -23 /tmp/apk-list.txt /tmp/src-list.txt   # APK 多出来的：
+cordova.js
+cordova_plugins.js
+```
+
+即 **`apk-web/` 的 91 个文件一个不少地全在 APK 里**，另加 Capacitor 注入的 2 个桥接文件。APK 根下还有 `assets/capacitor.config.json`、`assets/capacitor.plugins.json`、`assets/native-bridge.js`（这三个不属于 `assets/public/`）。
+
+**这一步是必要的**：它证明「被验证过的那份资源」和「打进包里的资源」是同一份，否则 4.6 的功能验证都不算数。
+
+### 4.5 没有真机：`adb devices` 是空的
+
+```text
+$ /d/dev/android-sdk/platform-tools/adb.exe devices
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+List of devices attached
+（下面无内容）
+```
+
+所以：**APK 构建成功、包内资源逐文件核对通过，但没有在物理机或模拟器上安装运行过**。4.6 的 14 项验证针对的是打进 APK 的那份静态资源本身（Playwright，`devices['Pixel 7']` → 实测 412×839），它能覆盖业务逻辑与布局，但**覆盖不到原生层**：WebView 内核版本差异、`https://localhost` 下的 IndexedDB 配额与清理策略、返回键行为、启动闪屏、系统深色模式联动、通知权限弹窗 —— 这些在第 6 节一律标注为未验证。
+
+### 4.6 对打进 APK 的那份资源的功能验证
+
+```text
+$ node scripts/verify-apk-web.mjs
+…
+14/14 通过
+```
+
+完整清单（全部 PASS）：
+
+| #   | 检查项                                                     | 说明                                                           |
+| --- | ---------------------------------------------------------- | -------------------------------------------------------------- |
+| 1   | 首页加载并出现引导                                         | 静态包在没有 Node 服务的情况下能渲染并读到本机数据             |
+| 2   | 离线包内题库已播种（112 题）— 实际 112                     | 直接对 IndexedDB 的 `exercises` 表 `count()`，确认题库随包可用 |
+| 3   | 深链接进入题目                                             | `/train/?exercise=ex-cond-001` 冷启动可用                      |
+| 4   | 提交并判分                                                 | 选择选项 → 提交 → 出现判分结果                                 |
+| 5   | AI 降级为「未启用」而不是报错崩溃                          | **APK 内没有 `/api/ai/*`**，客户端必须优雅降级，这条专门盯着它 |
+| 6   | 保存后 URL 变为 `/journal?edit=<id>`                       | 见 5.4 的路由说明                                              |
+| 7   | 冷启动到 `?edit=` 深链接后内容仍在                         | 刷新后编辑器仍是同一篇                                         |
+| 8   | 列表可见该篇日志                                           | 写进去的数据能被读出来                                         |
+| 9   | 从列表点进编辑器                                           | 列表 → 编辑器的入口                                            |
+| 10  | `/review/` `/stats/` `/me/` `/train/` `/coach/` 无横向溢出 | 5 条路由，实测溢出 0px                                         |
+
+脚本自己起静态 HTTP 服务器（端口 4321）托管 `apk-web/`，用 Playwright 打开，跑完即关。**它测的是资源目录，不是安装后的 App。**
+
+Web 主线的回归也重跑过，APK 这条改动没有破坏它：
+
+```text
+$ npx playwright test
+17 passed
+exit=0
+```
+
+单元与集成测试规模见 `README.md`（211 项）。
+
+## 5. APK 是怎么做到的：三个必须绕开的限制
+
+这一节解释 4.2 那些命令背后的设计决策。要改这套流程，先知道为什么长这样。
+
+### 5.1 静态导出与 `cacheComponents` 互斥
+
+`next.config.ts` 在 Web 侧用 `cacheComponents: true`（本项目的性能特性），而 `output: 'export'` 要求每条路由都能静态化，两者冲突：导出器抱怨路由没有声明 force-static，而 `cacheComponents` 又拒绝任何 `export const dynamic` 配置。同时 Next 16 的 `next build` **没有** `-c/--config-file` 参数，无法在同一目录用第二份配置文件构建。
+
+解决办法是**同一份源码、两个构建目标**，`next.config.ts` 按环境变量切换：
+
+```ts
+const isStaticExport = process.env.BUILD_TARGET === 'capacitor';
+const nextConfig: NextConfig = {
+  ...(isStaticExport
+    ? { output: 'export' as const, trailingSlash: true, images: { unoptimized: true } }
+    : { cacheComponents: true, partialPrefetching: true }),
+  turbopack: { rules: { '*.css': { loaders: ['@tailwindcss/turbopack'], as: '*.css' } } },
+};
+```
+
+CSS 规则两边都必须有，否则副本里 Tailwind 不生效。导出时由 `scripts/build-apk-web.mjs` 在 `execFileSync` 的 `env` 里传入 `BUILD_TARGET: 'capacitor'`，配置本身只有 `next.config.ts` 这一处，不存在第二份会漂移的副本配置。
+
+### 5.2 为什么需要 `.apk-src/` 副本而不是原地导出
+
+APK 里不存在 Node 服务端，`app/api` 下的 Route Handler 在导出模式下必然报错（依赖 `Request` 的 Route Handler 是 Next 官方文档列出的静态导出不支持项）。但**这些路由是安全边界**：SSRF 防护、API Key 只留在服务端、限流与每日配额都在里面，仓库里绝不能为了打包而删掉它们。
+
+所以 `scripts/build-apk-web.mjs` 走非破坏性路线：把源码递归复制进 `.apk-src/`，**只在副本里**排除 `app/api` 与 `app/manifest.ts`，然后在副本中构建。仓库本体一行不动，`.apk-src/` 与 `apk-web/` 都写进了 `.gitignore`，是可再生产物。
+
+两个实现细节，都是踩出来的：
+
+- 副本必须留在仓库**内部**，才能沿目录树向上解析到 `node_modules`；而 `fs.cpSync` 拒绝把目录复制进自身的子目录（`Cannot copy ... to a subdirectory of self`）。因此脚本里是手写的递归 `copyTree`。
+- 副本里 `app/manifest.ts` 属于元数据路由，导出模式下报同一个错。因此把 manifest 数据抽成 `content/app-manifest.json` 单一来源：Web 侧 `app/manifest.ts` 读它并返回 `MetadataRoute.Manifest`，导出侧把它原样复制成 `public/manifest.webmanifest`。两边内容不会漂移。
+
+### 5.3 `/manifest.webmanifest` 与 Service Worker 在 APK 里
+
+`apk-web/` 里确实带着 `sw.js`（它在那 91 个文件中）。Capacitor 的 `androidScheme: 'https'` 让页面运行在 `https://localhost` 这个安全上下文里，所以 Service Worker **会**注册。这不影响正确性：`sw.js` 对 `/api/*` 直接放行（不缓存、不拦截），而 APK 里本来就没有 `/api/*`，那些请求会失败并被客户端的降级逻辑接住 —— 4.6 第 5 项测的就是这条路径。
+
+### 5.4 为什么思考日志改成了 `/journal?edit=<id>`
+
+动态段 `app/journal/[id]/page.tsx` 在静态导出下必须有**非空**的 `generateStaticParams()`，而日志 id 是用户在本机创建的，构建期不可能枚举。所以把「编辑器」从路径段改成查询参数：
+
+```tsx
+export function JournalScreen() {
+  const params = useSearchParams();
+  const editId = params.get('edit');
+  return editId ? <JournalEditorView journalId={editId} /> : <JournalListView />;
+}
+```
+
+`app/journal/page.tsx` 用 `<Suspense>` 包住它（`useSearchParams` 在导出模式下要求 Suspense 边界）。列表项、保存后的跳转、首页入口都改成 `/journal?edit=${id}`；Web E2E 用例同步更新，并新增「从列表点进编辑器 + 刷新后仍在同一篇」两步断言（4.6 末尾的 17 passed 包含它们）。
+
+代价要讲明白：**日志不再有 `/journal/<id>` 这种天然可分享的短链接**。Web 侧同样走这个路由，所以是全局改变，不是 APK 专属的退化；而对本仓库「数据只在本机 IndexedDB、没有云端共享」的定位来说，分享链接本来就不成立，真正可用的搬运路径是导出备份 JSON。
+
+### 5.5 打成上架包还差什么
+
+本仓库只做到 `assembleDebug`，产物是 debug 签名。要走 release：
+
+```bash
+cd android
+keytool -genkey -v -keystore logicdaily-release.keystore -alias logicdaily -keyalg RSA -keysize 2048 -validity 10000
+# keystore 路径与口令配进环境变量或 ~/.gradle/gradle.properties，不要写进仓库
+./gradlew bundleRelease
+```
+
+需要你自己负责：keystore 保管（丢了就无法给老用户升级）、`versionCode`/`versionName` 递增策略、Google Play 开发者账号与合规声明、以及 AGPL-3.0-or-later 下随附源码的义务。**这些步骤我没有执行过，本节不构成「照做就能上架」的承诺。**
 
 打包之后仍然要做、而 Capacitor **不会**替你做的事：
 
-- 本地通知插件 + 精确闹钟权限 + 各厂商省电白名单引导（否则提醒照样不准）。
-- 如果要推送：FCM（或厂商通道）+ 你的服务端，以及账号体系（当前用户没有账号）。
-- 数据迁移：PWA 的站点数据在 Chrome 的 profile 里，Capacitor WebView 是**另一个存储域**。装了 APK 不会自动继承你「添加到主屏幕」那份训练记录。搬运办法只有仓库里已有的那条路：`我的` → 导出备份 JSON → 在新壳里导入（实测 `lib/db/store.ts:603-625` 校验结构与版本并要求 `app === 'logicdaily'`；`lib/domain/settings.ts:105-108` 只丢弃设置里 `ai` 段的 `apiKey`/`key`/`token`）。
-- 签名 keystore 的保管、版本升级策略、商店素材与隐私声明。
-- 上架分发（Google Play 的开发者账号与一次性注册费等以官方当前页面为准，我没有核实过）。
-- AGPL-3.0-or-later：以 APK 形式分发同样要求随附/明示源码。
+- 本地通知插件 + 精确闹钟权限 + 各厂商省电白名单引导（否则提醒照样不准，见第 5.6 节）。
+- 如果要推送：FCM（或厂商通道）+ 你的服务端，以及账号体系（当前没有账号）。
+- 数据迁移：PWA 的站点数据在 Chrome 的 profile 里，Capacitor WebView 是**另一个存储域**。装了 APK 不会自动继承你「添加到主屏幕」那份训练记录。唯一的搬运办法是仓库里已有的那条路：`我的` → 导出备份 JSON → 在新壳里导入（实测 `lib/db/store.ts` 的导入校验结构与版本并要求 `app === 'logicdaily'`；设置导入只丢弃 `ai` 段里的 `apiKey`/`key`/`token`）。
 
-**我不会在这台机器上执行以上任何命令**，因为第 4 节的前提一个都不满足。如果你在自己机器上跑通了，欢迎把结果（含 Gradle/Capacitor 版本、compileSdk、静态导出到底怎么配成功的）补进这份文档 —— 那份更新才是验证过的。
+### 5.6 通知与推送的真实状态（本仓库）
+
+这是最容易误判的一块，逐条摆事实。检索范围限定代码目录（`app lib components features scripts tests public content`），以免被 Markdown 文档自身的叙述污染：
+
+```text
+$ grep -rn "PushSubscription\|pushManager" app lib components features scripts tests public content
+（无输出，exit=1）
+
+$ grep -rn "decideReminder" app lib components features
+lib/services/reminders.ts:37:export function decideReminder(options: {
+components/reminder-gate.tsx:7:import { decideReminder } from '@/lib/services/reminders';
+components/reminder-gate.tsx:40:      const decision = decideReminder({
+```
+
+1. **没有 Web Push。** `PushSubscription`、`pushManager` 零命中；`public/sw.js` 里没有 `push`/`notification` 事件监听器（实测全文只有 `install`、`activate`、`fetch`、`message` 四个）。没有订阅、没有 VAPID 应用服务器密钥、没有保存订阅的服务端接口。因此**关掉 App、关掉网页之后，没有任何机制能把 LogicDaily 唤醒并通知你**。
+2. **前台提醒已经接线（这一条是后来补的，之前是断的）。** `components/reminder-gate.tsx` 挂在 `app/layout.tsx` 的 `AppProviders` 内，应用打开时读 `store.getPlan` / `getProgress` / `listDueReviews` 算出待办必做项数与逾期天数，交给 `decideReminder()`，然后把结果表达为：页内横幅（`role="status"`，浮在底部导航之上）+ `notify()` + 在 `Notification.permission === 'granted'` 时构造 `new Notification(...)`。每天最多表达一次，用 `localStorage` 的 `logicdaily:reminder-fired:<dateKey>` 记录；`new Notification` 包了 try/catch，某些浏览器要求先有用户手势，弹不出来时页内横幅仍在。此前 `decideReminder()` 只有单元测试在用、运行时零调用点 —— 也就是设置项和文案都写了但什么都不发生，现在这条死链路接上了。
+3. **决策逻辑本身是纯函数**（`lib/services/reminders.ts`）：开关/暂停、今天已提醒过、休息日不打扰、未到点、超过窗口不再打扰、免打扰时段（支持跨午夜 22:30–07:30 这类区间）、每周复盘日、待办数与逾期优先。由 `tests/unit/reminders.test.ts` 覆盖。
+4. 该文件的注释仍是官方口径：
+
+   > PWA 无法保证后台准时唤醒（浏览器与系统都会限制），因此这里只做「应用处于打开状态时的当日提醒」。真正的可靠后台提醒需要原生包装层。
+
+   界面上也照这个说了（`features/me/me-view.tsx`）：「作为网页应用，只有页面开着（或 Service Worker 被系统唤醒）时才可能发出提醒，浏览器与系统的电池优化都会限制后台任务。」
+
+5. 结论：**当前版本的「提醒」是「打开应用时才表达的当日提醒」；在你没打开它的时候，不会有到点的系统通知送达。** APK 也一样 —— 5.5 说的本地通知插件还没引入，Capacitor 壳本身不提供这个能力。
+
+两条一般性事实：
+
+- **Chrome for Android 的 Web Push 确实能在 App 未打开时送达**，代价是要实现订阅端（`pushManager.subscribe`）、服务端订阅存储、VAPID 应用服务器与发送逻辑 —— 本仓库一个都没有。而且它推的是**服务器主动发的消息**；本地定时提醒并不需要 push，但**准时唤醒 Service Worker 是不可靠的**：Doze、厂商电池优化、进程冻结都会推迟或丢弃，页面后台化后 `setTimeout` 不保证执行。
+- **Capacitor 不会把这件事变可靠。** 原生壳只是给 WebView 套了层容器；要让提醒到点，必须再引入原生本地通知/精确闹钟插件，配合 Android 12+ 的 `SCHEDULE_EXACT_ALARM`、Android 13+ 的 `POST_NOTIFICATIONS`，并自己处理厂商省电策略。**「打包成 APK」不等于「后台通知可靠」**，这是最常见的误解。
 
 ## 6. 已知限制（手机端）
 
-- 没有 APK，也没有任何签名包、商店页面；Capacitor / Gradle **从未尝试**（第 4 节有环境证据）。
-- 后台提醒不可靠，且当前实现**没有**任何真正的通知发送代码：只有权限请求按钮；`decideReminder()` 无运行时调用点；无 Web Push（无 `PushSubscription`/`pushManager`）。
-- 安全区变量 `env(safe-area-inset-*)` 已生效（meta viewport 含 `viewport-fit=cover`），同时仍有 `pb-28` + `min-h-[52px]` 这类固定补偿兜底。未在真机上量过刘海与手势区的实际像素值。
-- `orientation: 'portrait-primary'` 只是 manifest 建议值，不构成横屏被禁止的保证。
-- 离线行为没有 e2e 覆盖（测试里反而先注销 SW、清 cache），本文第 2 节是代码阅读结论，不是真机断网验证。
-- 首次安装必须在联网状态下使用一次，之后离线能力才「攒够」；从未访问过的路由首次离线可能打不开。
-- `/api/*` 永不缓存（设计如此）：AI 教练在离线时必然不可用。
-- 若用非 HTTPS 地址访问（内网 IP、`http://` 域名），Service Worker 不注册，离线与安装都不可用。
-- 用户数据只在浏览器 IndexedDB（数据库名 `logicdaily`）里：换浏览器、换设备、清除站点数据、系统清理存储都会丢；没有云端同步 —— 实测代码目录里没有任何读取 `SUPABASE_*` 的代码，也没有登录流程（`supabase/migrations/` 里有 SQL，装上也不会改变 App 的行为）。
+**APK 侧 —— 已验证的部分：**
+
+- 有可安装的 debug APK（4,732,472 字节，`com.logicdaily.app` 1.0 / versionCode 1，minSdk 22 / target 34 / compileSdk 34），Gradle 首次完整构建 `BUILD SUCCESSFUL in 1m 29s`（第 4 节有全部命令与原始输出）。
+- APK 内 93 个 `assets/public/*` 条目与打包前的 `apk-web/` 逐路径一致（4.4）。
+- 打进包的那份资源经 Playwright 验证 14/14 通过：题库 112 题随包播种、答题判分、`/journal?edit=` 全流程含冷启动刷新、AI 优雅降级、5 条路由无横向溢出（4.6）。
+- APK 是**纯离线单机**：不依赖任何服务器，AI 思维教练在包内不可用（设计上必须经服务端），界面显示「未启用」而非崩溃。
+
+**APK 侧 —— 未验证 / 明确不具备：**
+
+- **没有在任何真机或模拟器上安装运行过**（`adb devices` 为空，4.5）。原生层行为（WebView 内核差异、`https://localhost` 下的 IndexedDB 配额与系统清理策略、返回键、启动闪屏、系统深色模式联动、通知权限弹窗）全部未验证。
+- **debug 签名，不能上架**。没有 release keystore、没有 AAB、没有商店页面；5.5 的 release 步骤未执行。
+- **APK 里没有后台提醒能力**。没有 Web Push（`PushSubscription`/`pushManager` 零命中），没有原生本地通知插件；`ReminderGate` 只在页面打开时表达当日提醒（5.6）。
+- APK 里 AI 相关的全部功能不可用（没有 Node 服务端）。若需要 AI，用 PWA 路线或 `server.url` 远程壳（后者会失去离线）。
+- APK 与 PWA 的存储**不互通**：装了 APK 不会继承「添加到主屏幕」那份记录，只能导出 JSON 再导入。
+- `orientation: 'portrait-primary'` 只是 manifest 建议值；APK 侧没有额外做原生方向锁定配置。
 - 没有为大屏/横屏做过适配验证；内容容器宽度上限 `max-w-[520px]`。
-- 软键盘没有专门逻辑（无 `visualViewport` 监听），真机上的输入体验未测试；e2e 视口是 `devices['Pixel 7']`（实测 412×839），而用例标题写着 393×851，两者不一致。
-- 本文所有真机表述（Chrome 菜单文案、厂商浏览器行为、Doze 影响）属于一般性说明，**没有**在任何 Android 设备上实测过。
+- AGPL-3.0-or-later：以 APK 形式分发同样要求随附/明示源码。
 
-## 7. 想在手机上认真验证一遍的话
+**PWA 侧：**
 
-按顺序做，每一步都能看到实际结果（这些是给你的机器的指令，我没有执行）：
+- 后台提醒不可靠：只有「打开时」的当日提醒（页内横幅 + 已授权时的 `new Notification`），没有到点的系统级唤醒（5.6）。
+- 安全区变量 `env(safe-area-inset-*)` 已生效（meta viewport 含 `viewport-fit=cover`），同时仍有 `pb-28` + `min-h-[52px]` 这类固定补偿兜底。未在真机上量过刘海与手势区的实际像素值。
+- 离线行为没有 e2e 覆盖（测试里反而先注销 SW、清 cache），第 2 节是对 `public/sw.js` 的逐行阅读结论，不是真机断网验证。
+- 首次安装必须在联网状态下使用一次，之后离线能力才「攒够」；从未访问过的路由首次离线可能打不开。
+- `/api/*` 永不缓存（设计如此）：AI 教练离线时必然不可用。
+- 若用非 HTTPS 地址访问（内网 IP、`http://` 域名），Service Worker 不注册，离线与安装都不可用。
+- 用户数据只在浏览器 IndexedDB（数据库名 `logicdaily`）里：换浏览器、换设备、清除站点数据、系统清理存储都会丢；没有云端同步，也没有登录流程（`supabase/migrations/` 里有 SQL，装上也不会改变 App 的行为）。
+- 软键盘没有专门逻辑（无 `visualViewport` 监听），真机上的输入体验未测试。
+- 本文关于真机的表述（Chrome 菜单文案、厂商浏览器行为、Doze 影响）属于一般性说明，**没有**在任何 Android 设备上实测过。
+
+## 7. 想在真机上认真验证一遍的话
+
+**跑现成的 APK**（不需要 Node 环境，在你的手机上执行）：
+
+1. 从本仓库的 GitHub Releases 下载 debug APK，安装（需要允许「未知来源」）。
+2. 首次打开不需要联网（题库在包里）。做一道题、写一篇日志、刷新页面确认数据还在，就验证了 IndexedDB 在这个 WebView 里真的能落盘 —— 这是 4.5 里唯一没能自动覆盖的点。
+3. 「我的」页看提醒区，授权通知后回到应用内，确认当日提醒是否以系统通知形式出现（当前设计只在打开时表达，见 5.6）。
+4. 想和 PWA 数据打通：在 PWA 里 `我的` → 导出备份 JSON，在 APK 里导入。
+
+**自己从源码构建 APK**（在你的机器上执行）：
+
+1. 准备 JDK 17+（版本要与所选 Capacitor/AGP 匹配 —— 见 4.1 关于 Capacitor 8 需要 JDK 21 的说明）、Android SDK（platform-tools + 与 compileSdk 匹配的 platforms/build-tools，并接受 `sdkmanager --licenses`）。
+2. `npm install` → `npm run build:apk-web` → `npx cap sync android`。
+3. 在 `android/local.properties` 写 `sdk.dir=`，**用正斜杠**（4.1）。
+4. `cd android && ./gradlew assembleDebug`。
+5. `adb install -r app/build/outputs/apk/debug/app-debug.apk`（`adb devices` 必须先能看到设备）。
+
+**PWA 路线的验证步骤**：
 
 1. `npm run build && npm start`，用内网 IP + HTTPS 暴露（或用你的正式域名）。**别用 `http://`**，否则第 2 步一定失败。
 2. 手机 Chrome 打开 → 菜单确认有「安装应用/添加到主屏幕」。没有就查 `chrome://serviceworker-internals` 与 `/manifest.webmanifest` 是否 200。
 3. 联网状态下把 `/`、`/train`、`/journal`、`/journal/new`、`/review`、`/stats`、`/me`、`/coach`、`/offline` 各点一遍（让分块进缓存）。
 4. 关掉 Wi-Fi 与蜂窝数据，从桌面图标启动，做一道题、写一篇日志、看复习队列，确认能保存（重开一次仍在）。
-5. 打开「我的」页看提醒区：会显示通知权限状态，可以点「请求通知权限」——授权后**不会**收到任何定时通知，这就是 5.3 说的现状。
-6. 键盘/遮挡：在 `/journal/new` 点最长的输入框，观察键盘弹起后是否被底部导航盖住。
-7. 想看 DOM/存储细节：手机开 USB 调试，桌面 Chrome 访问 `chrome://inspect`（这需要本机装 platform-tools/adb，即第 4 节缺失的那部分）。
-8. 若第 6 步出现遮挡或溢出，请附上机型、Chrome 版本与截图开 Issue —— 那会是这份文档第一份真机证据。
+5. 键盘/遮挡：在 `/journal/new` 点最长的输入框，观察键盘弹起后是否被底部导航盖住。
+6. 想看 DOM/存储细节：手机开 USB 调试，桌面 Chrome 访问 `chrome://inspect`。
+7. 若第 5 步出现遮挡或溢出，请附上机型、Chrome 版本与截图开 Issue —— 那会是这份文档第一份真机证据。
+
+如果你在自己机器上跑通了 release 打包或真机验证，欢迎把结果（Gradle/Capacitor/AGP 版本、compileSdk、机型与系统版本、实际现象）补进本文档 —— 那份更新才算验证过的。

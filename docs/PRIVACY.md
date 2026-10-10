@@ -12,6 +12,8 @@ LogicDaily 是本地优先应用。未配置 AI、未部署后端时，**不存�
 - 服务端只有两个接口（`/api/ai/status`、`/api/ai/analyze`），未配置模型凭据时它们只返回「未启用」。
 - 没有埋点、没有统计 SDK、没有第三方脚本、没有广告 SDK。可以自行检查 `app/layout.tsx` 与 `package.json` 依赖清单。
 
+**用 APK 时同样成立**，但要注意三点差别：（1）它是 WebView 里的 IndexedDB，与浏览器那份是**两个独立存储域**，互不继承，也不是同步关系；（2）包里根本没有服务端，所以 AI 教练在 App 内不可用 —— 少了一条数据外发路径，不是多了一条；（3）APK 是打进本地资源后从 `https://localhost` 加载的（`capacitor.config.ts` 不设 `server.url`），清单只声明 `android.permission.INTERNET` 供 WebView 自身使用，**应用代码不会主动发起任何网络请求**（`lib/ai/client.ts` 请求的是本站 `/api/ai/*`，在包内不存在）。第（3）点是这样设计的，但**未在真机上用抓包验证过**。
+
 ## 2. 存了哪些字段
 
 | 类别                      | 内容                                                                                     | 敏感度高低的直观说明                     |

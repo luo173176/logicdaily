@@ -10,14 +10,15 @@ LogicDaily 是一个**离线优先、移动端优先**的逻辑思维训练 PWA�
 - **说清口径**：训练报告里每一个数字都能展开看它是怎么算出来的，样本不足时直接写「样本不足」，不会告诉你「逻辑能力提升 20%」。
 - **真实场景**：思考日志用八步向导记录一个真实问题（背景 / 事实 / 假设 / 结论 / 另一种解释 / 关键不确定 / 验证动作 / 复盘结果），并强制区分「我观察到的」和「我推测的」。
 
-**仓库状态**：功能可用、测试通过、CI 已在 GitHub Actions 上跑通，但**尚未部署过**，也**没有 APK**。详见 [已知限制](#已知限制)。
+**仓库状态**：功能可用、测试通过、CI 已在 GitHub Actions 上跑通，**APK 已真实构建**（debug 包在 [Releases](https://github.com/luo173176/logicdaily/releases) 上），但**尚未部署过**。详见 [已知限制](#已知限制)。
 
-|        |                                                                                                               |
-| ------ | ------------------------------------------------------------------------------------------------------------- |
-| 技术栈 | Next.js 16 (App Router / Turbopack) · React 19 · TypeScript strict · Tailwind CSS 4 · Dexie (IndexedDB) · Zod |
-| 题库   | 14 个题型 × 8 题 = 112 道原创中文题，全部带解析、推理步骤、典型错误与知识点标签                               |
-| 测试   | 211 个单元/集成测试 + 17 个移动端视口端到端测试（Pixel 7 模拟），CI 见 `.github/workflows/ci.yml`             |
-| 许可   | AGPL-3.0-or-later（题库内容同为 AGPL）                                                                        |
+|        |                                                                                                                             |
+| ------ | --------------------------------------------------------------------------------------------------------------------------- |
+| 技术栈 | Next.js 16 (App Router / Turbopack) · React 19 · TypeScript strict · Tailwind CSS 4 · Dexie (IndexedDB) · Zod               |
+| 题库   | 14 个题型 × 8 题 = 112 道原创中文题，全部带解析、推理步骤、典型错误与知识点标签                                             |
+| 测试   | 211 个单元/集成测试 + 17 个移动端视口端到端测试（Pixel 7 模拟）+ 14 项 APK 离线包功能验证，CI 见 `.github/workflows/ci.yml` |
+| 分发   | PWA（添加到主屏幕）**或** 纯离线 APK（Capacitor 6，debug 签名，4.51 MB，无 Node 服务端 → App 内 AI 不可用）                 |
+| 许可   | AGPL-3.0-or-later（题库内容同为 AGPL）                                                                                      |
 
 ## 界面
 
@@ -103,18 +104,33 @@ npm start
 
 ## 手机使用
 
-Chrome for Android 打开站点 → 菜单 → **添加到主屏幕**，即以 `standalone` 竖屏模式启动，离线可用。iOS 的 Safari 添加主屏幕同样可用（受 Safari 存储配额策略影响，长期不打开可能被清理）。详见 [docs/ANDROID.md](docs/ANDROID.md)。
+两条路，任选一条：
 
-**没有 APK**：本机没有 JDK 与 Android SDK，Capacitor 打包从未尝试过。为什么够用/什么时候需要原生壳，见 [docs/ANDROID.md](docs/ANDROID.md)。
+**A. PWA（推荐，AI 教练可用）**：Chrome for Android 打开你部署的站点 → 菜单 → **添加到主屏幕**，即以 `standalone` 竖屏模式启动，离线可用。iOS 的 Safari 添加主屏幕同样可用（受 Safari 存储配额策略影响，长期不打开可能被清理）。
+
+**B. 纯离线 APK（不依赖任何服务器，App 内 AI 不可用）**：从 [Releases](https://github.com/luo173176/logicdaily/releases) 下载 debug 包直接安装。它把 112 道题和全部前端资源打进包内，从 APK 自身的本地资源加载（`capacitor.config.ts` 不设 `server.url`），所以不需要域名、不需要 HTTPS、不需要后端。代价是 **AI 思维教练在 App 内不可用** —— 那一条能力必然要经服务端转发给模型，界面会显示「AI 教练未启用」而不是报错崩溃。
+
+```bash
+# 自己构建 APK（需要 JDK 17+ 与 Android SDK）
+npm ci
+npm run build:apk-web        # 静态导出 → apk-web/（排除 app/api 等服务端路由）
+npx cap sync android
+cd android && ./gradlew assembleDebug
+# 产物 android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+两个诚实前提：这是 **debug 签名**包，不能提交 Google Play（release 需你自己的 keystore）；构建在这台机器上跑通了，但 **APK 从未在真机或模拟器上安装运行过**（`adb devices` 为空）—— 对打进包的那份资源是用 Playwright 逐条验证的（`npm run verify:apk-web`，14 项）。为什么够用 / 什么时候需要原生壳 / 已验证与未验证的分界，见 [docs/ANDROID.md](docs/ANDROID.md)。
 
 ## 项目结构
 
 ```
 app/                     Next.js App Router：页面 + /api/ai/* 服务端路由
-  manifest.ts            PWA manifest（MetadataRoute.Manifest）
+  manifest.ts            PWA manifest（MetadataRoute.Manifest，数据来自 content/app-manifest.json）
   providers.tsx          客户端上下文：打开 IndexedDB、播种题库、提供 dateKey/settings
-components/              通用 UI（卡片、按钮、答题控件、底部导航、SW 注册）
-content/exercises/       14 个题包 JSON，共 112 题（带解析、典型错误、知识点）
+components/              通用 UI（卡片、按钮、答题控件、底部导航、SW 注册、当日提醒 ReminderGate）
+content/
+  exercises/             14 个题包 JSON，共 112 题（带解析、典型错误、知识点）
+  app-manifest.json      manifest 单一来源：Web 侧动态生成，APK 侧落成静态文件
 features/                按业务切分的视图：home / training / journal / review / stats / me / coach / onboarding
 lib/
   domain/                纯函数领域层：schema、判分、归因、调度、掌握度、计划、统计、时间
@@ -122,13 +138,17 @@ lib/
   ai/                    模型适配层：provider、SSRF 防护、限流、输出校验、提示词
   services/              用例编排：提交作答、生成计划、提醒决策
   content/               题包装载与内容标签
-scripts/                 题库校验、图标生成、SQL 种子导出、截图
+scripts/                 题库校验、图标生成、SQL 种子导出、截图、APK 资源构建与验证
+android/                 Capacitor 6 生成的 Android 工程（提交源码，产物与 local.properties 不提交）
+capacitor.config.ts      APK 打包配置（webDir = apk-web，不设 server.url）
 supabase/migrations/     云端模式 SQL（RLS 隔离），Phase 3 尚未接入应用
 tests/
   unit/                  领域层与工具函数
   integration/           fake-indexeddb 上的数据层 + 训练流程 + 题库内容自检
   e2e/                   Playwright，Pixel 7 视口，覆盖引导/答题/归因/日志/复习/报告/备份恢复/AI 降级
 ```
+
+`.apk-src/`（构建副本）与 `apk-web/`（Capacitor 的 `webDir`）是可再生产物，都在 `.gitignore` 里；`android/app/src/main/assets/public` 由 `cap sync` 生成，同样不提交。
 
 架构、数据模型、AI 接入与隐私边界分别见：
 
@@ -146,15 +166,20 @@ tests/
 | 命令                          | 作用                                                         |
 | ----------------------------- | ------------------------------------------------------------ |
 | `npm run dev`                 | 开发服务器（Turbopack）                                      |
-| `npm run build` / `npm start` | 生产构建与启动                                               |
+| `npm run build` / `npm start` | 生产构建与启动（Web 目标，含 `/api/ai/*`）                   |
 | `npm run typecheck`           | `tsc --noEmit`                                               |
 | `npm run lint`                | ESLint（flat config，`core-web-vitals` + `typescript` 预设） |
 | `npm run test`                | Vitest 单元 + 集成（211 个用例，用 fake-indexeddb）          |
 | `npm run test:e2e`            | Playwright 端到端（17 个用例，自动起停生产服务器）           |
 | `npm run content:validate`    | 题库内容校验（id 规范、枚举、答案与解析自洽、重复题干检测）  |
+| `npm run build:apk-web`       | 静态导出 APK 用资源 → `apk-web/`（副本中排除服务端路由）     |
+| `npm run verify:apk-web`      | 用 Playwright 验证**打进 APK 的那份资源**（14 项）           |
+| `npm run apk:sync`            | `build:apk-web` + `cap sync android`                         |
 | `npm run format`              | Prettier 写入格式化                                          |
 
-CI（`.github/workflows/ci.yml`）依次跑：`typecheck` → `eslint` → `content:validate` → `test` → `build`，通过后再跑 `test:e2e`。
+构建 APK 本身还要在 `android/` 里跑 `./gradlew assembleDebug`（需要 JDK 与 Android SDK，见 [docs/ANDROID.md](docs/ANDROID.md) 第 4 节）。
+
+CI（`.github/workflows/ci.yml`）依次跑：`typecheck` → `eslint` → `content:validate` → `test` → `build`，通过后再跑 `test:e2e`。APK 构建**不在 CI 里**：它需要 JDK + Android SDK，而且产物是 debug 签名包，放在 Actions 上会给人一种「已发布可安装正式版」的错觉，所以只在本地构建并上传到 Release。
 
 ## 配置 AI（可选）
 
@@ -184,9 +209,10 @@ AI_RATE_LIMIT_PER_MIN=12
 诚实清单：
 
 - **未部署**：本仓库从未发布到任何环境，`docs/DEPLOYMENT.md` 里的部署步骤是说明而非验证结果。
-- **无 APK / 无原生应用**：没有 JDK 与 Android SDK，Capacitor 与 Kotlin 方案都未尝试，也没有创建 `android/` 空目录充数。
-- **后台提醒不可靠**：PWA 无法保证后台唤醒，提醒只在应用被打开时生效；系统通知已接 `Notification` 权限，但没有服务端推送（未实现 `PushSubscription`）。
-- **云端账户与同步未实现（Phase 3）**：`DataStore` 接口留了接缝，`supabase/migrations/` 有带 RLS 的 SQL 并在本地 Postgres 上验证过，但应用内没有登录、没有同步，装了 SQL 也不会改变产品行为。
+- **APK 没在真机上跑过**：构建真实成功（首次完整构建 `BUILD SUCCESSFUL in 1m 29s`，产物 4,732,472 字节，`aapt2` 元数据与包内 93 个资源条目都核对过），打进包的那份资源也用 Playwright 验证了 14 项；但 `adb devices` 为空，**没有安装到任何真机或模拟器**。所以原生层行为（WebView 内核差异、`https://localhost` 下的 IndexedDB 配额与清理、返回键、闪屏、通知权限弹窗）未经验证。而且它是 debug 签名，不能上架。
+- **APK 内没有 AI**：纯离线包不含 Node 服务端，`/api/ai/*` 不存在，AI 教练显示为「未启用」。要用 AI 得走 PWA 路线（或把 `capacitor.config.ts` 改成 `server.url` 指向你自己的部署，但那就不再是离线包）。
+- **后台提醒不可靠**：PWA 无法保证后台唤醒。`decideReminder()` 已接到运行时（`components/reminder-gate.tsx`：页内横幅 + 已授权时的系统通知），但只在应用被打开时表达；没有服务端推送（未实现 `PushSubscription`），APK 也没有引入原生本地通知插件。界面上没有承诺到点提醒。
+- **云端账户与同步未实现（Phase 3）**：`DataStore` 接口留了接缝，`supabase/migrations/` 有带 RLS 的 SQL 并在本地 Postgres 上验证过，但应用内没有登录、没有同步，装了 SQL 也不会改变产品行为。PWA 与 APK 的存储是两个不同的域，互不继承，只能靠导出/导入 JSON 搬运。
 - **题库为原创中文题，未经大规模实测**：112 题都通过了结构校验、答案自洽测试与人工解析编写，但没有做过样本化的难度标定；难度值是编辑判断。
 - **AI 反馈质量取决于所配模型**：小模型可能给出泛泛的追问；输出契约只保证格式，不保证洞见。
 - **多标签页并发写入未做冲突合并**：同一 profile 在两个标签页同时作答理论上可能互相覆盖进度。
