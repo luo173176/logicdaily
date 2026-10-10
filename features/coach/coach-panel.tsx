@@ -188,7 +188,7 @@ export function CoachPanel({ context }: { context: CoachContext }) {
 
   if (status && !status.configured) {
     return (
-      <Note tone="warn" title="服务端还没有模型凭据">
+      <Note tone="warn" title={status.unreachable ? '这里连不上 AI 接口' : '服务端还没有模型凭据'}>
         <div className="stack gap-2">
           <p>{status.message ?? '配置好 AI_API_KEY、AI_BASE_URL 与 AI_MODEL 后，这里才能给出反馈。其他功能不受影响。'}</p>
           <Link href="/me" className="text-sm text-brand no-underline">

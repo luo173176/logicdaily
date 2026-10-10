@@ -1,9 +1,11 @@
 /**
  * 验证打进 APK 的离线前端包（apk-web/）确实可用。
  *
- * 这里用静态文件服务器模拟 Capacitor WebView 的加载环境：没有 Node 服务端，
- * 因此 /api/ai/* 必然 404 —— 正是要验证「AI 不可用时应用仍完整可用」这条降级承诺。
- * 用法：node scripts/verify-apk-web.mjs
+ * 这里用静态文件服务器模拟 Capacitor WebView 的加载环境，包括一个容易忽略的细节：
+ * Capacitor 的 WebViewLocalServer 默认 html5mode=true，任何「最后一段不含点」的路径
+ * （包括 /api/ai/status）都会被兜底成应用自己的 index.html 并返回 **200**，而不是 404。
+ * 所以降级路径必须在「请求成功但拿回 HTML」这种情况下也成立——真机上就是这里漏出了
+ * "Unexpected token '<'" 给用户。用法：node scripts/verify-apk-web.mjs
  */
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
@@ -42,8 +44,21 @@ async function resolveFile(urlPath) {
 }
 
 const server = createServer(async (request, response) => {
+  const urlPath = (request.url ?? '/').split('?')[0];
   const file = await resolveFile(request.url ?? '/');
   if (!file) {
+    const lastSegment = urlPath.replace(/\/+$/, '').split('/').pop() ?? '';
+    // 复刻 Capacitor html5mode：无扩展名的路径返回应用外壳（200 + text/html）。
+    if (!lastSegment.includes('.')) {
+      try {
+        const shell = await readFile(join(ROOT, 'index.html'));
+        response.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
+        response.end(shell);
+        return;
+      } catch {
+        /* 外壳都不存在时落到 404 */
+      }
+    }
     response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
     response.end('not found');
     return;
@@ -128,10 +143,25 @@ try {
   await page.getByRole('button', { name: '提交作答' }).click();
   await page.getByText('答对').waitFor({ timeout: 15_000 });
   check('提交并判分', true);
-  check(
-    'AI 降级为「未启用」而不是报错崩溃',
-    (await page.getByText(/AI 教练未启用|服务端还没有模型凭据/).count()) > 0,
-  );
+
+  // AI 降级：没有服务端的构建里必须给出可读说明，绝不能漏出解析器文案。
+  const RAW_PARSER_TEXT = /Unexpected token|is not valid JSON|SyntaxError/;
+  for (const route of ['/me/', '/coach/']) {
+    await page.goto(`http://127.0.0.1:${PORT}${route}`);
+    // 状态探测是挂载后异步发出的，轮询到出现降级痕迹为止，别用固定 sleep 猜。
+    await waitUntil(async () => {
+      const text = await page.locator('body').innerText();
+      return RAW_PARSER_TEXT.test(text) || /没有服务端|AI 教练未启用|这里连不上 AI 接口/.test(text);
+    }, 15_000);
+    const text = await page.locator('body').innerText();
+    const leaked = RAW_PARSER_TEXT.test(text);
+    const explained = /没有服务端|AI 教练未启用|这里连不上 AI 接口/.test(text);
+    check(
+      `${route} AI 优雅降级`,
+      explained && !leaked,
+      leaked ? `漏出解析器文案：${text.match(RAW_PARSER_TEXT)?.[0]}` : explained ? '' : '既无说明也无降级',
+    );
+  }
 
   // 新的 ?edit= 路由是否在纯静态下可用
   await page.goto(`http://127.0.0.1:${PORT}/journal/`);

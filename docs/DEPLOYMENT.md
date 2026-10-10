@@ -6,7 +6,7 @@
 
 本仓库**从未部署到任何环境**。本文里的部署步骤是**说明**，不是验证结论。
 
-已经真实验证过的部分：`.github/workflows/ci.yml` 在 GitHub Actions 上跑通（`main` 分支 push 触发，两个任务全绿：类型检查 / ESLint / 题库校验 / 211 个单元与集成测试 / 生产构建，随后 Ubuntu 上的 Chromium 以 Pixel 7 视口跑过 17 个端到端用例）。这证明的是「干净机器上从 `npm ci` 起整条链路可复现」，**不等于**任何托管平台的部署可用性。
+已经真实验证过的部分：`.github/workflows/ci.yml` 在 GitHub Actions 上跑通（`main` 分支 push 触发，两个任务全绿：类型检查 / ESLint / 题库校验 / 220 个单元与集成测试 / 生产构建，随后 Ubuntu 上的 Chromium 以 Pixel 7 视口跑过 17 个端到端用例）。这证明的是「干净机器上从 `npm ci` 起整条链路可复现」，**不等于**任何托管平台的部署可用性。
 
 区分方式：
 

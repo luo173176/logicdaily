@@ -16,7 +16,8 @@
 - **走的是「纯离线单机」路线**：APK 从打包进自身的本地资源加载页面（`capacitor.config.ts` 里不设 `server.url`），因此不依赖任何服务器，也不需要 HTTPS 域名。代价是 AI 教练在 App 内不可用 —— 那一条能力必然要经过服务端转发给模型。
 - **推荐用法仍然是 PWA**（第 1 节）：不需要签名、上架、升级策略，且 AI 教练可用。APK 的价值在于「不依赖浏览器站点数据清理策略」「可在没有 Chrome 的设备分发」，以及为将来的原生通知留出入口。
 - **这是 debug 包，不是上架包**：用 Android 默认的 debug keystore 签名，只能直接安装到手机上侧载试用，不能提交 Google Play（那需要 `bundleRelease` + 你自己的 keystore，见 5.5）。
-- **没有在任何真机/模拟器上安装运行过**：`adb devices` 输出为空（第 4.5 节）。所以本仓库对 APK 的验证方式是**用 Playwright 驱动与打包进 APK 的那一份静态资源逐条核对功能**（`npm run verify:apk-web`，14 项全通过），而不是真机点按。第 6 节明确区分了「已验证」和「未验证」。
+- **构建机上没有连接设备**（`adb devices` 为空），所以没有自动化真机测试；对 APK 的验证方式是**用 Playwright 驱动与打包进 APK 的那一份静态资源逐条核对功能**（`npm run verify:apk-web`，15 项全通过）。第 6 节明确区分了「已验证」和「未验证」。
+- **已有一条真机实测反馈**：使用者在自己的 Android 手机上装了 v1.0.0，发现「我的 → AI 教练」把 JSON 解析错误直接显示了出来。原因与修复见 4.6.1 —— 这条反馈本身证明 App 能在真机上安装、渲染、路由并读写 IndexedDB。
 
 写这份文档时，本仓库同样从未部署过公网实例，部署相关见 `docs/DEPLOYMENT.md`。PWA 路线需要你先把它跑在一个 HTTPS 地址上（本机 `http://localhost` 只能用于同一台机器的调试，且 Service Worker 之外的手机访问不会是安全上下文）；APK 路线不需要。
 
@@ -302,14 +303,14 @@ List of devices attached
 （下面无内容）
 ```
 
-所以：**APK 构建成功、包内资源逐文件核对通过，但没有在物理机或模拟器上安装运行过**。4.6 的 14 项验证针对的是打进 APK 的那份静态资源本身（Playwright，`devices['Pixel 7']` → 实测 412×839），它能覆盖业务逻辑与布局，但**覆盖不到原生层**：WebView 内核版本差异、`https://localhost` 下的 IndexedDB 配额与清理策略、返回键行为、启动闪屏、系统深色模式联动、通知权限弹窗 —— 这些在第 6 节一律标注为未验证。
+所以：**APK 构建成功、包内资源逐文件核对通过，但这台构建机上没有连接任何设备，因此没有自动化的真机测试**（使用者自己装机跑过一次，见 4.6.1）。4.6 的 15 项验证针对的是打进 APK 的那份静态资源本身（Playwright，`devices['Pixel 7']` → 实测 412×839），它能覆盖业务逻辑与布局，但**覆盖不到原生层**：WebView 内核版本差异、`https://localhost` 下的 IndexedDB 配额与清理策略、返回键行为、启动闪屏、系统深色模式联动、通知权限弹窗 —— 这些在第 6 节一律标注为未验证。
 
 ### 4.6 对打进 APK 的那份资源的功能验证
 
 ```text
 $ node scripts/verify-apk-web.mjs
 …
-14/14 通过
+15/15 通过
 ```
 
 完整清单（全部 PASS）：
@@ -320,12 +321,15 @@ $ node scripts/verify-apk-web.mjs
 | 2   | 离线包内题库已播种（112 题）— 实际 112                     | 直接对 IndexedDB 的 `exercises` 表 `count()`，确认题库随包可用 |
 | 3   | 深链接进入题目                                             | `/train/?exercise=ex-cond-001` 冷启动可用                      |
 | 4   | 提交并判分                                                 | 选择选项 → 提交 → 出现判分结果                                 |
-| 5   | AI 降级为「未启用」而不是报错崩溃                          | **APK 内没有 `/api/ai/*`**，客户端必须优雅降级，这条专门盯着它 |
-| 6   | 保存后 URL 变为 `/journal?edit=<id>`                       | 见 5.4 的路由说明                                              |
-| 7   | 冷启动到 `?edit=` 深链接后内容仍在                         | 刷新后编辑器仍是同一篇                                         |
-| 8   | 列表可见该篇日志                                           | 写进去的数据能被读出来                                         |
-| 9   | 从列表点进编辑器                                           | 列表 → 编辑器的入口                                            |
-| 10  | `/review/` `/stats/` `/me/` `/train/` `/coach/` 无横向溢出 | 5 条路由，实测溢出 0px                                         |
+| 5   | `/me/` AI 优雅降级                                         | 「我的 → AI 教练」必须给出可读说明，见 4.6.1                   |
+| 6   | `/coach/` AI 优雅降级                                      | 教练面板同理；两条都断言页面里不出现解析器文案                 |
+| 7   | 保存后 URL 变为 `/journal?edit=<id>`                       | 见 5.4 的路由说明                                              |
+| 8   | 冷启动到 `?edit=` 深链接后内容仍在                         | 刷新后编辑器仍是同一篇                                         |
+| 9   | 列表可见该篇日志                                           | 写进去的数据能被读出来                                         |
+| 10  | 从列表点进编辑器                                           | 列表 → 编辑器的入口                                            |
+| 11  | `/review/` `/stats/` `/me/` `/train/` `/coach/` 无横向溢出 | 5 条路由，实测溢出 0px                                         |
+
+（第 5/6 项各是一页，第 11 项是 5 条路由，合计 15 项断言。）
 
 脚本自己起静态 HTTP 服务器（端口 4321）托管 `apk-web/`，用 Playwright 打开，跑完即关。**它测的是资源目录，不是安装后的 App。**
 
@@ -337,7 +341,26 @@ $ npx playwright test
 exit=0
 ```
 
-单元与集成测试规模见 `README.md`（211 项）。
+单元与集成测试规模见 `README.md`（220 项）。
+
+### 4.6.1 第一条真机反馈：降级文案漏出了 JSON 解析错误
+
+使用者在自己的 Android 手机上装了 v1.0.0，打开「我的 → AI 教练」看到：
+
+> 无法连接 AI 服务
+> Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+
+这不是配置问题，是**降级路径本身写错了**，而且原因很具体：
+
+1. Capacitor 的 `WebViewLocalServer` 默认 `html5mode = true`（`CapConfig.java:36`，本仓库没有覆盖 `server.html5mode`）；
+2. 于是任何「最后一段不含点」的路径都会被兜底成应用自己的 `index.html` 并返回 **200**（`WebViewLocalServer.java:401`）—— `/api/ai/status` 正好落进这条分支；
+3. `lib/ai/client.ts` 原来只在 `!response.ok` 时判定不可达，200 + HTML 会走到 `response.json()` 抛 `SyntaxError`，而 catch 分支把 `error.message` 原样显示给了用户。
+
+修复分三处：`readAiStatus()` 先按内容类型判定，拿到 HTML 就返回设计好的说明（`NO_SERVER_MESSAGE`）；`callTask()` 同样区分「没有服务端」与「模型返回结构不对」，不再把前者说成后者；教练面板的标题在不可达时改成「这里连不上 AI 接口」。
+
+**并且把测试台改成真的像 APK**：`scripts/verify-apk-web.mjs` 的静态服务器原先对未知路径返回 404，恰好绕过了这个 bug —— 现在它复刻 html5mode 兜底（无扩展名路径 → 200 + `index.html`），并新增两条断言：`/me/` 与 `/coach/` 页面必须出现可读的降级说明、且不得出现 `Unexpected token` / `is not valid JSON` / `SyntaxError`。`tests/unit/ai-client.test.ts` 也补了 9 个用例直接盯这几种响应形态。
+
+这条反馈同时说明：本文此前「APK 从未在真机上运行过」的表述只描述了**构建机**的状态（`adb devices` 为空，所以没有自动化真机测试），不等于没人装过。IndexedDB 在 WebView 里能正常落盘、页面能渲染、路由能跳转，现在都有了真机侧的间接证据；仍然没有真机证据的是闪屏、返回键、通知权限与存储配额这些原生行为。
 
 ### 4.7 从已发布的仓库重新走一遍（干净副本）
 
@@ -471,12 +494,12 @@ components/reminder-gate.tsx:40:      const decision = decideReminder({
 
 - 有可安装的 debug APK（4,303,043 字节，`com.logicdaily.app` 1.0 / versionCode 1，minSdk 22 / target 34 / compileSdk 34），Gradle 首次完整构建 `BUILD SUCCESSFUL in 1m 29s`（第 4 节有全部命令与原始输出）。
 - APK 内 93 个 `assets/public/*` 条目与打包前的 `apk-web/` 逐路径一致（4.4）。
-- 打进包的那份资源经 Playwright 验证 14/14 通过：题库 112 题随包播种、答题判分、`/journal?edit=` 全流程含冷启动刷新、AI 优雅降级、5 条路由无横向溢出（4.6）。
+- 打进包的那份资源经 Playwright 验证 15/15 通过：题库 112 题随包播种、答题判分、`/journal?edit=` 全流程含冷启动刷新、AI 优雅降级、5 条路由无横向溢出（4.6）。
 - APK 是**纯离线单机**：不依赖任何服务器，AI 思维教练在包内不可用（设计上必须经服务端），界面显示「未启用」而非崩溃。
 
 **APK 侧 —— 未验证 / 明确不具备：**
 
-- **没有在任何真机或模拟器上安装运行过**（`adb devices` 为空，4.5）。原生层行为（WebView 内核差异、`https://localhost` 下的 IndexedDB 配额与系统清理策略、返回键、启动闪屏、系统深色模式联动、通知权限弹窗）全部未验证。
+- **构建机上没有设备**（`adb devices` 为空，4.5），所以没有自动化真机测试。已知的真机事实只有一条：使用者在 Android 手机上装 v1.0.0 后 App 能打开、能进「我的」页（那次反馈见 4.6.1）。仍然没有证据的原生行为：WebView 内核版本差异、IndexedDB 配额与系统清理策略、返回键、启动闪屏、系统深色模式联动、通知权限弹窗。
 - **debug 签名，不能上架**。没有 release keystore、没有 AAB、没有商店页面；5.5 的 release 步骤未执行。
 - **APK 里没有后台提醒能力**。没有 Web Push（`PushSubscription`/`pushManager` 零命中），没有原生本地通知插件；`ReminderGate` 只在页面打开时表达当日提醒（5.6）。
 - APK 里 AI 相关的全部功能不可用（没有 Node 服务端）。若需要 AI，用 PWA 路线或 `server.url` 远程壳（后者会失去离线）。

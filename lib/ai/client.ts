@@ -47,6 +47,7 @@ const ERROR_COPY: Record<string, string> = {
   bad_response: '模型返回的结果不符合结构要求，已丢弃，请重试。',
   network: '无法连接模型服务。',
   forbidden: '请求来源不被接受。',
+  no_server: '这个构建里没有服务端，AI 教练不可用；训练本身不受影响。',
 };
 
 export function describeAiError(code: string | undefined, fallback?: string): string {
@@ -54,18 +55,42 @@ export function describeAiError(code: string | undefined, fallback?: string): st
   return ERROR_COPY[code] ?? `${fallback ?? 'AI 调用失败'}（${code}）`;
 }
 
+/** 纯静态构建（APK 或没有 Node 服务端的托管）里 /api/ai/* 不存在。 */
+export const NO_SERVER_MESSAGE =
+  '这个构建里没有服务端，所以 AI 教练不可用：模型调用必须经过本站 /api/ai/*，而纯静态包（含 APK）不含 Node 运行时。判分、解析、错因归类与复习调度都在本机，不受影响。想用 AI 请把本项目部署成网页版。';
+
+/** 用来把「接口返回的不是 JSON」这一情况与真正的解析错误区分开，避免把 SyntaxError 文案丢给用户。 */
+class NoAiServerError extends Error {}
+
+/**
+ * 静态包里对 /api/ai/status 的请求未必是 404：Capacitor 的本地服务器默认开着 html5mode，
+ * 任何无扩展名的路径都会被兜底成应用自己的 index.html 并返回 200，于是 response.ok 为真、
+ * JSON 解析才失败。这里按内容判定并给出设计好的文案，而不是抛出 "Unexpected token '<'"。
+ */
+async function readAiJson(response: Response): Promise<unknown> {
+  const text = await response.text();
+  const contentType = response.headers.get('content-type') ?? '';
+  if (!contentType.includes('json') && /^\s*</.test(text)) throw new NoAiServerError();
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new NoAiServerError();
+  }
+}
+
+function unreachableMessage(error: unknown): string {
+  if (error instanceof NoAiServerError) return NO_SERVER_MESSAGE;
+  return error instanceof Error ? error.message : '无法访问服务端 AI 状态接口。';
+}
+
 export async function readAiStatus(): Promise<AiStatus> {
   try {
     const response = await fetch('/api/ai/status', { cache: 'no-store' });
     if (!response.ok) return { configured: false, unreachable: true, message: `状态接口返回 ${response.status}。` };
-    const json = (await response.json()) as AiStatus;
+    const json = (await readAiJson(response)) as AiStatus;
     return { ...json, configured: Boolean(json.configured) };
   } catch (error) {
-    return {
-      configured: false,
-      unreachable: true,
-      message: error instanceof Error ? error.message : '无法访问服务端 AI 状态接口（纯静态部署时属于预期）。',
-    };
+    return { configured: false, unreachable: true, message: unreachableMessage(error) };
   }
 }
 
@@ -84,9 +109,23 @@ async function callTask<T>(task: string, payload: unknown, settings: AppSettings
         maxOutputTokens: settings.ai.maxOutputTokens,
       }),
     });
-    const json = (await response.json().catch(() => null)) as CoachResponse<T> | null;
+    if (!response.ok && response.status === 404) {
+      return { ok: false, code: 'no_server', message: NO_SERVER_MESSAGE };
+    }
+    const text = await response.text();
+    const contentType = response.headers.get('content-type') ?? '';
+    // 状态 200 却是 HTML：静态包里本地服务器把无扩展名路径兜底成了 index.html。
+    const servedHtml = !contentType.includes('json') && /^\s*</.test(text);
+    let json: CoachResponse<T> | null = null;
+    try {
+      json = JSON.parse(text) as CoachResponse<T>;
+    } catch {
+      json = null;
+    }
     if (!json) {
-      return { ok: false, code: 'bad_response', message: describeAiError('bad_response') };
+      return servedHtml
+        ? { ok: false, code: 'no_server', message: NO_SERVER_MESSAGE }
+        : { ok: false, code: 'bad_response', message: describeAiError('bad_response') };
     }
     if (!json.ok) {
       return { ...json, message: json.message ?? describeAiError(json.code) };

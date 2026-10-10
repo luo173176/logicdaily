@@ -28,11 +28,11 @@ _暂无。_
 - **移动端优先 PWA**：manifest（standalone、竖屏、快捷方式）、手写 Service Worker（页面外壳 stale-while-revalidate、静态资源 cache-first、`/api/*` 永不缓存）、更新提示不自动接管、纯 Node 脚本生成图标（无图像依赖）、深浅色主题无闪烁切换、安全区与键盘避让。
 - **两种构建目标（Web 与 APK）**：`next.config.ts` 按 `BUILD_TARGET=capacitor` 在 `cacheComponents` 与 `output: 'export'` 之间切换（两者互斥，Next 16 的 `next build` 又没有 `-c` 参数）。`scripts/build-apk-web.mjs` 把源码复制进 `.apk-src/`，**只在副本里**排除 `app/api` 与 `app/manifest.ts`（服务端路由是 SSRF/密钥隔离/限流所在，仓库本体不动），导出结果同步到 `apk-web/` 作为 Capacitor 的 `webDir`。manifest 数据抽成 `content/app-manifest.json` 单一来源，两条路共用。
 - **纯离线单机 APK**：`android/` 由 `npx cap add android`（Capacitor 6.2.2，选它是因为本机 JDK 17 而 8.x 要求 JDK 21）生成，`capacitor.config.ts` **不设** `server.url` 因此从包内本地资源加载，`androidScheme: 'https'`、`allowMixedContent: false`，清单只声明 `android.permission.INTERNET`。Gradle `assembleDebug` 实测 `BUILD SUCCESSFUL in 1m 29s`（82/82 tasks），产物 4,303,043 字节，`aapt2` 核验 `com.logicdaily.app` versionCode 1 / versionName 1.0 / minSdk 22 / target 34 / compileSdk 34，包内 93 个 `assets/public/*` 与 `apk-web/` 的 91 个文件逐路径一致（另 2 个是 Capacitor 注入的桥接文件）。**APK 内 AI 教练不可用**（没有 Node 服务端），界面显示「未启用」。
-- **APK 资源的功能验证**：`scripts/verify-apk-web.mjs` 用静态服务器托管 `apk-web/` 并用 Playwright 跑 14 项检查（首页引导、112 题随包播种、题目深链接、提交判分、AI 优雅降级、`/journal?edit=` 的保存/刷新/列表/进入、5 条路由无横向溢出）。实测 14/14 通过。注意这验证的是打进包内的那份资源，**不是**安装后的 App —— APK 从未在真机或模拟器上运行（`adb devices` 为空）。
+- **APK 资源的功能验证**：`scripts/verify-apk-web.mjs` 用静态服务器托管 `apk-web/` 并用 Playwright 跑 15 项检查（首页引导、112 题随包播种、题目深链接、提交判分、AI 优雅降级、`/journal?edit=` 的保存/刷新/列表/进入、5 条路由无横向溢出）。实测 15/15 通过。注意这验证的是打进包内的那份资源，**不是**安装后的 App —— APK 从未在真机或模拟器上运行（`adb devices` 为空）。
 - **APK 的启动器图标与闪屏**：`scripts/generate-icons.mjs` 在 `android/` 存在时覆写 25 个 PNG（各密度 `ic_launcher` / `ic_launcher_round` / adaptive 前景层 + 横竖闪屏）与 `ic_launcher_background` 颜色，替换 `cap add` 带来的 Capacitor 模板 logo；重构绘制函数后 PWA 那 4 个 PNG 的输出逐字节不变。
 - **发布包从 clean 构建**：AGP 的增量打包在条目变小时不回收旧位置，实测同一份代码的增量包比干净包多 429,429 字节死空间（11 个条目后面有空洞）。本文与文档引用的字节数都对应 `clean assembleDebug` 的产物。
 - **干净副本可复现**：从 GitHub 下载的 tarball 里重跑 `npm ci` → `build:apk-web` → `cap sync` → `assembleDebug` 全部成功（91 个资源文件、包内 578 个条目、`aapt2` 元数据与本机一致），确认构建没有依赖本地遗留产物。
-- **测试**：211 个单元/集成测试（Vitest + fake-indexeddb）+ 17 个端到端测试（Playwright，Pixel 7 视口），覆盖引导、答题与解析、错因与歧义标记、复习说明、刷新后持久化、日志增删改查与向导、报告指标、导出→清除→导入、非法导入被拒、AI 三种降级、横向溢出与输入遮挡。
+- **测试**：220 个单元/集成测试（Vitest + fake-indexeddb）+ 17 个端到端测试（Playwright，Pixel 7 视口），覆盖引导、答题与解析、错因与歧义标记、复习说明、刷新后持久化、日志增删改查与向导、报告指标、导出→清除→导入、非法导入被拒、AI 三种降级、横向溢出与输入遮挡。
 - **CI**：`.github/workflows/ci.yml`，先跑类型检查、ESLint、内容校验、单元/集成测试与生产构建，再跑端到端测试并在失败时保留报告。
 - **每日额度的本机自检**：教练面板与材料分析在发请求前检查本机当天用量，达到「我的」里设定的上限就不再发送（服务端 `AI_DAILY_LIMIT` 仍是权威）。此前该设置项完全不生效，界面却写着「两侧都会检查」。
 - **枚举副本防漂移**：`scripts/validate-exercises.mjs` 需要的题型/错误类型枚举抽到 `scripts/content-enums.mjs`，并由 `tests/integration/content.test.ts` 与 `lib/domain/taxonomy.ts` 逐项比对（校验脚本是纯 Node，无法导入 TS，只能维护副本）。
@@ -41,6 +41,8 @@ _暂无。_
 - **文档**：`README.md` 与 `docs/` 下的架构、数据模型、产品规格、AI 接入、隐私、部署、Android 说明，另有 `SECURITY.md`、`CONTRIBUTING.md` 与本文件。
 
 ### 修复
+
+- **APK 里 AI 降级文案漏出 JSON 解析错误**（第一条真机实测反馈）：「我的 → AI 教练」显示 `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`。根因是 Capacitor 的 `WebViewLocalServer` 默认 `html5mode = true`，任何最后一段不含点的路径（包括 `/api/ai/status`）都被兜底成应用自己的 `index.html` 并返回 **200**，于是 `!response.ok` 判定不成立、`response.json()` 抛错，而 catch 分支把 `error.message` 原样丢给了界面。现在 `readAiStatus()` 按内容类型判定并给出设计好的说明，`callTask()` 区分「没有服务端」与「模型返回结构不对」（原先后者会被误报成模型的问题），教练面板标题在不可达时改为「这里连不上 AI 接口」。同时把 `scripts/verify-apk-web.mjs` 的静态服务器改成复刻 html5mode 兜底（它之前对未知路径返回 404，正好绕过了这个 bug），新增 `/me/` 与 `/coach/` 两条降级断言，并补 `tests/unit/ai-client.test.ts` 9 个用例覆盖这几种响应形态。
 
 - **AI 状态接口被预渲染并长期缓存**：`/api/ai/status` 不读请求，在 `cacheComponents` 下于构建期求值，返回 `x-nextjs-cache: HIT` 与 `cache-control: s-maxage=31536000`，导致运维配好模型 Key 之后界面仍对所有人显示「AI 未启用」。改为在取值前 `await connection()`（`export const dynamic = 'force-dynamic'` 在 `cacheComponents` 下会被构建拒绝），路由表现已变为 `ƒ (Dynamic)`。
 - **安全区 CSS 完全不生效**：`app/globals.css` 与底部导航都用了 `env(safe-area-inset-*)`，但 meta viewport 缺 `viewport-fit=cover`，这些值在移动浏览器里解析为 0。已在 `app/layout.tsx` 的 `viewport` 导出补上。
@@ -61,7 +63,7 @@ _暂无。_
 ### 已知限制
 
 - 未部署到任何环境：`docs/DEPLOYMENT.md` 的步骤是说明而非验证结果。
-- APK 未在真机或模拟器上运行过：构建成功、包内资源逐路径核对、那份资源经 Playwright 14 项验证，但 `adb devices` 为空，原生层行为（WebView 内核差异、IndexedDB 配额与系统清理、返回键、闪屏、通知权限弹窗）未验证。且是 debug 签名，不能上架；Release/AAB 步骤未执行。
+- APK 未在真机或模拟器上运行过：构建成功、包内资源逐路径核对、那份资源经 Playwright 15 项验证，构建机上 `adb devices` 为空，所以没有自动化真机测试；返回键、闪屏、通知权限弹窗、存储配额这些原生行为仍无证据。且是 debug 签名，不能上架；Release/AAB 步骤未执行。
 - APK 内 AI 教练不可用（纯离线包不含服务端）；PWA 与 APK 的存储是两个不同域，训练记录不互通，只能靠导出/导入 JSON 搬运。
 - 云端账户与同步（Phase 3）未接入应用，仅有 `DataStore` 接缝与 SQL 迁移。
 - PWA 无法保证后台唤醒，提醒只在应用打开时生效；未实现服务端推送（无 `PushSubscription`），APK 也未引入原生本地通知插件。

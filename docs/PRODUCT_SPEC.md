@@ -218,7 +218,7 @@
 | 若采用 Capacitor：工程可实际构建、权限与网络配置、签名模板、Debug/Release 区分、提供构建说明 | **已实现并构建成功**：`@capacitor/*@6.2.2`，`capacitor.config.ts` 指定 `webDir: 'apk-web'` 且**不设** `server.url`（从包内本地资源加载），`android.allowMixedContent: false`、`server.androidScheme: 'https'`。`android/variables.gradle` 实测 minSdk 22 / compileSdk 34 / targetSdk 34。**权限最小化**：`android/app/src/main/AndroidManifest.xml` 只声明 `android.permission.INTERNET`（Capacitor 必需，给 WebView 自身），构建产物里另见 AGP 自动注入的 `com.logicdaily.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`；没有存储、通知、定位、相机权限。Gradle `assembleDebug` → `BUILD SUCCESSFUL in 1m 29s`，产物 4,303,043 字节，`aapt2 dump badging` 实测 `com.logicdaily.app` versionCode 1 / versionName 1.0 / minSdk 22 / target 34 / compileSdk 34。Debug 与 Release 已区分说明（Release 需自建 keystore，见 `docs/ANDROID.md` 5.5，**该步骤未执行**）。构建与验证步骤写在 README「手机使用」与 `docs/ANDROID.md` 第 4 节 |
 | 环境缺少 SDK 时完成可验证的工程配置并指出未执行的步骤                                        | 已如实说明：真机安装未做（`adb devices` 为空）、Release 未做、上架未做、包内 AI 不可用（没有 Node 服务端）——见 `README.md` 已知限制、`docs/ANDROID.md` 第 6 节                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-**实现状态**：已实现（纯离线单机 APK）。**注意两点诚实边界**：（1）没有在任何真机或模拟器上安装运行过，功能验证针对的是打进包内的那份静态资源（`npm run verify:apk-web`，14 项）；（2）APK 内 AI 思维教练不可用，因为该能力必然经服务端转发给模型，界面显示「未启用」而非崩溃，这一条有专门的自动化检查。代价是 C-11 的可靠后台提醒仍未兑现 —— 原生壳本身不带来本地通知插件。
+**实现状态**：已实现（纯离线单机 APK）。**注意两点诚实边界**：（1）构建机上没有连接设备，所以没有自动化真机测试，功能验证针对的是打进包内的那份静态资源（`npm run verify:apk-web`，15 项）；已有一条使用者自己的真机反馈暴露降级文案漏出解析器错误，已修复并补自动化（`docs/ANDROID.md` 4.6.1）；（2）APK 内 AI 思维教练不可用，因为该能力必然经服务端转发给模型，界面显示「未启用」而非崩溃，这一条有专门的自动化检查。代价是 C-11 的可靠后台提醒仍未兑现 —— 原生壳本身不带来本地通知插件。
 
 ### C-15 界面风格与首次引导（需求 §8）
 
@@ -284,7 +284,7 @@
 | Phase 1 可运行的核心 MVP          | 完成                 | 中文界面、每日任务、题库、答题判分、解析、本地持久化、错题、复习、日志、统计、112 题、自动化测试                                                                                                            |
 | Phase 2 AI 思维教练               | 完成（能力 12 缺 1） | 适配层、服务端调用、提示词版本、结构化校验、超时重试、限额、用量记录、安全控制、降级                                                                                                                        |
 | Phase 3 账户与跨设备同步          | 未实现（应用侧）     | 已有 `DataStore` 接缝、`syncState` 字段与云端 SQL（`supabase/migrations/` 共 13 张表、RLS 49 条策略、题库种子）；但无登录、无 Supabase 客户端、无同步逻辑，执行迁移不改变产品行为                           |
-| Phase 4 移动端完善与 Android 评估 | 完成                 | PWA 与纯离线 APK 两条路都交付：`android/` 工程真实构建成功（debug 包 4.10 MB），包内资源经 Playwright 14 项验证。后台提醒的可靠性缺口仍保留（前台提醒已接通，见 C-11；APK 未引入原生本地通知插件，见 C-14） |
+| Phase 4 移动端完善与 Android 评估 | 完成                 | PWA 与纯离线 APK 两条路都交付：`android/` 工程真实构建成功（debug 包 4.10 MB），包内资源经 Playwright 15 项验证。后台提醒的可靠性缺口仍保留（前台提醒已接通，见 C-11；APK 未引入原生本地通知插件，见 C-14） |
 | Phase 5 发布与维护                | 部分                 | 文档已齐（含 `CHANGELOG.md`、`CONTRIBUTING.md`、`SECURITY.md`），但从未部署，也没有实际执行过云端迁移                                                                                                       |
 
 ## 6. 需求与实现不一致之处
@@ -307,11 +307,11 @@
 诚实清单，与 `README.md` 的已知限制保持一致：
 
 - **云端账户与同步在应用里未实现**（Phase 3）：没有注册、登录、同步代码，`SyncState.mode` 恒为 `'local'`。`supabase/migrations/` 有 13 张表 + RLS 49 条策略 + 题库种子，`supabase/README.md:7-13` 明确说明"应用尚未使用这套 schema，装上迁移也不会改变产品行为"；隔离效果有一次性 Docker Postgres 上的手工验证记录（`supabase/README.md:102-146`），但 CI 里没有 Postgres 作业，`tests/` 里也只有本地 `profileId` 层面的隔离用例（`tests/integration/local-store.test.ts:167-172`）。
-- **APK 未在真机上运行**：`android/` 工程与 debug 包真实构建成功（`docs/ANDROID.md` 第 4 节有 Gradle 输出、`aapt2` 元数据、包内 93 个资源条目与 `apk-web/` 的逐路径比对），打进包内的那份资源由 `npm run verify:apk-web` 验证 14 项。但 `adb devices` 为空，**没有安装到任何真机或模拟器**，所以原生层行为未验证；并且是 debug 签名，不能上架；包内 AI 不可用（没有 Node 服务端，界面显示「未启用」）。PWA 与 APK 的存储是两个不同域，训练记录不互通。
+- **构建机上没有设备**：`android/` 工程与 debug 包真实构建成功（`docs/ANDROID.md` 第 4 节有 Gradle 输出、`aapt2` 元数据、包内 93 个资源条目与 `apk-web/` 的逐路径比对），打进包内的那份资源由 `npm run verify:apk-web` 验证 15 项。构建机上 `adb devices` 为空，所以自动化覆盖不到原生层；真机侧目前有一条来自使用者的实测反馈（Android 手机流量下打开「我的 → AI 教练」），暴露了降级文案把 JSON 解析错误直接显示出来的问题，已修复并补了自动化（`docs/ANDROID.md` 4.6.1）。包是 debug 签名，不能上架；包内 AI 不可用（没有 Node 服务端）。PWA 与 APK 的存储是两个不同域，训练记录不互通。
 - **提醒只在应用打开时生效**：`components/reminder-gate.tsx` 在根布局里执行当日决策（页内横幅 + 已授权时的系统通知），但没有 `PushSubscription`、`public/sw.js` 也没有 `push`/`notificationclick` 处理器，关闭页面后不会有任何提醒；APK 同样没有引入原生本地通知插件；`ReminderGate` 自身没有自动化测试。
 - **AI 依赖服务端密钥**：`AI_API_KEY`/`AI_BASE_URL` 缺失时接口返回 `not_configured`（503），所有 AI 功能降级为说明文案，训练主流程不受影响。纯静态部署没有服务端路由时，状态接口不可达（`lib/ai/client.ts:57-70`）。
 - **限流为单进程内存实现**：多实例部署需要共享存储（`lib/ai/ratelimit.ts`）。
 - **多标签页并发写入未做冲突合并**：同一 profile 在两个标签页同时作答，进度行可能被后写一方覆盖。
 - **题库为原创中文题，未经样本化难度标定**：112 题通过结构校验、答案自洽检查与人工解析编写，难度值是编辑判断。
 - **AI 反馈质量取决于所配模型**：输出契约只保证结构与来源可控，不保证洞见。
-- **文档与代码的时间差**：`docs/` 下 8 份文档 + 根目录 3 份都已存在且链接可解析，但 `docs/DEPLOYMENT.md` 与 `supabase/README.md` 描述的部署与迁移流程**从未在本仓库执行过**；README 里的测试数量（"211 个单元/集成测试 + 17 个端到端测试"）是编写时的统计，新增代码不保证仍落在同一覆盖范围内。任何数字与本文件冲突时，以代码与 `file:line` 为准。
+- **文档与代码的时间差**：`docs/` 下 8 份文档 + 根目录 3 份都已存在且链接可解析，但 `docs/DEPLOYMENT.md` 与 `supabase/README.md` 描述的部署与迁移流程**从未在本仓库执行过**；README 里的测试数量（"220 个单元/集成测试 + 17 个端到端测试 + 15 项 APK 资源验证"）是编写时的统计，新增代码不保证仍落在同一覆盖范围内。任何数字与本文件冲突时，以代码与 `file:line` 为准。
