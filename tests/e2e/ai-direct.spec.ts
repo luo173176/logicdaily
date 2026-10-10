@@ -176,9 +176,11 @@ test.describe('AI 本机直连模式', () => {
       const raw = readFileSync(target, 'utf8');
       expect(raw).not.toContain(TEST_KEY);
       expect(raw).not.toContain('"apiKey"');
-      const payload = JSON.parse(raw) as { data: { settings: { ai: { mode: string; baseUrl: string } } } };
+      const payload = JSON.parse(raw) as { data: { settings: { ai: { mode: string; baseUrl: string; provider: string } } } };
       expect(payload.data.settings.ai.mode).toBe('direct');
       expect(payload.data.settings.ai.baseUrl).toBe(`${mock.origin}/v1`);
+      // 地址是自己填的，用量记录里的供应商标记就不能还写着某个预设。
+      expect(payload.data.settings.ai.provider).toBe('custom');
     } finally {
       await closeServer(mock.server);
     }

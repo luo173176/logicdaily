@@ -134,7 +134,13 @@ export function AiSettingsSection({ draft, patch, profileId, ready }: Props) {
                 autoComplete="off"
                 spellCheck={false}
                 value={draft.ai.baseUrl}
-                onChange={(event) => aiPatch({ baseUrl: event.target.value })}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  // 地址一改，「提供商」这个标记就不再可信了：用量记录里的 provider 字段要跟得上，
+                  // 否则会一直写着 deepseek，而实际打的是用户自己填的另一个地址。
+                  const matched = AI_PROVIDER_SHORTCUTS.find((preset) => preset.baseUrl && preset.baseUrl === value.trim());
+                  aiPatch({ baseUrl: value, provider: matched?.id ?? 'custom' });
+                }}
                 placeholder="https://api.example.com/v1"
               />
             </Field>
