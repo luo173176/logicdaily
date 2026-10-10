@@ -12,7 +12,7 @@
 | 其余全部功能 | 离线可用                          | 离线可用（题库 112 题随包播种进 IndexedDB）               |
 | 分发         | 你自己的 HTTPS 域名               | GitHub Releases 上的 debug 签名 APK                       |
 
-- **APK 已经真实构建成功并有产物**：`android/app/build/outputs/apk/debug/app-debug.apk`，4,732,472 字节（4.51 MB），Gradle 首次完整构建 `BUILD SUCCESSFUL in 1m 29s`（82/82 tasks）。第 4 节贴了环境版本、构建命令与 `aapt2` 的真实输出。
+- **APK 已经真实构建成功并有产物**：`android/app/build/outputs/apk/debug/app-debug.apk`，4,303,043 字节（4.10 MB），Gradle 首次完整构建 `BUILD SUCCESSFUL in 1m 29s`（82/82 tasks）。第 4 节贴了环境版本、构建命令与 `aapt2` 的真实输出。
 - **走的是「纯离线单机」路线**：APK 从打包进自身的本地资源加载页面（`capacitor.config.ts` 里不设 `server.url`），因此不依赖任何服务器，也不需要 HTTPS 域名。代价是 AI 教练在 App 内不可用 —— 那一条能力必然要经过服务端转发给模型。
 - **推荐用法仍然是 PWA**（第 1 节）：不需要签名、上架、升级策略，且 AI 教练可用。APK 的价值在于「不依赖浏览器站点数据清理策略」「可在没有 Chrome 的设备分发」，以及为将来的原生通知留出入口。
 - **这是 debug 包，不是上架包**：用 Android 默认的 debug keystore 签名，只能直接安装到手机上侧载试用，不能提交 Google Play（那需要 `bundleRelease` + 你自己的 keystore，见 5.5）。
@@ -202,10 +202,10 @@ $ node -e "const p=require('./package.json');console.log(Object.keys(p.dependenc
 ### 4.2 构建命令（按顺序，每条都真实执行过）
 
 ```bash
-npm run build:apk-web        # node scripts/build-apk-web.mjs → apk-web/（91 个文件，1,725,157 字节 ≈ 1.65 MB）
+npm run build:apk-web        # node scripts/build-apk-web.mjs → apk-web/（91 个文件，约 1.64 MB）
 npx cap sync android         # 把 apk-web/ 复制进 android/app/src/main/assets/public
 cd android
-JAVA_HOME="D:/dev/jdk17" /d/dev/gradle-8.9/gradle-8.9/bin/gradle.bat assembleDebug
+JAVA_HOME="D:/dev/jdk17" /d/dev/gradle-8.9/gradle-8.9/bin/gradle.bat clean assembleDebug
 ```
 
 Gradle 真实输出（尾部）。第一次是完整构建：
@@ -216,20 +216,20 @@ BUILD SUCCESSFUL in 1m 29s
 exit=0
 ```
 
-之后又重建了两次，都是增量：换构建脚本的配置传递方式后 `BUILD SUCCESSFUL in 34s`（23 executed / 59 up-to-date），换掉启动器图标后 `BUILD SUCCESSFUL in 28s`（6 executed / 76 up-to-date）。三次 exit 都是 0。
+之后又重建了两次，都是增量：换构建脚本的配置传递方式后 `BUILD SUCCESSFUL in 34s`（23 executed / 59 up-to-date），换掉启动器图标后 `BUILD SUCCESSFUL in 28s`（6 executed / 76 up-to-date），最后 `clean assembleDebug` 完整重建 `BUILD SUCCESSFUL in 15s`（76 executed / 10 up-to-date）。四次 exit 都是 0。
 
 产物（当前仓库里这一次的输出）：
 
 ```text
 $ ls -la android/app/build/outputs/apk/debug/
--rw-r--r-- 1 luo17 197609 4732472 Oct  9 22:31 app-debug.apk
--rw-r--r-- 1 luo17 197609     368 Oct  9 22:31 output-metadata.json
+-rw-r--r-- 1 luo17 197609 4303043 Oct 10 09:24 app-debug.apk
+-rw-r--r-- 1 luo17 197609     368 Oct 10 09:24 output-metadata.json
 
 $ certutil -hashfile android/app/build/outputs/apk/debug/app-debug.apk MD5
-74bc65bc6130fa13375cf06af301b5ec
+a0ed509159b65dd02d244df085a0d133
 ```
 
-4,732,472 字节 ≈ 4.51 MB。
+4,303,043 字节 ≈ 4.10 MB。
 
 一个踩过的坑：**把 gradle 的输出管道给 `tail` 会让 `$?` 变成 `tail` 的退出码**，第一次构建失败时我因此误判成成功。之后改成先重定向到文件再读，才拿到真实的 `exit=1` 和失败任务名。
 
@@ -243,7 +243,19 @@ $ certutil -hashfile android/app/build/outputs/apk/debug/app-debug.apk MD5
 - `drawable-port-*` / `drawable-land-*` 的 `splash.png`：品牌渐变底 + 居中标记。
 - `values/ic_launcher_background.xml`：背景色层改成 `#2F5D88`，避免与前景接缝。
 
-脚本是纯 Node（zlib + 手写 CRC32），没有引入任何图像处理依赖；重构后 PWA 那 4 个 PNG 的输出与之前**逐字节相同**（`md5sum -c` 验证）。改完图标后重新 `assembleDebug`，包体从 4,436,189 变成 4,732,472 字节（PNG 比模板那几张重）。
+脚本是纯 Node（zlib + 手写 CRC32），没有引入任何图像处理依赖；重构后 PWA 那 4 个 PNG 的输出与之前**逐字节相同**（`md5sum -c` 验证）。
+
+### 4.2.2 增量打包会留下死空间：发布前请 clean
+
+第一次上传 Release 用的是增量构建的 APK，4,732,472 字节。后来在一份干净克隆里重建，得到 4,302,821 字节 —— 差了近 430 KB。逐条目比对两个包：**条目数完全相同（578），每条目的压缩后数据也几乎相同（差 223 字节，来自 CSS chunk 名里的构建 id）**，差的根本不是内容。
+
+用 zip 本地头逐个算条目间空隙才看清：增量包里有 11 个条目后面垫了共 **429,429 字节**的死空间（最大一段 348,627 字节紧跟在 `res/xml/file_paths.xml` 之后），干净构建的包是 **0**。AGP 的增量打包在条目变小时会把旧位置留成空洞，不会自动回收。
+
+结论与做法：
+
+- **发布用的包必须来自 `gradle clean assembleDebug`**，不是增量产物。本文与 Release 上的字节数/MD5 对应的就是 clean 之后的那一次。
+- 别把包体大小当成回归指标去追增量构建的数字，它会被打包器的空洞污染。
+- 想核对两个包是否等价，比条目清单与逐条目压缩大小，而不是比文件总大小。
 
 ### 4.3 用 aapt2 核验 APK 元数据
 
@@ -326,6 +338,30 @@ exit=0
 ```
 
 单元与集成测试规模见 `README.md`（211 项）。
+
+### 4.7 从已发布的仓库重新走一遍（干净副本）
+
+上面所有命令都在一份**从 GitHub 下载的 tarball** 里重跑过一次，用来确认提交里没有漏掉构建必需的文件、也没有依赖我本地留下的产物：
+
+```text
+$ gh api repos/luo173176/logicdaily/tarball/main | tar xz --strip-components=1
+$ ls -d apk-web .apk-src android/local.properties android/app/src/main/assets/public
+ls: cannot access 'apk-web': No such file or directory          # 四个都不存在，说明副本是干净的
+$ npm ci --no-audit --no-fund
+added 491 packages in 60s
+$ npm run build:apk-web
+[4/4] 完成：apk-web/ 共 91 个文件，1.64 MB
+$ npx cap sync android
+[info] Sync finished in 0.311s
+$ printf 'sdk.dir=D:/dev/android-sdk\n' > android/local.properties    # 这个文件不入库，每台机器自己写
+$ cd android && JAVA_HOME="D:/dev/jdk17" gradle.bat assembleDebug
+BUILD SUCCESSFUL in 34s
+82 actionable tasks: 82 executed
+```
+
+副本产出的包 4,302,821 字节，与 `README`/本文引用的 4,303,043 字节差 222 字节 —— 差异全部来自 Next 构建 id 参与 chunk 文件名，属于每次构建都会变的量。**不要**把字节数当成可复现性断言，要看的是条目清单（两边都是 578 条、`assets/public` 都是 93 条）与 `aapt2` 元数据（`com.logicdaily.app` 1.0 / versionCode 1 / minSdk 22 / target 34），这两项在副本与本机完全一致。
+
+顺带确认了 `capacitor.config.ts`、`content/app-manifest.json`、`android/variables.gradle`、`android/app/src/main/AndroidManifest.xml` 都已入库，而 `.apk-src/`、`apk-web/`、`android/local.properties`、`android/app/src/main/assets/public` 都没有被误提交。
 
 ## 5. APK 是怎么做到的：三个必须绕开的限制
 
@@ -433,7 +469,7 @@ components/reminder-gate.tsx:40:      const decision = decideReminder({
 
 **APK 侧 —— 已验证的部分：**
 
-- 有可安装的 debug APK（4,732,472 字节，`com.logicdaily.app` 1.0 / versionCode 1，minSdk 22 / target 34 / compileSdk 34），Gradle 首次完整构建 `BUILD SUCCESSFUL in 1m 29s`（第 4 节有全部命令与原始输出）。
+- 有可安装的 debug APK（4,303,043 字节，`com.logicdaily.app` 1.0 / versionCode 1，minSdk 22 / target 34 / compileSdk 34），Gradle 首次完整构建 `BUILD SUCCESSFUL in 1m 29s`（第 4 节有全部命令与原始输出）。
 - APK 内 93 个 `assets/public/*` 条目与打包前的 `apk-web/` 逐路径一致（4.4）。
 - 打进包的那份资源经 Playwright 验证 14/14 通过：题库 112 题随包播种、答题判分、`/journal?edit=` 全流程含冷启动刷新、AI 优雅降级、5 条路由无横向溢出（4.6）。
 - APK 是**纯离线单机**：不依赖任何服务器，AI 思维教练在包内不可用（设计上必须经服务端），界面显示「未启用」而非崩溃。
@@ -475,7 +511,7 @@ components/reminder-gate.tsx:40:      const decision = decideReminder({
 1. 准备 JDK 17+（版本要与所选 Capacitor/AGP 匹配 —— 见 4.1 关于 Capacitor 8 需要 JDK 21 的说明）、Android SDK（platform-tools + 与 compileSdk 匹配的 platforms/build-tools，并接受 `sdkmanager --licenses`）。
 2. `npm install` → `npm run build:apk-web` → `npx cap sync android`。
 3. 在 `android/local.properties` 写 `sdk.dir=`，**用正斜杠**（4.1）。
-4. `cd android && ./gradlew assembleDebug`。
+4. `cd android && ./gradlew clean assembleDebug`（要发布就带上 `clean`，见 4.2.2）。
 5. `adb install -r app/build/outputs/apk/debug/app-debug.apk`（`adb devices` 必须先能看到设备）。
 
 **PWA 路线的验证步骤**：

@@ -22,4 +22,5 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - **静态导出的限制**：不能用依赖 `Request` 的 Route Handler、不能用无 `generateStaticParams()` 的动态段、`useSearchParams()` 需要 `<Suspense>` 边界、元数据路由（`app/manifest.ts`）要落成静态文件。所以日志编辑是 `/journal?edit=<id>` 而不是 `/journal/[id]`，manifest 数据在 `content/app-manifest.json` 单一来源。
 - **改会影响 APK 的东西就跑两遍**：动了路由/manifest/AI 客户端 → `npm run build:apk-web && npm run verify:apk-web`，外加 `npx playwright test`。
 - **Android 侧的本地文件不提交**：`android/local.properties`（`sdk.dir` **必须用正斜杠**，反斜杠转义会让 Gradle 在 `SdkLocator` 处抛 `java.io.IOException`）、`android/**/build/`、`*.apk`、`android/app/src/main/assets/public` 都在 `.gitignore` 里；APK 走 GitHub Release 分发，不进工作树。
+- **发布用的 APK 必须 `./gradlew clean assembleDebug`**。增量打包会在条目变小时留下死空间（实测同一份代码多 430 KB）。比较两个包是否等价要看条目清单与逐条目大小，文件总大小会因 Next 构建 id 进入 chunk 文件名而浮动。
 - 提交前跑：`npm run typecheck && npm run lint && npm run content:validate && npm run test && npm run build`，以及 `npm run format:check`（Prettier 配置在 `.prettierrc.json`，Markdown 表格由它统一对齐）。

@@ -117,7 +117,7 @@ npm run test:e2e     # 会自己起停生产服务器，注意别占用 3000/312
 npm run build:apk-web    # 复制源码到 .apk-src/ → 静态导出 → apk-web/
 npm run verify:apk-web   # 用 Playwright 验证打进包内的那份资源（14 项）
 npm run apk:sync         # build:apk-web + cap sync android
-cd android && ./gradlew assembleDebug
+cd android && ./gradlew clean assembleDebug
 ```
 
 需要知道的前提与禁忌：
@@ -127,6 +127,7 @@ cd android && ./gradlew assembleDebug
 - `android/local.properties` 里的 `sdk.dir` **必须用正斜杠**（`sdk.dir=D:/dev/android-sdk`）。反斜杠转义会让 Gradle 在 `SdkLocator` 校验路径时抛 `java.io.IOException`。这个文件不提交。
 - Capacitor 版本要与本机 JDK 匹配：8.x 生成的工程要求 JDK 21 + compileSdk 36；本仓库现在钉在 6.2.2（Java 17 / compileSdk 34）。升级要连 `android/` 工程一起重新生成并真机验证。
 - 产物 `*.apk`、`apk-web/`、`.apk-src/`、`android/app/src/main/assets/public` 都在 `.gitignore` 里：APK 走 GitHub Release，不进工作树。
+- **要发布的包必须从 `clean` 构建**。AGP 的增量打包在条目变小时不回收旧位置，实测同一份代码的增量包比干净包多 430 KB 死空间。判断两个包是否等价要比条目清单与逐条目大小，不要比文件总大小（Next 的构建 id 参与 chunk 文件名，字节数每次都会浮动）。
 - 影响用户可见行为的改动，`npm run test:e2e` 与 `npm run verify:apk-web` 都要跑；后者会告诉你包内那份资源是否还自洽。
 
 ## 加一个 AI 任务
